@@ -1,0 +1,949 @@
+bps_id,fips_place,bps_name,county_fips,county_name,geoid,tiger_name,match_method,first_year,last_year,units_2010_ymax,units_2000_ymax
+001000,00113,Abingdon,095,Knox County,1700113,Abingdon city,fips_place,2000,2025,2,9
+002800,00243,Addison village,043,DuPage County,1700243,Addison village,fips_place,2000,2025,343,1201
+004900,00516,Albany village,195,Whiteside County,1700516,Albany village,fips_place,2000,2025,15,52
+005200,00555,Albers village,027,Clinton County,1700555,Albers village,fips_place,2000,2025,10,120
+006100,00646,Aledo,131,Mercer County,1700646,Aledo city,fips_place,2000,2025,49,148
+007000,00672,Alexis village,187,Warren County,1700672,Alexis village,fips_place,2000,2025,1,9
+007900,00685,Algonquin village,111,McHenry County,1700685,Algonquin village,fips_place,2000,2025,1527,3957
+008500,00737,Alhambra village,119,Madison County,1700737,Alhambra village,fips_place,2000,2025,5,18
+009400,00815,Allendale village,185,Wabash County,1700815,Allendale village,fips_place,2000,2025,12,14
+009700,00867,Allenville village,139,Moultrie County,1700867,Allenville village,fips_place,2000,2025,0,0
+010300,00880,Allerton village,183,Vermilion County,1700880,Allerton village,fips_place,2000,2025,1,2
+011500,00919,Alma village,121,Marion County,1700919,Alma village,fips_place,2024,2025,0,0
+012100,00971,Alpha village,073,Henry County,1700971,Alpha village,fips_place,2000,2025,0,4
+012700,01010,Alsip village,031,Cook County,1701010,Alsip village,fips_place,2000,2025,37,186
+013000,01049,Altamont,049,Effingham County,1701049,Altamont city,fips_place,2000,2025,55,106
+013900,01114,Alton,119,Madison County,1701114,Alton city,fips_place,2000,2025,106,557
+015100,01270,Amboy,103,Lee County,1701270,Amboy city,fips_place,2000,2025,3,49
+016300,01361,Anchor village,113,McLean County,1701361,Anchor village,fips_place,2000,2025,0,2
+016900,01426,Andalusia village,161,Rock Island County,1701426,Andalusia village,fips_place,2000,2013,10,51
+017800,01491,Andover village,073,Henry County,1701491,Andover village,fips_place,2000,2025,9,11
+018100,01543,Anna,181,Union County,1701543,Anna city,fips_place,2000,2025,25,85
+018400,01569,Annawan town,073,Henry County,1701569,Annawan town,fips_place,2000,2025,5,50
+019300,01595,Antioch village,097,Lake County,1701595,Antioch village,fips_place,2000,2025,338,2324
+020500,01881,Arcola,041,Douglas County,1701881,Arcola city,fips_place,2000,2025,47,117
+021700,01972,Argenta village,115,Macon County,1701972,Argenta village,fips_place,2000,2025,5,17
+022300,02154,Arlington Heights village,031,Cook County,1702154,Arlington Heights village,fips_place,2000,2025,1487,2607
+022900,02206,Armington village,179,Tazewell County,1702206,Armington village,fips_place,2000,2025,0,1
+023200,02258,Aroma Park village,091,Kankakee County,1702258,Aroma Park village,fips_place,2000,2025,8,26
+024400,02342,Arrowsmith village,113,McLean County,1702342,Arrowsmith village,fips_place,2000,2025,0,1
+025000,02414,Arthur village,041,Douglas County,1702414,Arthur village,fips_place,2000,2025,82,125
+026800,02479,Ashkum village,075,Iroquois County,1702479,Ashkum village,fips_place,2000,2025,8,19
+027400,02505,Ashland village,017,Cass County,1702505,Ashland village,fips_place,2000,2025,4,20
+027700,02531,Ashley,189,Washington County,1702531,Ashley city,fips_place,2000,2025,1,8
+028600,02557,Ashmore village,029,Coles County,1702557,Ashmore village,fips_place,2000,2025,2,5
+029200,02583,Ashton village,103,Lee County,1702583,Ashton village,fips_place,2000,2025,1,41
+029500,02609,Assumption,021,Christian County,1702609,Assumption city,fips_place,2003,2025,6,15
+030400,02635,Astoria town,057,Fulton County,1702635,Astoria town,fips_place,2000,2025,7,16
+030700,02674,Athens,129,Menard County,1702674,Athens city,fips_place,2000,2025,20,121
+031300,02726,Atkinson town,073,Henry County,1702726,Atkinson town,fips_place,2000,2025,13,26
+031900,02752,Atlanta,107,Logan County,1702752,Atlanta city,fips_place,2000,2025,8,69
+033100,02882,Atwood village,147,Piatt County,1702882,Atwood village,fips_place,2000,2025,8,14
+033400,02921,Auburn,167,Sangamon County,1702921,Auburn city,fips_place,2000,2025,46,213
+035500,03012,Aurora,089,Kane County,1703012,Aurora city,fips_place,2000,2025,2880,13667
+037300,03181,Aviston village,027,Clinton County,1703181,Aviston village,fips_place,2000,2025,195,411
+038200,03207,Avon village,057,Fulton County,1703207,Avon village,fips_place,2000,2025,0,0
+039700,03454,Baldwin village,157,Randolph County,1703454,Baldwin village,fips_place,2000,2025,1,1
+041200,03610,Bannockburn village,097,Lake County,1703610,Bannockburn village,fips_place,2000,2025,20,54
+044500,03844,Barrington village,031,Cook County,1703844,Barrington village,fips_place,2000,2025,194,488
+043000,03883,Barrington Hills village,031,Cook County,1703883,Barrington Hills village,fips_place,2000,2025,88,326
+045100,03948,Barry,149,Pike County,1703948,Barry city,fips_place,2000,2025,13,35
+046300,04013,Bartlett village,043,DuPage County,1704013,Bartlett village,fips_place,2000,2025,405,3316
+046900,04039,Bartonville village,143,Peoria County,1704039,Bartonville village,fips_place,2000,2025,22,133
+047800,04078,Batavia,089,Kane County,1704078,Batavia city,fips_place,2000,2025,783,1943
+049000,04156,Bath village,125,Mason County,1704156,Bath village,fips_place,2000,2025,4,12
+049300,04273,Bay View Gardens village,203,Woodford County,1704273,Bay View Gardens village,fips_place,2000,2025,24,24
+049900,04303,Beach Park village,097,Lake County,1704303,Beach Park village,fips_place,2000,2025,194,1485
+051100,04351,Beardstown,017,Cass County,1704351,Beardstown city,fips_place,2000,2025,14,184
+052900,04507,Beaverville village,075,Iroquois County,1704507,Beaverville village,fips_place,2000,2025,2,11
+053200,04533,Beckemeyer village,027,Clinton County,1704533,Beckemeyer village,fips_place,2000,2025,26,64
+053500,04572,Bedford Park village,031,Cook County,1704572,Bedford Park village,fips_place,2000,2025,29,30
+054400,04585,Beecher village,197,Will County,1704585,Beecher village,fips_place,2000,2025,173,557
+054100,04598,Beecher City village,049,Effingham County,1704598,Beecher City village,fips_place,2013,2025,7,7
+054700,04689,Belgium village,183,Vermilion County,1704689,Belgium village,fips_place,2000,2025,3,15
+056500,04845,Belleville,163,St. Clair County,1704845,Belleville city,fips_place,2000,2025,512,2149
+057100,04871,Bellevue village,143,Peoria County,1704871,Bellevue village,fips_place,2000,2025,93,95
+057700,04897,Bellflower village,113,McLean County,1704897,Bellflower village,fips_place,2000,2025,2,2
+058300,04975,Bellwood village,031,Cook County,1704975,Bellwood village,fips_place,2000,2025,116,132
+058900,05092,Belvidere,007,Boone County,1705092,Belvidere city,fips_place,2000,2025,335,1976
+059800,05144,Bement village,147,Piatt County,1705144,Bement village,fips_place,2000,2025,22,39
+060100,05209,Benld,117,Macoupin County,1705209,Benld city,fips_place,2002,2025,4,20
+061000,05248,Bensenville village,043,DuPage County,1705248,Bensenville village,fips_place,2000,2025,65,259
+061300,05261,Benson village,203,Woodford County,1705261,Benson village,fips_place,2000,2025,0,7
+061900,05300,Benton,055,Franklin County,1705300,Benton city,fips_place,2000,2025,85,190
+062800,05404,Berkeley village,031,Cook County,1705404,Berkeley village,fips_place,2000,2025,10,42
+064900,05573,Berwyn,031,Cook County,1705573,Berwyn city,fips_place,2000,2025,61,204
+065500,05599,Bethalto village,119,Madison County,1705599,Bethalto village,fips_place,2000,2025,217,608
+065800,05612,Bethany village,139,Moultrie County,1705612,Bethany village,fips_place,2000,2025,3,11
+068500,05898,Biggsville village,071,Henderson County,1705898,Biggsville village,fips_place,2000,2025,1,6
+070000,06171,Bishop Hill village,073,Henry County,1706171,Bishop Hill village,fips_place,2000,2025,2,3
+070500,06184,Bismarck village,183,Vermilion County,1706184,Bismarck village,fips_place,2004,2025,9,21
+073000,06587,Bloomingdale village,043,DuPage County,1706587,Bloomingdale village,fips_place,2000,2025,286,750
+073300,06613,Bloomington,113,McLean County,1706613,Bloomington city,fips_place,2000,2025,2607,8046
+074500,06704,Blue Island,031,Cook County,1706704,Blue Island city,fips_place,2000,2025,31,325
+075400,06756,Blue Mound village,115,Macon County,1706756,Blue Mound village,fips_place,2000,2025,3,12
+076600,,Bluffs village,171,Scott County,1706899,Bluffs village,name,2000,2004,0,0
+076900,06964,Bluford village,081,Jefferson County,1706964,Bluford village,fips_place,2000,2025,2,6
+077800,07133,Bolingbrook village,197,Will County,1707133,Bolingbrook village,fips_place,2000,2025,1994,7076
+079000,07211,Bondville village,019,Champaign County,1707211,Bondville village,fips_place,2000,2025,3,12
+079600,07237,Bonfield village,091,Kankakee County,1707237,Bonfield village,fips_place,2000,2025,1,11
+079900,07263,Bonnie village,081,Jefferson County,1707263,Bonnie village,fips_place,2002,2025,0,3
+082000,07471,Bourbonnais village,091,Kankakee County,1707471,Bourbonnais village,fips_place,2000,2025,454,1520
+084400,07640,Braceville village,063,Grundy County,1707640,Braceville village,fips_place,2008,2025,11,13
+085600,07744,Bradley village,091,Kankakee County,1707744,Bradley village,fips_place,2000,2025,349,1458
+085900,07770,Braidwood,197,Will County,1707770,Braidwood city,fips_place,2000,2025,137,701
+086200,07913,Breese,027,Clinton County,1707913,Breese city,fips_place,2000,2025,212,456
+088000,08225,Bridgeview village,031,Cook County,1708225,Bridgeview village,fips_place,2000,2025,20,347
+088900,08264,Brighton village,117,Macoupin County,1708264,Brighton village,fips_place,2000,2025,58,216
+089500,08303,Brimfield village,143,Peoria County,1708303,Brimfield village,fips_place,2000,2025,8,22
+090100,08420,Broadlands village,019,Champaign County,1708420,Broadlands village,fips_place,2000,2025,2,11
+090400,08446,Broadview village,031,Cook County,1708446,Broadview village,fips_place,2000,2025,70,72
+091000,08472,Broadwell village,107,Logan County,1708472,Broadwell village,fips_place,2000,2025,0,6
+091300,08524,Brocton village,045,Edgar County,1708524,Brocton village,fips_place,2000,2025,0,0
+091900,08576,Brookfield village,031,Cook County,1708576,Brookfield village,fips_place,2000,2025,72,287
+093100,08706,Brookport,127,Massac County,1708706,Brookport city,fips_place,2002,2025,6,15
+100000,09304,Buckingham village,091,Kankakee County,1709304,Buckingham village,fips_place,2000,2025,2,7
+100300,09317,Buckley village,075,Iroquois County,1709317,Buckley village,fips_place,2000,2025,0,10
+103000,09434,Buffalo village,167,Sangamon County,1709434,Buffalo village,fips_place,2000,2025,0,0
+101800,09447,Buffalo Grove village,097,Lake County,1709447,Buffalo Grove village,fips_place,2000,2025,359,810
+103300,09531,Bull Valley village,111,McHenry County,1709531,Bull Valley village,fips_place,2000,2025,20,75
+103600,09538,Bulpitt village,021,Christian County,1709538,Bulpitt village,fips_place,2000,2025,0,1
+104800,09642,Burbank,031,Cook County,1709642,Burbank city,fips_place,2000,2025,174,836
+106900,09798,Burnham village,031,Cook County,1709798,Burnham village,fips_place,2000,2025,1,75
+108400,09980,Burr Ridge village,043,DuPage County,1709980,Burr Ridge village,fips_place,2000,2025,326,685
+111700,10240,Byron,141,Ogle County,1710240,Byron city,fips_place,2000,2025,86,472
+113300,10373,Cahokia Heights,163,St. Clair County,1710373,Cahokia Heights city,fips_place,2022,2025,2,2
+113500,10383,Cairo,003,Alexander County,1710383,Cairo city,fips_place,2000,2025,3,9
+562500,10422,Caledonia village,007,Boone County,1710422,Caledonia village,fips_place,2003,2025,0,0
+114700,10487,Calumet City,031,Cook County,1710487,Calumet City city,fips_place,2000,2025,1,296
+115000,10513,Calumet Park village,031,Cook County,1710513,Calumet Park village,fips_place,2000,2025,9,84
+115900,10591,Camargo village,041,Douglas County,1710591,Camargo village,fips_place,2000,2025,15,52
+116200,10630,Cambria village,199,Williamson County,1710630,Cambria village,fips_place,2002,2025,404,418
+116800,10643,Cambridge village,073,Henry County,1710643,Cambridge village,fips_place,2000,2025,8,38
+118300,10773,Campbell Hill village,077,Jackson County,1710773,Campbell Hill village,fips_place,2000,2025,0,0
+118000,10877,Camp Point village,001,Adams County,1710877,Camp Point village,fips_place,2000,2025,25,46
+118500,10906,Campton Hills village,089,Kane County,1710906,Campton Hills village,fips_place,2013,2025,185,185
+119800,11007,Canton,057,Fulton County,1711007,Canton city,fips_place,2000,2025,73,158
+121000,11124,Capron village,007,Boone County,1711124,Capron village,fips_place,2000,2025,24,215
+121300,11150,Carbon Cliff village,161,Rock Island County,1711150,Carbon Cliff village,fips_place,2000,2025,4,27
+121900,11163,Carbondale,077,Jackson County,1711163,Carbondale city,fips_place,2000,2025,489,2555
+121600,11176,Carbon Hill village,063,Grundy County,1711176,Carbon Hill village,fips_place,2000,2025,8,16
+122500,11202,Carlinville,117,Macoupin County,1711202,Carlinville city,fips_place,2013,2025,14,14
+123100,11215,Carlock village,113,McLean County,1711215,Carlock village,fips_place,2000,2025,37,72
+123400,11228,Carlyle,027,Clinton County,1711228,Carlyle city,fips_place,2000,2025,41,135
+124300,11293,Carmi,193,White County,1711293,Carmi city,fips_place,2013,2025,5,5
+124900,11332,Carol Stream village,043,DuPage County,1711332,Carol Stream village,fips_place,2000,2025,202,746
+125200,11358,Carpentersville village,089,Kane County,1711358,Carpentersville village,fips_place,2000,2025,155,2204
+127000,11462,Carrollton,061,Greene County,1711462,Carrollton city,fips_place,2000,2025,78,154
+127900,11514,Carterville,199,Williamson County,1711514,Carterville city,fips_place,2000,2025,315,769
+128200,11527,Carthage,067,Hancock County,1711527,Carthage city,fips_place,2000,2025,42,96
+129100,11592,Cary village,111,McHenry County,1711592,Cary village,fips_place,2000,2025,383,1859
+129400,11618,Casey,023,Clark County,1711618,Casey city,fips_place,2017,2025,9,9
+130600,11644,Caseyville village,163,St. Clair County,1711644,Caseyville village,fips_place,2000,2025,282,478
+132100,11774,Catlin village,183,Vermilion County,1711774,Catlin village,fips_place,2000,2025,32,96
+132700,11826,Cave-In-Rock village,069,Hardin County,1711826,Cave-In-Rock village,fips_place,2000,2025,0,0
+133300,11982,Cedar Point village,099,LaSalle County,1711982,Cedar Point village,fips_place,2000,2025,0,9
+133900,12008,Cedarville village,177,Stephenson County,1712008,Cedarville village,fips_place,2000,2025,0,6
+134200,12151,Central City village,121,Marion County,1712151,Central City village,fips_place,2013,2025,0,0
+135100,12164,Centralia,121,Marion County,1712164,Centralia city,fips_place,2000,2025,81,317
+136600,12268,Cerro Gordo village,147,Piatt County,1712268,Cerro Gordo village,fips_place,2000,2025,8,10
+137800,12385,Champaign,019,Champaign County,1712385,Champaign city,fips_place,2000,2025,9362,14732
+139300,12450,Chandlerville village,017,Cass County,1712450,Chandlerville village,fips_place,2003,2025,7,13
+140200,12476,Channahon village,197,Will County,1712476,Channahon village,fips_place,2000,2025,955,2786
+140800,12567,Charleston,029,Coles County,1712567,Charleston city,fips_place,2000,2025,227,976
+142000,12684,Chatham village,167,Sangamon County,1712684,Chatham village,fips_place,2000,2025,1094,2326
+142300,12710,Chatsworth town,105,Livingston County,1712710,Chatsworth town,fips_place,2000,2025,0,1
+143200,12801,Chebanse village,075,Iroquois County,1712801,Chebanse village,fips_place,2000,2025,3,10
+144400,12931,Chenoa,113,McLean County,1712931,Chenoa city,fips_place,2000,2025,20,53
+146200,13139,Chester,157,Randolph County,1713139,Chester city,fips_place,2000,2025,9,53
+147700,14000,Chicago,031,Cook County,1714000,Chicago city,fips_place,2000,2025,81905,164867
+148300,14026,Chicago Heights,031,Cook County,1714026,Chicago Heights city,fips_place,2000,2025,6,117
+148600,14065,Chicago Ridge village,031,Cook County,1714065,Chicago Ridge village,fips_place,2000,2025,58,178
+149200,14117,Chillicothe,143,Peoria County,1714117,Chillicothe city,fips_place,2000,2025,166,336
+150400,14273,Chrisman,045,Edgar County,1714273,Chrisman city,fips_place,2000,2025,3,24
+151000,14286,Christopher,055,Franklin County,1714286,Christopher city,fips_place,2000,2025,6,30
+151600,14351,Cicero town,031,Cook County,1714351,Cicero town,fips_place,2000,2025,8,10
+152800,14442,Cisco village,147,Piatt County,1714442,Cisco village,fips_place,2002,2025,1,3
+153400,14468,Cissna Park village,075,Iroquois County,1714468,Cissna Park village,fips_place,2000,2025,4,21
+154300,14572,Clarendon Hills village,043,DuPage County,1714572,Clarendon Hills village,fips_place,2000,2025,275,779
+155800,14715,Clay City village,025,Clay County,1714715,Clay City village,fips_place,2002,2025,3,10
+157000,14767,Clayton village,001,Adams County,1714767,Clayton village,fips_place,2000,2025,3,5
+158200,14923,Cleveland village,073,Henry County,1714923,Cleveland village,fips_place,2000,2025,0,0
+158500,14936,Clifton village,075,Iroquois County,1714936,Clifton village,fips_place,2000,2025,5,23
+158800,15001,Clinton,039,De Witt County,1715001,Clinton city,fips_place,2000,2025,45,147
+160600,15170,Coal City village,063,Grundy County,1715170,Coal City village,fips_place,2000,2025,112,465
+161500,15235,Coal Valley village,161,Rock Island County,1715235,Coal Valley village,fips_place,2000,2025,115,358
+162400,15300,Cobden village,181,Union County,1715300,Cobden village,fips_place,2000,2025,11,31
+165400,15495,Colfax village,113,McLean County,1715495,Colfax village,fips_place,2000,2025,1,31
+165700,15599,Collinsville,119,Madison County,1715599,Collinsville city,fips_place,2000,2025,242,1375
+167200,15664,Colona,073,Henry County,1715664,Colona city,fips_place,2000,2025,101,249
+167800,15833,Columbia,133,Monroe County,1715833,Columbia city,fips_place,2000,2025,668,1441
+170800,16119,Congerville village,203,Woodford County,1716119,Congerville village,fips_place,2000,2025,24,47
+171400,16210,Cooksville village,113,McLean County,1716210,Cooksville village,fips_place,2000,2025,0,0
+173200,16366,Cordova village,161,Rock Island County,1716366,Cordova village,fips_place,2000,2025,6,40
+173500,16405,Cornell village,105,Livingston County,1716405,Cornell village,fips_place,2000,2025,6,17
+174100,16470,Cortland town,037,DeKalb County,1716470,Cortland town,fips_place,2000,2025,205,1013
+175900,,Coulterville village,157,Randolph County,1716613,Coulterville village,name,2000,2004,0,1
+176500,16691,Country Club Hills,031,Cook County,1716691,Country Club Hills city,fips_place,2000,2025,75,679
+176800,16873,Countryside,031,Cook County,1716873,Countryside city,fips_place,2000,2025,111,274
+177400,17055,Cowden village,173,Shelby County,1717055,Cowden village,fips_place,2000,2025,0,4
+177700,17185,Crainville village,199,Williamson County,1717185,Crainville village,fips_place,2000,2025,146,304
+179200,17406,Crescent City village,075,Iroquois County,1717406,Crescent City village,fips_place,2000,2025,4,5
+179800,17458,Crest Hill,197,Will County,1717458,Crest Hill city,fips_place,2000,2025,46,2928
+180100,17471,Creston village,141,Ogle County,1717471,Creston village,fips_place,2000,2025,39,79
+180400,17497,Crestwood village,031,Cook County,1717497,Crestwood village,fips_place,2000,2025,68,325
+181000,17523,Crete village,197,Will County,1717523,Crete village,fips_place,2000,2025,31,448
+181300,17549,Creve Coeur village,179,Tazewell County,1717549,Creve Coeur village,fips_place,2000,2025,9,60
+183100,17783,Crossville village,193,White County,1717783,Crossville village,fips_place,2000,2025,0,0
+184000,17887,Crystal Lake,111,McHenry County,1717887,Crystal Lake city,fips_place,2000,2025,1564,3279
+184300,17991,Cuba,057,Fulton County,1717991,Cuba city,fips_place,2000,2025,0,11
+184900,18030,Cullom village,105,Livingston County,1718030,Cullom village,fips_place,2000,2025,0,5
+187600,18342,Dakota village,177,Stephenson County,1718342,Dakota village,fips_place,2000,2025,0,4
+189400,18446,Dalton City village,139,Moultrie County,1718446,Dalton City village,fips_place,2000,2025,1,1
+189700,18459,Dalzell village,011,Bureau County,1718459,Dalzell village,fips_place,2007,2025,0,2
+190300,18472,Damiansville village,027,Clinton County,1718472,Damiansville village,fips_place,2003,2025,16,39
+191200,18498,Danforth village,075,Iroquois County,1718498,Danforth village,fips_place,2000,2025,1,8
+191800,18537,Danvers village,113,McLean County,1718537,Danvers village,fips_place,2000,2025,0,10
+192100,18563,Danville,183,Vermilion County,1718563,Danville city,fips_place,2000,2025,49,320
+192700,18628,Darien,043,DuPage County,1718628,Darien city,fips_place,2000,2025,201,422
+193600,18706,Davis village,177,Stephenson County,1718706,Davis village,fips_place,2000,2025,0,6
+193300,18719,Davis Junction village,141,Ogle County,1718719,Davis Junction village,fips_place,2000,2025,91,366
+194200,18745,Dawson village,167,Sangamon County,1718745,Dawson village,fips_place,2000,2025,1,18
+197800,18823,Decatur,115,Macon County,1718823,Decatur city,fips_place,2000,2025,114,1806
+199000,18940,Deer Creek village,179,Tazewell County,1718940,Deer Creek village,fips_place,2000,2025,3,77
+201400,18992,Deerfield village,097,Lake County,1718992,Deerfield village,fips_place,2000,2025,1219,1846
+199600,19031,Deer Grove village,195,Whiteside County,1719031,Deer Grove village,fips_place,2017,2025,2,2
+200200,19083,Deer Park village,097,Lake County,1719083,Deer Park village,fips_place,2000,2025,459,551
+194800,19161,DeKalb,037,DeKalb County,1719161,DeKalb city,fips_place,2000,2025,532,2489
+195400,19200,De Land village,147,Piatt County,1719200,De Land village,fips_place,2000,2025,3,11
+202000,19226,Delavan,179,Tazewell County,1719226,Delavan city,fips_place,2000,2025,21,39
+195700,19499,De Pue village,011,Bureau County,1719499,De Pue village,fips_place,2000,2025,2,8
+196300,19616,De Soto village,077,Jackson County,1719616,De Soto village,fips_place,2000,2025,16,28
+204400,19642,Des Plaines,031,Cook County,1719642,Des Plaines city,fips_place,2000,2025,1128,2987
+205300,19837,Diamond village,063,Grundy County,1719837,Diamond village,fips_place,2000,2025,64,483
+207100,20045,Divernon village,167,Sangamon County,1720045,Divernon village,fips_place,2000,2025,0,19
+208000,20149,Dixmoor village,031,Cook County,1720149,Dixmoor village,fips_place,2000,2025,1,60
+208300,20162,Dixon,103,Lee County,1720162,Dixon city,fips_place,2000,2025,250,508
+209500,20292,Dolton village,031,Cook County,1720292,Dolton village,fips_place,2000,2025,14,80
+210700,20331,Donovan village,075,Iroquois County,1720331,Donovan village,fips_place,2000,2025,2,4
+211600,20370,Dorchester village,117,Macoupin County,1720370,Dorchester village,fips_place,2000,2025,0,17
+214000,20565,Dowell village,077,Jackson County,1720565,Dowell village,fips_place,2002,2025,1,4
+214600,20591,Downers Grove village,043,DuPage County,1720591,Downers Grove village,fips_place,2000,2025,1074,2011
+215200,20643,Downs village,113,McLean County,1720643,Downs village,fips_place,2000,2025,4,11
+217000,20890,Du Bois village,189,Washington County,1720890,Du Bois village,fips_place,2000,2025,5,9
+218800,21098,Dunfermline village,057,Fulton County,1721098,Dunfermline village,fips_place,2000,2025,1,29
+219400,21176,Dunlap village,143,Peoria County,1721176,Dunlap village,fips_place,2021,2025,1,1
+220000,21254,Dupo village,163,St. Clair County,1721254,Dupo village,fips_place,2000,2025,25,254
+220600,21280,Durand village,201,Winnebago County,1721280,Durand village,fips_place,2011,2017,1,1
+221800,21358,Dwight village,105,Livingston County,1721358,Dwight village,fips_place,2000,2025,67,161
+223600,21540,Earlville,099,LaSalle County,1721540,Earlville city,fips_place,2000,2025,2,72
+223900,21553,East Alton village,119,Madison County,1721553,East Alton village,fips_place,2000,2025,62,106
+224500,21579,East Brooklyn village,063,Grundy County,1721579,East Brooklyn village,fips_place,2000,2025,2,3
+224800,21605,East Cape Girardeau village,003,Alexander County,1721605,East Cape Girardeau village,fips_place,2000,2025,0,0
+225100,21618,East Carondelet village,163,St. Clair County,1721618,East Carondelet village,fips_place,2000,2025,3,6
+225400,21683,East Dubuque,085,Jo Daviess County,1721683,East Dubuque city,fips_place,2000,2025,18,74
+226000,21696,East Dundee village,089,Kane County,1721696,East Dundee village,fips_place,2000,2025,218,279
+227500,21826,East Galesburg village,095,Knox County,1721826,East Galesburg village,fips_place,2000,2025,8,19
+227800,21852,East Gillespie village,117,Macoupin County,1721852,East Gillespie village,fips_place,2002,2025,8,18
+228400,21904,East Hazel Crest village,031,Cook County,1721904,East Hazel Crest village,fips_place,2000,2025,4,23
+229000,22073,East Moline,161,Rock Island County,1722073,East Moline city,fips_place,2000,2025,192,398
+231100,22151,Easton village,125,Mason County,1722151,Easton village,fips_place,2000,2025,0,6
+229900,22164,East Peoria,179,Tazewell County,1722164,East Peoria city,fips_place,2000,2025,354,1055
+230200,22255,East St. Louis,163,St. Clair County,1722255,East St. Louis city,fips_place,2000,2025,1055,1167
+233500,22645,Edinburg village,021,Christian County,1722645,Edinburg village,fips_place,2000,2025,24,55
+234100,22697,Edwardsville,119,Madison County,1722697,Edwardsville city,fips_place,2000,2025,1251,2669
+234700,22736,Effingham,049,Effingham County,1722736,Effingham city,fips_place,2000,2025,615,1082
+237100,22931,Elburn village,089,Kane County,1722931,Elburn village,fips_place,2000,2025,659,1564
+238600,23074,Elgin,089,Kane County,1723074,Elgin city,fips_place,2000,2025,3715,8854
+240100,23191,Elizabethtown village,069,Hardin County,1723191,Elizabethtown village,fips_place,2000,2025,0,0
+240400,23256,Elk Grove Village village,031,Cook County,1723256,Elk Grove Village village,fips_place,2000,2025,19,411
+242200,23269,Elkhart village,107,Logan County,1723269,Elkhart village,fips_place,2000,2025,6,15
+243100,23373,Elkville village,077,Jackson County,1723373,Elkville village,fips_place,2000,2014,0,0
+245200,23555,Ellsworth village,113,McLean County,1723555,Ellsworth village,fips_place,2000,2025,10,11
+246100,23620,Elmhurst,043,DuPage County,1723620,Elmhurst city,fips_place,2000,2025,2042,4252
+246700,23698,Elmwood,143,Peoria County,1723698,Elmwood city,fips_place,2021,2025,2,2
+247000,23724,Elmwood Park village,031,Cook County,1723724,Elmwood Park village,fips_place,2000,2025,90,374
+235600,23737,El Paso,203,Woodford County,1723737,El Paso city,fips_place,2000,2025,50,138
+247900,23776,Elsah village,083,Jersey County,1723776,Elsah village,fips_place,2000,2012,1,6
+248800,23945,Elwood village,197,Will County,1723945,Elwood village,fips_place,2000,2025,28,285
+249400,23971,Emden village,107,Logan County,1723971,Emden village,fips_place,2000,2025,5,10
+250000,24062,Emington village,105,Livingston County,1724062,Emington village,fips_place,2000,2025,0,0
+251200,24166,Energy village,199,Williamson County,1724166,Energy village,fips_place,2000,2025,11,49
+253900,24374,Erie village,195,Whiteside County,1724374,Erie village,fips_place,2000,2025,17,45
+255700,24452,Essex village,091,Kankakee County,1724452,Essex village,fips_place,2000,2025,18,82
+256000,24543,Eureka,203,Woodford County,1724543,Eureka city,fips_place,2000,2025,111,316
+256600,24582,Evanston,031,Cook County,1724582,Evanston city,fips_place,2000,2025,1032,5247
+257200,24608,Evansville village,157,Randolph County,1724608,Evansville village,fips_place,2000,2025,3,10
+257500,24634,Evergreen Park village,031,Cook County,1724634,Evergreen Park village,fips_place,2000,2025,68,130
+258700,24764,Fairbury,105,Livingston County,1724764,Fairbury city,fips_place,2000,2025,102,151
+259000,24816,Fairfield,191,Wayne County,1724816,Fairfield city,fips_place,2000,2025,18,125
+261700,25063,Fairview village,057,Fulton County,1725063,Fairview village,fips_place,2000,2025,2,13
+261100,25141,Fairview Heights,163,St. Clair County,1725141,Fairview Heights city,fips_place,2000,2025,556,2020
+263800,25414,Farmer City,039,De Witt County,1725414,Farmer City city,fips_place,2025,2025,0,0
+264700,25531,Farmington,057,Fulton County,1725531,Farmington city,fips_place,2000,2025,29,51
+266500,25713,Fayetteville village,163,St. Clair County,1725713,Fayetteville village,fips_place,2000,2025,4,12
+268600,26012,Fieldon village,083,Jersey County,1726012,Fieldon village,fips_place,2003,2025,0,2
+269500,26116,Findlay village,173,Shelby County,1726116,Findlay village,fips_place,2000,2025,10,17
+269800,26194,Fisher village,019,Champaign County,1726194,Fisher village,fips_place,2000,2025,142,248
+270100,26233,Fithian village,183,Vermilion County,1726233,Fithian village,fips_place,2000,2025,3,35
+270700,26311,Flanagan village,105,Livingston County,1726311,Flanagan village,fips_place,2000,2025,25,39
+272200,26454,Flora,025,Clay County,1726454,Flora city,fips_place,2000,2025,80,142
+273700,26571,Flossmoor village,031,Cook County,1726571,Flossmoor village,fips_place,2000,2025,13,274
+275200,26710,Ford Heights village,031,Cook County,1726710,Ford Heights village,fips_place,2000,2025,0,0
+276100,26935,Forest Park village,031,Cook County,1726935,Forest Park village,fips_place,2000,2025,49,477
+276400,26987,Forest View village,031,Cook County,1726987,Forest View village,fips_place,2000,2025,0,0
+277000,27026,Forrest village,105,Livingston County,1727026,Forrest village,fips_place,2000,2025,10,28
+277600,27065,Forreston village,141,Ogle County,1727065,Forreston village,fips_place,2000,2025,5,35
+277900,27091,Forsyth village,115,Macon County,1727091,Forsyth village,fips_place,2000,2025,120,506
+280300,27442,Fox Lake village,097,Lake County,1727442,Fox Lake village,fips_place,2000,2025,452,1474
+280900,27533,Fox River Grove village,111,McHenry County,1727533,Fox River Grove village,fips_place,2000,2025,114,231
+283300,27624,Frankfort village,197,Will County,1727624,Frankfort village,fips_place,2000,2025,1416,3904
+283900,27689,Franklin Grove village,103,Lee County,1727689,Franklin Grove village,fips_place,2000,2025,0,4
+284200,27702,Franklin Park village,031,Cook County,1727702,Franklin Park village,fips_place,2000,2025,111,118
+285700,27806,Freeburg village,163,St. Clair County,1727806,Freeburg village,fips_place,2000,2025,170,521
+287200,27884,Freeport,177,Stephenson County,1727884,Freeport city,fips_place,2000,2025,21,340
+288400,28144,Fulton,195,Whiteside County,1728144,Fulton city,fips_place,2000,2025,56,147
+290500,28300,Galena,085,Jo Daviess County,1728300,Galena city,fips_place,2000,2025,44,166
+290800,28326,Galesburg,095,Knox County,1728326,Galesburg city,fips_place,2000,2025,61,323
+292000,28430,Galva,073,Henry County,1728430,Galva city,fips_place,2000,2025,12,40
+293800,28638,Gardner village,063,Grundy County,1728638,Gardner village,fips_place,2000,2025,4,36
+295000,28807,Gays village,139,Moultrie County,1728807,Gays village,fips_place,2000,2025,0,4
+295600,28846,Geneseo,073,Henry County,1728846,Geneseo city,fips_place,2000,2025,219,404
+296200,28872,Geneva,089,Kane County,1728872,Geneva city,fips_place,2000,2025,459,2073
+296800,28898,Genoa,037,DeKalb County,1728898,Genoa city,fips_place,2000,2025,186,558
+297400,28963,Georgetown,183,Vermilion County,1728963,Georgetown city,fips_place,2000,2025,5,32
+299200,29041,Germantown village,027,Clinton County,1729041,Germantown village,fips_place,2013,2025,55,55
+298600,29080,Germantown Hills village,203,Woodford County,1729080,Germantown Hills village,fips_place,2000,2025,94,488
+298000,29093,German Valley village,177,Stephenson County,1729093,German Valley village,fips_place,2000,2025,1,2
+299800,29125,Gibson City,053,Ford County,1729125,Gibson City city,fips_place,2000,2025,108,181
+300100,29145,Gifford village,019,Champaign County,1729145,Gifford village,fips_place,2000,2025,68,168
+300400,29171,Gilberts village,089,Kane County,1729171,Gilberts village,fips_place,2000,2025,836,2412
+300700,29236,Gillespie,117,Macoupin County,1729236,Gillespie city,fips_place,2000,2025,54,84
+301300,29275,Gilman,075,Iroquois County,1729275,Gilman city,fips_place,2000,2025,14,51
+302800,29431,Gladstone village,071,Henderson County,1729431,Gladstone village,fips_place,2000,2025,7,11
+303100,29483,Glasford village,143,Peoria County,1729483,Glasford village,fips_place,2000,2025,2,14
+303700,29639,Glen Carbon village,119,Madison County,1729639,Glen Carbon village,fips_place,2000,2025,514,1539
+304300,29652,Glencoe village,031,Cook County,1729652,Glencoe village,fips_place,2000,2025,276,682
+304600,29730,Glendale Heights village,043,DuPage County,1729730,Glendale Heights village,fips_place,2000,2025,5,543
+304000,29756,Glen Ellyn village,043,DuPage County,1729756,Glen Ellyn village,fips_place,2000,2025,382,1019
+304900,29938,Glenview village,031,Cook County,1729938,Glenview village,fips_place,2000,2025,2002,4677
+305200,30029,Glenwood village,031,Cook County,1730029,Glenwood village,fips_place,2000,2025,1,47
+305600,30094,Godfrey village,119,Madison County,1730094,Godfrey village,fips_place,2000,2025,406,1092
+306100,30120,Godley village,197,Will County,1730120,Godley village,fips_place,2000,2025,104,133
+306400,30133,Golconda,151,Pope County,1730133,Golconda city,fips_place,2000,2025,1,5
+307900,30328,Golf village,031,Cook County,1730328,Golf village,fips_place,2000,2025,11,26
+309400,30445,Goodfield village,203,Woodford County,1730445,Goodfield village,fips_place,2000,2025,71,140
+310300,30575,Goreville village,087,Johnson County,1730575,Goreville village,fips_place,2002,2025,6,25
+310600,,Gorham village,077,Jackson County,1730588,Gorham village,name,2003,2003,0,0
+311200,30653,Grafton,083,Jersey County,1730653,Grafton city,fips_place,2000,2025,176,259
+312700,30757,Grand Ridge village,099,LaSalle County,1730757,Grand Ridge village,fips_place,2000,2025,6,10
+313000,30770,Grand Tower,077,Jackson County,1730770,Grand Tower city,fips_place,2000,2014,0,0
+313900,30835,Grandview village,167,Sangamon County,1730835,Grandview village,fips_place,2000,2011,0,2
+314500,30926,Granite City,119,Madison County,1730926,Granite City city,fips_place,2000,2025,198,649
+316000,30978,Grantfork village,119,Madison County,1730978,Grantfork village,fips_place,2000,2014,0,41
+315100,30991,Grant Park village,091,Kankakee County,1730991,Grant Park village,fips_place,2000,2025,11,159
+316600,31017,Granville village,155,Putnam County,1731017,Granville village,fips_place,2000,2025,5,44
+317200,31121,Grayslake village,097,Lake County,1731121,Grayslake village,fips_place,2000,2025,236,1735
+317800,31165,Grayville,193,White County,1731165,Grayville city,fips_place,2000,2025,17,25
+320500,31368,Greenfield,061,Greene County,1731368,Greenfield city,fips_place,2000,2025,3,16
+318400,31446,Green Oaks village,097,Lake County,1731446,Green Oaks village,fips_place,2000,2025,63,180
+319000,31563,Green Valley village,179,Tazewell County,1731563,Green Valley village,fips_place,2000,2025,1,6
+321700,31576,Greenview village,129,Menard County,1731576,Greenview village,fips_place,2000,2025,0,7
+322000,31589,Greenville,005,Bond County,1731589,Greenville city,fips_place,2000,2025,167,359
+323500,31732,Gridley village,113,McLean County,1731732,Gridley village,fips_place,2000,2025,16,58
+323800,31771,Griggsville,149,Pike County,1731771,Griggsville city,fips_place,2000,2025,3,15
+326800,32018,Gurnee village,097,Lake County,1732018,Gurnee village,fips_place,2000,2025,154,987
+328300,32200,Hainesville village,097,Lake County,1732200,Hainesville village,fips_place,2000,2025,6,546
+330100,32408,Hamel village,119,Madison County,1732408,Hamel village,fips_place,2000,2012,5,106
+330400,32434,Hamilton,067,Hancock County,1732434,Hamilton city,fips_place,2000,2025,1,47
+331600,32499,Hammond village,147,Piatt County,1732499,Hammond village,fips_place,2000,2025,3,15
+332200,32525,Hampshire village,089,Kane County,1732525,Hampshire village,fips_place,2003,2025,1212,1943
+332800,32564,Hampton village,161,Rock Island County,1732564,Hampton village,fips_place,2000,2025,16,120
+334000,32668,Hanna City village,143,Peoria County,1732668,Hanna City village,fips_place,2021,2025,1,1
+335800,32707,Hanover village,085,Jo Daviess County,1732707,Hanover village,fips_place,2002,2025,0,3
+334600,32746,Hanover Park village,031,Cook County,1732746,Hanover Park village,fips_place,2000,2025,68,322
+340300,33227,Harristown village,115,Macon County,1733227,Harristown village,fips_place,2000,2025,10,32
+340900,33279,Hartford village,119,Madison County,1733279,Hartford village,fips_place,2000,2025,5,5
+341500,33318,Hartsburg village,107,Logan County,1733318,Hartsburg village,fips_place,2000,2025,7,7
+341800,33331,Harvard,111,McHenry County,1733331,Harvard city,fips_place,2000,2025,104,831
+343000,33383,Harvey,031,Cook County,1733383,Harvey city,fips_place,2000,2025,91,219
+343300,33435,Harwood Heights village,031,Cook County,1733435,Harwood Heights village,fips_place,2000,2025,12,185
+343900,33513,Havana,125,Mason County,1733513,Havana city,fips_place,2000,2025,4,31
+344800,33630,Hawthorn Woods village,097,Lake County,1733630,Hawthorn Woods village,fips_place,2000,2025,765,1434
+345400,33695,Hazel Crest village,031,Cook County,1733695,Hazel Crest village,fips_place,2000,2025,0,116
+346000,33851,Hebron village,111,McHenry County,1733851,Hebron village,fips_place,2000,2025,36,171
+346300,33877,Hecker village,133,Monroe County,1733877,Hecker village,fips_place,2003,2025,6,11
+348100,34098,Hennepin village,155,Putnam County,1734098,Hennepin village,fips_place,2000,2025,11,45
+348400,34137,Henning village,183,Vermilion County,1734137,Henning village,fips_place,2002,2025,3,3
+348700,34163,Henry,123,Marshall County,1734163,Henry city,fips_place,2000,2025,36,142
+350800,34358,Herrin,199,Williamson County,1734358,Herrin city,fips_place,2000,2025,522,1206
+351100,34384,Herscher village,091,Kankakee County,1734384,Herscher village,fips_place,2000,2025,12,64
+351700,34449,Heyworth village,113,McLean County,1734449,Heyworth village,fips_place,2000,2025,108,226
+352300,34514,Hickory Hills,031,Cook County,1734514,Hickory Hills city,fips_place,2000,2025,74,244
+353500,34670,Highland,119,Madison County,1734670,Highland city,fips_place,2000,2025,455,1329
+353800,34722,Highland Park,097,Lake County,1734722,Highland Park city,fips_place,2000,2025,1052,1933
+354400,34865,Highwood,097,Lake County,1734865,Highwood city,fips_place,2000,2025,179,203
+354700,34982,Hillcrest village,141,Ogle County,1734982,Hillcrest village,fips_place,2000,2025,2,48
+355000,,Hillsboro,135,Montgomery County,1735047,Hillsboro city,name,2000,2004,0,21
+355600,,Hillsdale village,161,Rock Island County,1735073,Hillsdale village,name,2000,2003,0,0
+355900,35086,Hillside village,031,Cook County,1735086,Hillside village,fips_place,2000,2025,46,387
+356800,35268,Hinckley village,037,DeKalb County,1735268,Hinckley village,fips_place,2000,2025,14,59
+357100,35281,Hindsboro village,041,Douglas County,1735281,Hindsboro village,fips_place,2000,2025,2,2
+357700,35307,Hinsdale village,043,DuPage County,1735307,Hinsdale village,fips_place,2000,2025,689,1480
+358600,35385,Hodgkins village,031,Cook County,1735385,Hodgkins village,fips_place,2000,2025,40,56
+359500,35398,Hoffman village,027,Clinton County,1735398,Hoffman village,fips_place,2000,2025,3,8
+358900,35411,Hoffman Estates village,031,Cook County,1735411,Hoffman Estates village,fips_place,2000,2025,288,1855
+359800,35515,Holiday Hills village,111,McHenry County,1735515,Holiday Hills village,fips_place,2000,2025,1,3
+361300,35814,Homer village,019,Champaign County,1735814,Homer village,fips_place,2000,2025,14,22
+360900,35835,Homer Glen village,197,Will County,1735835,Homer Glen village,fips_place,2003,2025,663,1493
+361600,35866,Hometown,031,Cook County,1735866,Hometown city,fips_place,2000,2025,0,0
+361900,35879,Homewood village,031,Cook County,1735879,Homewood village,fips_place,2000,2025,31,190
+363100,36061,Hoopeston,183,Vermilion County,1736061,Hoopeston city,fips_place,2000,2025,53,76
+363400,36074,Hooppole village,073,Henry County,1736074,Hooppole village,fips_place,2000,2025,0,1
+364600,36126,Hopedale village,179,Tazewell County,1736126,Hopedale village,fips_place,2000,2025,5,29
+364900,36150,Hopewell village,123,Marshall County,1736150,Hopewell village,fips_place,2000,2025,14,48
+365500,36190,Hopkins Park village,091,Kankakee County,1736190,Hopkins Park village,fips_place,2000,2025,43,86
+366700,36347,Hoyleton village,189,Washington County,1736347,Hoyleton village,fips_place,2000,2025,0,19
+367300,36438,Hudson village,113,McLean County,1736438,Hudson village,fips_place,2000,2025,30,154
+367600,36477,Huey village,027,Clinton County,1736477,Huey village,fips_place,2000,2025,0,0
+367900,36516,Hull village,149,Pike County,1736516,Hull village,fips_place,2000,2025,0,2
+370000,36750,Huntley village,111,McHenry County,1736750,Huntley village,fips_place,2000,2025,2549,10208
+371200,36815,Hurst,199,Williamson County,1736815,Hurst city,fips_place,2000,2025,15,16
+371800,36841,Hutsonville village,033,Crawford County,1736841,Hutsonville village,fips_place,2002,2025,14,21
+373000,37127,Illiopolis village,167,Sangamon County,1737127,Illiopolis village,fips_place,2000,2025,7,15
+373300,37179,Ina village,081,Jefferson County,1737179,Ina village,fips_place,2000,2025,21,30
+374200,37218,Indian Creek village,097,Lake County,1737218,Indian Creek village,fips_place,2000,2025,6,156
+374800,37257,Indian Head Park village,031,Cook County,1737257,Indian Head Park village,fips_place,2000,2025,10,99
+376900,37608,Inverness village,031,Cook County,1737608,Inverness village,fips_place,2000,2025,99,556
+377500,37647,Ipava village,057,Fulton County,1737647,Ipava village,fips_place,2000,2025,1,3
+378700,37712,Iroquois village,075,Iroquois County,1737712,Iroquois village,fips_place,2000,2025,2,6
+379900,37777,Irvington village,189,Washington County,1737777,Irvington village,fips_place,2000,2025,4,14
+380200,37803,Irwin village,091,Kankakee County,1737803,Irwin village,fips_place,2000,2025,0,0
+381400,37894,Island Lake village,111,McHenry County,1737894,Island Lake village,fips_place,2000,2025,156,372
+381700,37907,Itasca village,043,DuPage County,1737907,Itasca village,fips_place,2000,2025,688,1000
+382600,37998,Ivesdale village,019,Champaign County,1737998,Ivesdale village,fips_place,2000,2025,0,7
+384100,38115,Jacksonville,137,Morgan County,1738115,Jacksonville city,fips_place,2000,2025,135,535
+386800,38375,Jerome village,167,Sangamon County,1738375,Jerome village,fips_place,2000,2025,0,0
+387700,38414,Jerseyville,083,Jersey County,1738414,Jerseyville city,fips_place,2000,2025,609,1042
+388700,38479,Johnsburg village,111,McHenry County,1738479,Johnsburg village,fips_place,2000,2025,182,732
+390100,38544,Johnston City,199,Williamson County,1738544,Johnston City city,fips_place,2000,2025,23,73
+390400,38570,Joliet,197,Will County,1738570,Joliet city,fips_place,2000,2025,3566,16973
+391300,38635,Jonesboro,181,Union County,1738635,Jonesboro city,fips_place,2000,2025,19,60
+392500,38739,Joy village,131,Mercer County,1738739,Joy village,fips_place,2000,2025,0,1
+393700,38830,Justice village,031,Cook County,1738830,Justice village,fips_place,2000,2025,69,543
+395500,38921,Kangley village,099,LaSalle County,1738921,Kangley village,fips_place,2000,2025,0,2
+395800,38934,Kankakee,091,Kankakee County,1738934,Kankakee city,fips_place,2000,2025,218,322
+397600,39038,Kappa village,203,Woodford County,1739038,Kappa village,fips_place,2000,2025,13,37
+400000,39298,Keithsburg,131,Mercer County,1739298,Keithsburg city,fips_place,2000,2025,17,29
+402100,39519,Kenilworth village,031,Cook County,1739519,Kenilworth village,fips_place,2000,2025,35,77
+403600,39727,Kewanee,073,Henry County,1739727,Kewanee city,fips_place,2000,2025,27,153
+404200,39753,Keyesport village,005,Bond County,1739753,Keyesport village,fips_place,2003,2025,9,10
+405700,39883,Kildeer village,097,Lake County,1739883,Kildeer village,fips_place,2000,2025,343,549
+406000,39909,Kincaid village,021,Christian County,1739909,Kincaid village,fips_place,2000,2025,6,69
+407800,40065,Kingston village,037,DeKalb County,1740065,Kingston village,fips_place,2003,2025,8,39
+407200,40091,Kingston Mines village,143,Peoria County,1740091,Kingston Mines village,fips_place,2000,2025,0,6
+409000,40143,Kinsman village,063,Grundy County,1740143,Kinsman village,fips_place,2000,2025,2,2
+409300,40156,Kirkland village,037,DeKalb County,1740156,Kirkland village,fips_place,2000,2025,2,216
+409600,40182,Kirkwood village,187,Warren County,1740182,Kirkwood village,fips_place,2000,2025,3,4
+410800,40416,Knoxville,095,Knox County,1740416,Knoxville city,fips_place,2000,2025,18,41
+415300,40559,Lacon,123,Marshall County,1740559,Lacon city,fips_place,2000,2025,1,17
+415900,40598,Ladd village,011,Bureau County,1740598,Ladd village,fips_place,2000,2025,84,99
+412000,40767,La Grange village,031,Cook County,1740767,La Grange village,fips_place,2000,2025,238,619
+411700,40793,La Grange Park village,031,Cook County,1740793,La Grange Park village,fips_place,2000,2025,119,189
+417400,40884,Lake Barrington village,097,Lake County,1740884,Lake Barrington village,fips_place,2000,2025,96,225
+417700,40910,Lake Bluff village,097,Lake County,1740910,Lake Bluff village,fips_place,2000,2025,67,184
+418300,41105,Lake Forest,097,Lake County,1741105,Lake Forest city,fips_place,2000,2025,513,1142
+419800,41183,Lake in the Hills village,111,McHenry County,1741183,Lake in the Hills village,fips_place,2000,2025,300,2208
+419900,41214,Lake Ka-Ho village,117,Macoupin County,1741214,Lake Ka-Ho village,fips_place,2002,2025,6,9
+420700,41326,Lakemoor village,111,McHenry County,1741326,Lakemoor village,fips_place,2000,2025,192,1273
+419200,41586,Lake Villa village,097,Lake County,1741586,Lake Villa village,fips_place,2000,2025,149,1183
+421300,41651,Lakewood village,111,McHenry County,1741651,Lakewood village,fips_place,2000,2025,174,743
+419500,41742,Lake Zurich village,097,Lake County,1741742,Lake Zurich village,fips_place,2000,2025,454,1227
+422500,41859,Lanark,015,Carroll County,1741859,Lanark city,fips_place,2000,2025,2,20
+423400,42028,Lansing village,031,Cook County,1742028,Lansing village,fips_place,2000,2025,0,202
+414100,42171,La Rose village,123,Marshall County,1742171,La Rose village,fips_place,2000,2009,0,0
+414400,42184,LaSalle,099,LaSalle County,1742184,LaSalle city,fips_place,2000,2025,45,158
+424300,42249,Latham village,107,Logan County,1742249,Latham village,fips_place,2000,2025,1,3
+425500,42405,Lawrenceville,101,Lawrence County,1742405,Lawrenceville city,fips_place,2000,2025,737,747
+426700,42457,Leaf River village,141,Ogle County,1742457,Leaf River village,fips_place,2000,2025,0,0
+427000,42496,Lebanon,163,St. Clair County,1742496,Lebanon city,fips_place,2000,2025,167,499
+429100,42587,Lee village,103,Lee County,1742587,Lee village,fips_place,2000,2025,1,7
+430600,42756,Leland village,099,LaSalle County,1742756,Leland village,fips_place,2000,2025,2,25
+430300,42769,Leland Grove,167,Sangamon County,1742769,Leland Grove city,fips_place,2000,2025,24,48
+431200,42795,Lemont village,031,Cook County,1742795,Lemont village,fips_place,2000,2025,1427,2941
+431500,42834,Lena village,177,Stephenson County,1742834,Lena village,fips_place,2000,2025,11,55
+432700,42912,Leonore village,099,LaSalle County,1742912,Leonore village,fips_place,2013,2025,0,0
+425800,42971,Le Roy,113,McLean County,1742971,Le Roy city,fips_place,2000,2025,52,209
+433900,43055,Lewistown,057,Fulton County,1743055,Lewistown city,fips_place,2000,2025,2,16
+434500,43094,Lexington,113,McLean County,1743094,Lexington city,fips_place,2000,2025,39,76
+436600,43250,Libertyville village,097,Lake County,1743250,Libertyville village,fips_place,2000,2025,462,1050
+437000,43406,Lily Lake village,089,Kane County,1743406,Lily Lake village,fips_place,2013,2025,47,47
+438200,43510,Limestone village,091,Kankakee County,1743510,Limestone village,fips_place,2013,2025,13,13
+438400,43536,Lincoln,107,Logan County,1743536,Lincoln city,fips_place,2000,2025,89,254
+439000,43666,Lincolnshire village,097,Lake County,1743666,Lincolnshire village,fips_place,2000,2025,506,1261
+439300,43744,Lincolnwood village,031,Cook County,1743744,Lincolnwood village,fips_place,2000,2025,49,209
+439600,43770,Lindenhurst village,097,Lake County,1743770,Lindenhurst village,fips_place,2000,2025,307,1099
+440800,43900,Lisbon village,093,Kendall County,1743900,Lisbon village,fips_place,2000,2025,5,17
+441400,43939,Lisle village,043,DuPage County,1743939,Lisle village,fips_place,2000,2025,385,1140
+441700,,Litchfield,135,Montgomery County,1743965,Litchfield city,name,2000,2004,0,34
+442600,44082,Little York village,187,Warren County,1744082,Little York village,fips_place,2003,2025,0,0
+444700,44160,Livingston village,119,Madison County,1744160,Livingston village,fips_place,2000,2025,2,2
+445300,44173,Loami village,167,Sangamon County,1744173,Loami village,fips_place,2000,2025,14,38
+445600,44225,Lockport,197,Will County,1744225,Lockport city,fips_place,2000,2025,1696,5020
+446800,44264,Loda village,075,Iroquois County,1744264,Loda village,fips_place,2000,2025,16,28
+448000,44381,Lomax village,071,Henderson County,1744381,Lomax village,fips_place,2000,2025,0,3
+448300,44407,Lombard village,043,DuPage County,1744407,Lombard village,fips_place,2000,2025,1438,2538
+450100,44498,Long Creek village,115,Macon County,1744498,Long Creek village,fips_place,2000,2025,23,65
+450400,44524,Long Grove village,097,Lake County,1744524,Long Grove village,fips_place,2000,2025,117,577
+452800,44823,Lostant village,099,LaSalle County,1744823,Lostant village,fips_place,2000,2025,9,25
+454600,45031,Loves Park,201,Winnebago County,1745031,Loves Park city,fips_place,2000,2025,596,2631
+455200,45044,Lovington village,139,Moultrie County,1745044,Lovington village,fips_place,2000,2025,3,15
+456400,45174,Ludlow village,019,Champaign County,1745174,Ludlow village,fips_place,2000,2025,0,10
+457900,45278,Lyndon village,195,Whiteside County,1745278,Lyndon village,fips_place,2000,2025,7,15
+459400,45421,Lynwood village,031,Cook County,1745421,Lynwood village,fips_place,2000,2025,339,844
+460000,45434,Lyons village,031,Cook County,1745434,Lyons village,fips_place,2000,2025,20,382
+490000,45564,McCook village,031,Cook County,1745564,McCook village,fips_place,2000,2025,1,1
+490300,45616,McCullom Lake village,111,McHenry County,1745616,McCullom Lake village,fips_place,2000,2025,2,47
+490900,45694,McHenry,111,McHenry County,1745694,McHenry city,fips_place,2000,2025,1808,4154
+460900,45726,Machesney Park village,201,Winnebago County,1745726,Machesney Park village,fips_place,2000,2025,235,1247
+461500,45785,Mackinaw village,179,Tazewell County,1745785,Mackinaw village,fips_place,2000,2025,39,163
+492700,45811,McLean village,113,McLean County,1745811,McLean village,fips_place,2000,2025,4,14
+493000,45824,McLeansboro,065,Hamilton County,1745824,McLeansboro city,fips_place,2002,2014,0,1
+493600,45850,McNabb village,155,Putnam County,1745850,McNabb village,fips_place,2000,2025,0,1
+461800,45889,Macomb,109,McDonough County,1745889,Macomb city,fips_place,2000,2025,104,1192
+462700,45941,Macon,115,Macon County,1745941,Macon city,fips_place,2000,2025,27,55
+463900,45993,Madison,119,Madison County,1745993,Madison city,fips_place,2000,2025,60,185
+465700,46110,Magnolia village,155,Putnam County,1746110,Magnolia village,fips_place,2000,2025,7,16
+466300,46136,Mahomet village,019,Champaign County,1746136,Mahomet village,fips_place,2000,2025,1395,2217
+467800,,Malden village,011,Bureau County,1746240,Malden village,name,2000,2001,0,0
+468700,46279,Malta village,037,DeKalb County,1746279,Malta village,fips_place,2003,2025,44,135
+469900,46357,Manhattan village,197,Will County,1746357,Manhattan village,fips_place,2000,2025,1340,2687
+470500,46383,Manito village,125,Mason County,1746383,Manito village,fips_place,2000,2025,5,24
+471700,46487,Mansfield village,147,Piatt County,1746487,Mansfield village,fips_place,2000,2025,4,16
+472300,46500,Manteno village,091,Kankakee County,1746500,Manteno village,fips_place,2000,2025,262,1081
+472900,46604,Maple Park village,089,Kane County,1746604,Maple Park village,fips_place,2000,2025,115,313
+473200,46643,Mapleton village,143,Peoria County,1746643,Mapleton village,fips_place,2000,2025,7,13
+473800,46695,Maquon village,095,Knox County,1746695,Maquon village,fips_place,2000,2025,0,0
+474100,46786,Marengo,111,McHenry County,1746786,Marengo city,fips_place,2000,2025,193,759
+475300,46864,Marine village,119,Madison County,1746864,Marine village,fips_place,2000,2025,49,84
+475600,46916,Marion,199,Williamson County,1746916,Marion city,fips_place,2000,2025,946,1976
+477100,46955,Marissa village,163,St. Clair County,1746955,Marissa village,fips_place,2000,2025,1,17
+477400,46981,Mark village,155,Putnam County,1746981,Mark village,fips_place,2000,2025,14,53
+477700,47007,Markham,031,Cook County,1747007,Markham city,fips_place,2000,2025,79,258
+478000,47072,Maroa,115,Macon County,1747072,Maroa city,fips_place,2000,2025,32,68
+478600,47111,Marquette Heights,179,Tazewell County,1747111,Marquette Heights city,fips_place,2000,2025,6,84
+479200,47150,Marseilles,099,LaSalle County,1747150,Marseilles city,fips_place,2000,2025,57,335
+479500,47163,Marshall,023,Clark County,1747163,Marshall city,fips_place,2000,2025,113,249
+482200,47280,Martinton village,075,Iroquois County,1747280,Martinton village,fips_place,2000,2025,3,15
+482800,47397,Maryville village,119,Madison County,1747397,Maryville village,fips_place,2000,2025,559,1551
+483100,47423,Mascoutah,163,St. Clair County,1747423,Mascoutah city,fips_place,2000,2025,939,1718
+483700,47475,Mason City,125,Mason County,1747475,Mason City city,fips_place,2000,2025,1,9
+485800,47527,Matherville village,131,Mercer County,1747527,Matherville village,fips_place,2000,2025,3,16
+486100,47540,Matteson village,031,Cook County,1747540,Matteson village,fips_place,2000,2025,391,2523
+486400,47553,Mattoon,029,Coles County,1747553,Mattoon city,fips_place,2000,2025,147,350
+488800,47774,Maywood village,031,Cook County,1747774,Maywood village,fips_place,2000,2025,304,380
+489400,47787,Mazon village,063,Grundy County,1747787,Mazon village,fips_place,2000,2025,4,44
+494500,48021,Mechanicsburg village,167,Sangamon County,1748021,Mechanicsburg village,fips_place,2000,2025,50,63
+495100,48073,Media village,071,Henderson County,1748073,Media village,fips_place,2000,2025,0,0
+495600,48138,Medora village,083,Jersey County,1748138,Medora village,fips_place,2025,2025,0,0
+496000,48242,Melrose Park village,031,Cook County,1748242,Melrose Park village,fips_place,2000,2025,79,258
+497800,48307,Mendon village,001,Adams County,1748307,Mendon village,fips_place,2013,2025,11,11
+498100,48333,Mendota,099,LaSalle County,1748333,Mendota city,fips_place,2000,2025,58,130
+499900,48424,Meredosia village,137,Morgan County,1748424,Meredosia village,fips_place,2000,2025,0,4
+500800,48554,Merrionette Park village,031,Cook County,1748554,Merrionette Park village,fips_place,2000,2025,0,70
+501400,48606,Metamora village,203,Woodford County,1748606,Metamora village,fips_place,2000,2025,100,476
+502000,48645,Metropolis,127,Massac County,1748645,Metropolis city,fips_place,2000,2025,131,313
+502300,48671,Mettawa village,097,Lake County,1748671,Mettawa village,fips_place,2000,2025,38,97
+503200,48853,Middletown village,107,Logan County,1748853,Middletown village,fips_place,2013,2025,1,1
+503500,48892,Midlothian village,031,Cook County,1748892,Midlothian village,fips_place,2000,2025,31,180
+504400,49009,Milan village,161,Rock Island County,1749009,Milan village,fips_place,2000,2025,79,127
+505000,49048,Milford village,075,Iroquois County,1749048,Milford village,fips_place,2000,2025,1,7
+507100,49191,Milledgeville village,015,Carroll County,1749191,Milledgeville village,fips_place,2000,2025,7,18
+508300,49308,Millington village,099,LaSalle County,1749308,Millington village,fips_place,2013,2025,13,13
+509200,49386,Millstadt village,163,St. Clair County,1749386,Millstadt village,fips_place,2000,2025,143,491
+511000,49555,Minier village,179,Tazewell County,1749555,Minier village,fips_place,2000,2025,13,48
+511300,49568,Minonk,203,Woodford County,1749568,Minonk city,fips_place,2000,2025,8,41
+511900,49607,Minooka village,063,Grundy County,1749607,Minooka village,fips_place,2000,2025,398,2553
+514000,49854,Mokena village,197,Will County,1749854,Mokena village,fips_place,2000,2025,924,2759
+514300,49867,Moline,161,Rock Island County,1749867,Moline city,fips_place,2000,2025,697,1493
+514900,49893,Momence,091,Kankakee County,1749893,Momence city,fips_place,2000,2025,9,31
+516100,49945,Monee village,197,Will County,1749945,Monee village,fips_place,2000,2025,67,862
+516700,50010,Monmouth,187,Warren County,1750010,Monmouth city,fips_place,2000,2025,89,167
+517200,50062,Monroe Center village,141,Ogle County,1750062,Monroe Center village,fips_place,2004,2025,0,3
+519400,50218,Montgomery village,089,Kane County,1750218,Montgomery village,fips_place,2000,2025,1076,5048
+520000,50244,Monticello,147,Piatt County,1750244,Monticello city,fips_place,2000,2025,288,571
+521200,50283,Montrose village,049,Effingham County,1750283,Montrose village,fips_place,2013,2025,3,3
+522700,50491,Morris,063,Grundy County,1750491,Morris city,fips_place,2000,2025,1358,2189
+523300,50530,Morrison,195,Whiteside County,1750530,Morrison city,fips_place,2000,2025,51,105
+524500,50621,Morton village,179,Tazewell County,1750621,Morton village,fips_place,2000,2025,791,1517
+523900,50647,Morton Grove village,031,Cook County,1750647,Morton Grove village,fips_place,2000,2025,218,981
+525400,50751,Mound City,153,Pulaski County,1750751,Mound City city,fips_place,2000,2025,2,8
+526600,50777,Mounds,153,Pulaski County,1750777,Mounds city,fips_place,2000,2025,1,12
+527200,50829,Mount Auburn village,021,Christian County,1750829,Mount Auburn village,fips_place,2000,2025,5,39
+527500,50868,Mount Carmel,185,Wabash County,1750868,Mount Carmel city,fips_place,2000,2025,64,175
+527800,50881,Mount Carroll,015,Carroll County,1750881,Mount Carroll city,fips_place,2000,2025,1,8
+529900,50998,Mount Morris village,141,Ogle County,1750998,Mount Morris village,fips_place,2000,2025,29,96
+530200,51024,Mount Olive,117,Macoupin County,1751024,Mount Olive city,fips_place,2002,2025,15,40
+531100,51089,Mount Prospect village,031,Cook County,1751089,Mount Prospect village,fips_place,2000,2025,469,954
+531400,51128,Mount Pulaski,107,Logan County,1751128,Mount Pulaski city,fips_place,2000,2025,5,14
+532000,51154,Mount Sterling,009,Brown County,1751154,Mount Sterling city,fips_place,2000,2025,23,63
+532600,51180,Mount Vernon,081,Jefferson County,1751180,Mount Vernon city,fips_place,2000,2025,166,513
+533500,51206,Mount Zion village,115,Macon County,1751206,Mount Zion village,fips_place,2000,2025,233,660
+534700,51232,Moweaqua village,173,Shelby County,1751232,Moweaqua village,fips_place,2000,2025,20,55
+535000,51271,Muddy village,165,Saline County,1751271,Muddy village,fips_place,2000,2025,0,0
+535600,51284,Mulberry Grove village,005,Bond County,1751284,Mulberry Grove village,fips_place,2003,2025,1,1
+535900,51336,Muncie village,183,Vermilion County,1751336,Muncie village,fips_place,2000,2025,2,3
+536200,51349,Mundelein village,097,Lake County,1751349,Mundelein village,fips_place,2000,2025,1165,2435
+537100,51453,Murphysboro,077,Jackson County,1751453,Murphysboro city,fips_place,2000,2025,20,87
+538900,51622,Naperville,043,DuPage County,1751622,Naperville city,fips_place,2000,2025,6284,12483
+540700,51700,Nashville,189,Washington County,1751700,Nashville city,fips_place,2000,2025,31,119
+541900,51791,Nauvoo,067,Hancock County,1751791,Nauvoo city,fips_place,2000,2025,2,108
+542500,,Nebo village,149,Pike County,1751882,Nebo village,name,2003,2006,0,0
+543700,51986,Neoga,035,Cumberland County,1751986,Neoga city,fips_place,2000,2025,12,34
+544600,51999,Neponset village,011,Bureau County,1751999,Neponset village,fips_place,2000,2025,0,0
+553000,52103,Newark village,093,Kendall County,1752103,Newark village,fips_place,2000,2025,3,63
+545800,52116,New Athens village,163,St. Clair County,1752116,New Athens village,fips_place,2000,2025,10,101
+546100,52142,New Baden village,027,Clinton County,1752142,New Baden village,fips_place,2000,2025,51,271
+547300,52168,New Berlin village,167,Sangamon County,1752168,New Berlin village,fips_place,2000,2025,36,136
+549100,52415,New Douglas village,119,Madison County,1752415,New Douglas village,fips_place,2000,2025,5,23
+550900,52584,New Lenox village,197,Will County,1752584,New Lenox village,fips_place,2000,2025,2139,4411
+554200,52623,Newman,041,Douglas County,1752623,Newman city,fips_place,2000,2025,11,26
+555400,52844,Newton,079,Jasper County,1752844,Newton city,fips_place,2013,2025,20,20
+556600,52961,Niantic village,115,Macon County,1752961,Niantic village,fips_place,2000,2025,0,2
+557200,53000,Niles village,031,Cook County,1753000,Niles village,fips_place,2000,2025,268,607
+558700,53143,Noble village,159,Richland County,1753143,Noble village,fips_place,2002,2025,7,9
+559000,,Nokomis,135,Montgomery County,1753169,Nokomis city,name,2000,2004,0,5
+560200,53234,Normal town,113,McLean County,1753234,Normal town,fips_place,2000,2025,2276,5923
+561100,53377,Norridge village,031,Cook County,1753377,Norridge village,fips_place,2000,2025,70,275
+562000,53442,North Aurora village,089,Kane County,1753442,North Aurora village,fips_place,2000,2025,1459,3484
+562300,53455,North Barrington village,097,Lake County,1753455,North Barrington village,fips_place,2000,2025,37,159
+566500,53481,Northbrook village,031,Cook County,1753481,Northbrook village,fips_place,2000,2025,720,1890
+562600,53559,North Chicago,097,Lake County,1753559,North Chicago city,fips_place,2000,2025,61,284
+562900,53585,North City village,055,Franklin County,1753585,North City village,fips_place,2002,2025,3,13
+567700,53663,Northfield village,031,Cook County,1753663,Northfield village,fips_place,2000,2025,122,281
+568000,53871,Northlake,031,Cook County,1753871,Northlake city,fips_place,2000,2025,112,286
+565600,54092,North Pekin village,179,Tazewell County,1754092,North Pekin village,fips_place,2000,2025,26,120
+565900,54144,North Riverside village,031,Cook County,1754144,North Riverside village,fips_place,2000,2025,0,10
+566200,54222,North Utica village,099,LaSalle County,1754222,North Utica village,fips_place,2000,2025,59,134
+569200,54404,Norwood village,143,Peoria County,1754404,Norwood village,fips_place,2024,2025,0,0
+570700,54534,Oak Brook village,043,DuPage County,1754534,Oak Brook village,fips_place,2000,2025,218,470
+572500,54560,Oakbrook Terrace,043,DuPage County,1754560,Oakbrook Terrace city,fips_place,2000,2025,34,175
+571000,54638,Oak Forest,031,Cook County,1754638,Oak Forest city,fips_place,2000,2025,204,818
+571300,54703,Oak Grove village,161,Rock Island County,1754703,Oak Grove village,fips_place,2000,2025,10,11
+573700,54781,Oakland,029,Coles County,1754781,Oakland city,fips_place,2000,2025,12,23
+571600,54820,Oak Lawn village,031,Cook County,1754820,Oak Lawn village,fips_place,2000,2025,127,1035
+572200,54885,Oak Park village,031,Cook County,1754885,Oak Park village,fips_place,2000,2025,1427,1739
+575200,55002,Oakwood village,183,Vermilion County,1755002,Oakwood village,fips_place,2000,2025,3,12
+574600,55041,Oakwood Hills village,111,McHenry County,1755041,Oakwood Hills village,fips_place,2000,2025,18,102
+576100,55132,Oconee village,173,Shelby County,1755132,Oconee village,fips_place,2000,2025,2,2
+577000,55171,Odell village,105,Livingston County,1755171,Odell village,fips_place,2000,2025,4,31
+577600,55210,Odin village,121,Marion County,1755210,Odin village,fips_place,2003,2025,0,2
+569800,55249,O'Fallon,163,St. Clair County,1755249,O'Fallon city,fips_place,2000,2025,2613,5476
+578200,55275,Ogden village,019,Champaign County,1755275,Ogden village,fips_place,2000,2025,9,21
+578800,55353,Oglesby,099,LaSalle County,1755353,Oglesby city,fips_place,2000,2025,24,165
+580900,55470,Okawville village,189,Washington County,1755470,Okawville village,fips_place,2000,2025,36,98
+581200,55639,Old Mill Creek village,097,Lake County,1755639,Old Mill Creek village,fips_place,2000,2025,1,2
+583300,,Olmsted village,153,Pulaski County,1755899,Olmsted village,name,2000,2004,0,0
+583600,55912,Olney,159,Richland County,1755912,Olney city,fips_place,2000,2025,68,307
+584200,55938,Olympia Fields village,031,Cook County,1755938,Olympia Fields village,fips_place,2000,2025,19,166
+586000,56081,Onarga village,075,Iroquois County,1756081,Onarga village,fips_place,2000,2025,18,34
+587800,56237,Oquawka village,071,Henderson County,1756237,Oquawka village,fips_place,2000,2025,26,52
+589300,56341,Orangeville village,177,Stephenson County,1756341,Orangeville village,fips_place,2000,2025,1,34
+589900,56471,Oreana village,115,Macon County,1756471,Oreana village,fips_place,2000,2025,0,56
+590200,56484,Oregon,141,Ogle County,1756484,Oregon city,fips_place,2000,2025,34,119
+591700,56601,Orion village,073,Henry County,1756601,Orion village,fips_place,2000,2025,11,50
+592000,56627,Orland Hills village,031,Cook County,1756627,Orland Hills village,fips_place,2000,2025,0,290
+592300,56640,Orland Park village,031,Cook County,1756640,Orland Park village,fips_place,2000,2025,1708,4800
+594700,56887,Oswego village,093,Kendall County,1756887,Oswego village,fips_place,2000,2025,3568,9142
+595300,56926,Ottawa,099,LaSalle County,1756926,Ottawa city,fips_place,2000,2025,502,1440
+598600,57225,Palatine village,031,Cook County,1757225,Palatine village,fips_place,2000,2025,559,2877
+599500,57303,Palmer village,021,Christian County,1757303,Palmer village,fips_place,2000,2025,0,0
+600400,57381,Palos Heights,031,Cook County,1757381,Palos Heights city,fips_place,2000,2025,167,1012
+600700,57394,Palos Hills,031,Cook County,1757394,Palos Hills city,fips_place,2000,2025,97,310
+601000,57407,Palos Park village,031,Cook County,1757407,Palos Park village,fips_place,2000,2025,70,314
+601600,57472,Pana,021,Christian County,1757472,Pana city,fips_place,2000,2025,34,129
+604000,57576,Papineau village,075,Iroquois County,1757576,Papineau village,fips_place,2000,2025,0,6
+604600,57628,Paris,045,Edgar County,1757628,Paris city,fips_place,2000,2025,127,301
+605200,57654,Park City,097,Lake County,1757654,Park City city,fips_place,2000,2025,0,32
+605500,57732,Park Forest village,031,Cook County,1757732,Park Forest village,fips_place,2000,2025,48,258
+606100,57875,Park Ridge,031,Cook County,1757875,Park Ridge city,fips_place,2000,2025,439,1367
+609400,58174,Pawnee village,167,Sangamon County,1758174,Pawnee village,fips_place,2000,2025,49,110
+608800,58226,Paw Paw village,103,Lee County,1758226,Paw Paw village,fips_place,2000,2025,1,36
+609700,58239,Paxton,053,Ford County,1758239,Paxton city,fips_place,2000,2025,51,145
+611200,58369,Pearl City village,177,Stephenson County,1758369,Pearl City village,fips_place,2000,2025,6,23
+612400,58408,Pecatonica village,201,Winnebago County,1758408,Pecatonica village,fips_place,2000,2025,2,116
+613000,58447,Pekin,179,Tazewell County,1758447,Pekin city,fips_place,2000,2025,280,1086
+615400,59000,Peoria,143,Peoria County,1759000,Peoria city,fips_place,2000,2025,1365,5862
+616300,59026,Peoria Heights village,143,Peoria County,1759026,Peoria Heights village,fips_place,2000,2025,46,71
+617500,59052,Peotone village,197,Will County,1759052,Peotone village,fips_place,2000,2025,117,415
+617800,,Percy village,157,Randolph County,1759104,Percy village,name,2000,2004,0,4
+618700,59156,Perry village,149,Pike County,1759156,Perry village,fips_place,2000,2025,8,9
+619600,59234,Peru,099,LaSalle County,1759234,Peru city,fips_place,2000,2025,105,388
+620500,59273,Pesotum village,019,Champaign County,1759273,Pesotum village,fips_place,2000,2025,8,23
+620800,59312,Petersburg,129,Menard County,1759312,Petersburg city,fips_place,2000,2025,31,98
+622900,59533,Philo village,019,Champaign County,1759533,Philo village,fips_place,2000,2025,2,167
+623200,59572,Phoenix village,031,Cook County,1759572,Phoenix village,fips_place,2000,2025,0,24
+624700,59709,Pierron village,005,Bond County,1759709,Pierron village,fips_place,2003,2025,3,7
+628600,59988,Pingree Grove village,089,Kane County,1759988,Pingree Grove village,fips_place,2003,2025,2856,4498
+628900,60079,Piper City village,053,Ford County,1760079,Piper City village,fips_place,2000,2025,0,1
+629800,60222,Pittsfield,149,Pike County,1760222,Pittsfield city,fips_place,2000,2025,57,162
+631000,60287,Plainfield village,197,Will County,1760287,Plainfield village,fips_place,2000,2025,4539,12725
+631600,60352,Plano,093,Kendall County,1760352,Plano city,fips_place,2000,2025,398,2325
+633400,60599,Pleasant Plains village,167,Sangamon County,1760599,Pleasant Plains village,fips_place,2000,2025,27,37
+636100,60872,Pocahontas village,005,Bond County,1760872,Pocahontas village,fips_place,2000,2025,8,25
+637000,60937,Polo,141,Ogle County,1760937,Polo city,fips_place,2000,2025,6,42
+637600,61015,Pontiac,105,Livingston County,1761015,Pontiac city,fips_place,2000,2025,51,303
+638200,61067,Pontoon Beach village,119,Madison County,1761067,Pontoon Beach village,fips_place,2000,2025,91,343
+640000,61145,Poplar Grove village,007,Boone County,1761145,Poplar Grove village,fips_place,2000,2025,204,1041
+281500,61216,Port Barrington village,111,McHenry County,1761216,Port Barrington village,fips_place,2000,2025,24,275
+640600,61223,Port Byron village,161,Rock Island County,1761223,Port Byron village,fips_place,2000,2025,36,139
+641200,61314,Posen village,031,Cook County,1761314,Posen village,fips_place,2000,2025,0,206
+641500,61366,Potomac village,183,Vermilion County,1761366,Potomac village,fips_place,2000,2025,3,15
+643600,61639,Prairie du Rocher village,157,Randolph County,1761639,Prairie du Rocher village,fips_place,2000,2025,10,11
+643300,61678,Prairie Grove village,111,McHenry County,1761678,Prairie Grove village,fips_place,2000,2025,18,354
+646000,61899,Princeton,011,Bureau County,1761899,Princeton city,fips_place,2000,2025,119,325
+646900,61925,Princeville village,143,Peoria County,1761925,Princeville village,fips_place,2000,2025,27,74
+647200,61977,Prophetstown,195,Whiteside County,1761977,Prophetstown city,fips_place,2000,2025,5,23
+647800,62016,Prospect Heights,031,Cook County,1762016,Prospect Heights city,fips_place,2000,2025,77,159
+648700,62211,Pulaski village,153,Pulaski County,1762211,Pulaski village,fips_place,2000,2025,0,0
+649900,62367,Quincy,001,Adams County,1762367,Quincy city,fips_place,2000,2025,1106,2356
+653500,62744,Rankin village,183,Vermilion County,1762744,Rankin village,fips_place,2000,2025,2,4
+653800,62757,Ransom village,099,LaSalle County,1762757,Ransom village,fips_place,2000,2025,3,3
+654400,62783,Rantoul village,019,Champaign County,1762783,Rantoul village,fips_place,2000,2025,78,221
+654700,62822,Rapids City village,161,Rock Island County,1762822,Rapids City village,fips_place,2000,2025,38,75
+655300,62848,Raritan village,071,Henderson County,1762848,Raritan village,fips_place,2000,2025,0,0
+656500,,Raymond village,135,Montgomery County,1762965,Raymond village,name,2000,2004,0,14
+657400,63043,Red Bud,157,Randolph County,1763043,Red Bud city,fips_place,2000,2025,74,297
+659500,63420,Reynolds village,161,Rock Island County,1763420,Reynolds village,fips_place,2000,2025,3,5
+662500,63641,Richmond village,111,McHenry County,1763641,Richmond village,fips_place,2000,2025,112,648
+662800,63706,Richton Park village,031,Cook County,1763706,Richton Park village,fips_place,2000,2025,56,537
+663400,63719,Richview village,189,Washington County,1763719,Richview village,fips_place,2000,2025,1,3
+664600,63862,Ridge Farm village,183,Vermilion County,1763862,Ridge Farm village,fips_place,2000,2025,1,4
+666400,,Ridott village,177,Stephenson County,1764044,Ridott village,name,2000,2004,0,0
+667900,64174,Ripley village,009,Brown County,1764174,Ripley village,fips_place,2002,2022,0,0
+669100,64278,Riverdale village,031,Cook County,1764278,Riverdale village,fips_place,2000,2025,0,109
+668500,64304,River Forest village,031,Cook County,1764304,River Forest village,fips_place,2000,2025,73,207
+668800,64343,River Grove village,031,Cook County,1764343,River Grove village,fips_place,2000,2025,89,153
+670000,64421,Riverside village,031,Cook County,1764421,Riverside village,fips_place,2000,2025,22,105
+670300,64486,Riverton village,167,Sangamon County,1764486,Riverton village,fips_place,2000,2025,55,160
+670600,64538,Riverwoods village,097,Lake County,1764538,Riverwoods village,fips_place,2000,2025,22,126
+671500,64590,Roanoke village,203,Woodford County,1764590,Roanoke village,fips_place,2000,2025,13,56
+671800,64616,Robbins village,031,Cook County,1764616,Robbins village,fips_place,2000,2025,173,261
+672700,64707,Robinson,033,Crawford County,1764707,Robinson city,fips_place,2000,2025,117,180
+673300,64746,Rochelle,141,Ogle County,1764746,Rochelle city,fips_place,2000,2025,192,374
+673900,64759,Rochester village,167,Sangamon County,1764759,Rochester village,fips_place,2000,2025,227,497
+674200,64837,Rock City village,177,Stephenson County,1764837,Rock City village,fips_place,2000,2025,1,12
+677500,64902,Rockdale village,197,Will County,1764902,Rockdale village,fips_place,2000,2025,7,31
+675100,64928,Rock Falls,195,Whiteside County,1764928,Rock Falls city,fips_place,2000,2025,30,178
+677800,65000,Rockford,201,Winnebago County,1765000,Rockford city,fips_place,2000,2025,888,4432
+675700,65078,Rock Island,161,Rock Island County,1765078,Rock Island city,fips_place,2000,2025,380,528
+680500,65338,Rolling Meadows,031,Cook County,1765338,Rolling Meadows city,fips_place,2000,2025,192,409
+681100,65442,Romeoville village,197,Will County,1765442,Romeoville village,fips_place,2000,2025,751,5830
+685000,65806,Roselle village,043,DuPage County,1765806,Roselle village,fips_place,2000,2025,282,744
+685300,65819,Rosemont village,031,Cook County,1765819,Rosemont village,fips_place,2000,2025,0,4
+685900,65845,Roseville village,187,Warren County,1765845,Roseville village,fips_place,2000,2025,1,2
+686200,65897,Rosiclare,069,Hardin County,1765897,Rosiclare city,fips_place,2000,2025,0,4
+687400,65962,Rossville village,183,Vermilion County,1765962,Rossville village,fips_place,2000,2025,0,11
+688900,66027,Round Lake village,097,Lake County,1766027,Round Lake village,fips_place,2000,2025,113,4064
+688000,66040,Round Lake Beach village,097,Lake County,1766040,Round Lake Beach village,fips_place,2000,2025,14,684
+688300,66053,Round Lake Heights village,097,Lake County,1766053,Round Lake Heights village,fips_place,2000,2025,2,351
+688600,66066,Round Lake Park village,097,Lake County,1766066,Round Lake Park village,fips_place,2000,2025,357,437
+689500,66131,Roxana village,119,Madison County,1766131,Roxana village,fips_place,2000,2025,0,0
+690100,66157,Royal village,019,Champaign County,1766157,Royal village,fips_place,2000,2025,3,12
+689800,66196,Royal Lakes village,117,Macoupin County,1766196,Royal Lakes village,fips_place,2013,2025,8,8
+690400,66209,Royalton village,055,Franklin County,1766209,Royalton village,fips_place,2013,2025,6,6
+691300,66287,Ruma village,157,Randolph County,1766287,Ruma village,fips_place,2000,2025,5,27
+692500,66339,Rushville,169,Schuyler County,1766339,Rushville city,fips_place,2013,2025,0,0
+695500,66534,Sadorus village,019,Champaign County,1766534,Sadorus village,fips_place,2000,2025,1,4
+748300,66638,St. Anne village,091,Kankakee County,1766638,St. Anne village,fips_place,2000,2025,0,50
+748600,66677,St. Augustine village,095,Knox County,1766677,St. Augustine village,fips_place,2000,2025,0,0
+749200,66703,St. Charles,089,Kane County,1766703,St. Charles city,fips_place,2000,2025,1283,3170
+750400,66768,St. David village,057,Fulton County,1766768,St. David village,fips_place,2000,2025,2,4
+750700,66794,St. Elmo,051,Fayette County,1766794,St. Elmo city,fips_place,2000,2025,9,32
+757000,66800,Ste. Marie village,079,Jasper County,1766800,Ste. Marie village,fips_place,2000,2025,0,10
+751900,66859,St. Jacob village,119,Madison County,1766859,St. Jacob village,fips_place,2000,2025,121,203
+752800,66950,St. Joseph village,019,Champaign County,1766950,St. Joseph village,fips_place,2000,2025,19,592
+753100,66989,St. Libory village,163,St. Clair County,1766989,St. Libory village,fips_place,2000,2025,24,62
+696100,67236,Salem,121,Marion County,1767236,Salem city,fips_place,2000,2025,44,147
+698300,67372,Sammons Point village,091,Kankakee County,1767372,Sammons Point village,fips_place,2009,2025,1,1
+700000,67444,Sandoval village,121,Marion County,1767444,Sandoval village,fips_place,2000,2025,3,9
+700300,67548,Sandwich,037,DeKalb County,1767548,Sandwich city,fips_place,2000,2025,146,480
+698800,67613,San Jose village,125,Mason County,1767613,San Jose village,fips_place,2000,2025,5,7
+703600,67756,Sauget village,163,St. Clair County,1767756,Sauget village,fips_place,2013,2025,0,0
+703900,67769,Sauk Village village,031,Cook County,1767769,Sauk Village village,fips_place,2000,2025,0,212
+705100,67821,Savanna,015,Carroll County,1767821,Savanna city,fips_place,2000,2025,0,13
+705700,67860,Savoy village,019,Champaign County,1767860,Savoy village,fips_place,2000,2025,992,1858
+706300,67912,Saybrook village,113,McLean County,1767912,Saybrook village,fips_place,2000,2025,2,13
+706900,67925,Scales Mound village,085,Jo Daviess County,1767925,Scales Mound village,fips_place,2002,2025,4,13
+707500,68003,Schaumburg village,031,Cook County,1768003,Schaumburg village,fips_place,2000,2025,898,1544
+708100,68081,Schiller Park village,031,Cook County,1768081,Schiller Park village,fips_place,2000,2025,15,254
+708400,,Schram City village,135,Montgomery County,1768120,Schram City village,name,2000,2004,0,0
+711400,68458,Seaton village,131,Mercer County,1768458,Seaton village,fips_place,2000,2025,0,0
+711700,68471,Seatonville village,011,Bureau County,1768471,Seatonville village,fips_place,2000,2025,4,16
+712000,68510,Secor village,203,Woodford County,1768510,Secor village,fips_place,2000,2025,3,5
+714100,68640,Seneca village,099,LaSalle County,1768640,Seneca village,fips_place,2000,2025,25,110
+714700,68705,Sesser,055,Franklin County,1768705,Sesser city,fips_place,2000,2025,35,59
+716200,68822,Shabbona village,037,DeKalb County,1768822,Shabbona village,fips_place,2000,2025,2,17
+716800,68991,Shannon village,015,Carroll County,1768991,Shannon village,fips_place,2000,2025,32,46
+718900,69186,Shelbyville,173,Shelby County,1769186,Shelbyville city,fips_place,2000,2025,100,215
+719800,69212,Sheldon village,075,Iroquois County,1769212,Sheldon village,fips_place,2000,2025,1,4
+720400,69277,Sheridan village,099,LaSalle County,1769277,Sheridan village,fips_place,2000,2025,2,54
+721000,69342,Sherman village,167,Sangamon County,1769342,Sherman village,fips_place,2000,2025,336,857
+721300,69368,Sherrard village,131,Mercer County,1769368,Sherrard village,fips_place,2000,2025,17,22
+722800,69524,Shiloh village,163,St. Clair County,1769524,Shiloh village,fips_place,2000,2025,1522,3195
+724300,69758,Shorewood village,197,Will County,1769758,Shorewood village,fips_place,2000,2025,1180,4012
+725500,69836,Sidell village,183,Vermilion County,1769836,Sidell village,fips_place,2000,2025,0,2
+726100,69875,Sidney village,019,Champaign County,1769875,Sidney village,fips_place,2000,2025,2,68
+726400,69914,Sigel town,173,Shelby County,1769914,Sigel town,fips_place,2000,2014,0,17
+727300,69979,Silvis,161,Rock Island County,1769979,Silvis city,fips_place,2000,2025,336,754
+728500,70122,Skokie village,031,Cook County,1770122,Skokie village,fips_place,2000,2025,636,2220
+728800,70161,Sleepy Hollow village,089,Kane County,1770161,Sleepy Hollow village,fips_place,2000,2025,5,37
+729400,70213,Smithboro village,005,Bond County,1770213,Smithboro village,fips_place,2000,2025,0,19
+730300,70252,Smithton village,163,St. Clair County,1770252,Smithton village,fips_place,2000,2025,203,748
+731500,70460,Somonauk village,037,DeKalb County,1770460,Somonauk village,fips_place,2000,2025,9,114
+732700,70525,Sorento village,005,Bond County,1770525,Sorento village,fips_place,2000,2025,2,18
+733000,70564,South Barrington village,031,Cook County,1770564,South Barrington village,fips_place,2000,2025,259,607
+733600,70629,South Chicago Heights village,031,Cook County,1770629,South Chicago Heights village,fips_place,2000,2025,2,50
+734500,70720,South Elgin village,089,Kane County,1770720,South Elgin village,fips_place,2000,2025,2194,3836
+741400,70759,Southern View village,167,Sangamon County,1770759,Southern View village,fips_place,2000,2025,0,2
+736000,70850,South Holland village,031,Cook County,1770850,South Holland village,fips_place,2000,2025,7,207
+736900,70889,South Jacksonville village,137,Morgan County,1770889,South Jacksonville village,fips_place,2000,2025,27,61
+739300,71175,South Pekin village,179,Tazewell County,1771175,South Pekin village,fips_place,2000,2025,7,53
+740200,71240,South Roxana village,119,Madison County,1771240,South Roxana village,fips_place,2000,2025,20,21
+741100,71370,South Wilmington village,063,Grundy County,1771370,South Wilmington village,fips_place,2000,2025,7,11
+742300,71448,Sparta,157,Randolph County,1771448,Sparta city,fips_place,2000,2025,181,235
+742900,71474,Spaulding village,167,Sangamon County,1771474,Spaulding village,fips_place,2000,2025,15,127
+743800,71604,Spring Bay village,203,Woodford County,1771604,Spring Bay village,fips_place,2000,2025,19,62
+746800,72000,Springfield,167,Sangamon County,1772000,Springfield city,fips_place,2000,2025,2615,6988
+745000,72052,Spring Grove village,111,McHenry County,1772052,Spring Grove village,fips_place,2000,2025,113,721
+745900,72156,Spring Valley,011,Bureau County,1772156,Spring Valley city,fips_place,2000,2025,14,152
+754600,72221,Standard village,155,Putnam County,1772221,Standard village,fips_place,2000,2025,1,11
+755200,72260,Stanford village,113,McLean County,1772260,Stanford village,fips_place,2000,2025,5,11
+756100,72403,Staunton,117,Macoupin County,1772403,Staunton city,fips_place,2000,2025,137,338
+757300,72468,Steeleville village,157,Randolph County,1772468,Steeleville village,fips_place,2000,2025,14,66
+757900,72520,Steger village,197,Will County,1772520,Steger village,fips_place,2000,2025,9,362
+758500,72546,Sterling,195,Whiteside County,1772546,Sterling city,fips_place,2000,2025,100,229
+760000,72650,Stewardson village,173,Shelby County,1772650,Stewardson village,fips_place,2000,2025,31,53
+760600,72676,Stickney village,031,Cook County,1772676,Stickney village,fips_place,2000,2025,29,60
+760900,72702,Stillman Valley village,141,Ogle County,1772702,Stillman Valley village,fips_place,2000,2025,15,53
+762100,72780,Stockton village,085,Jo Daviess County,1772780,Stockton village,fips_place,2000,2025,2,19
+762400,72923,Stone Park village,031,Cook County,1772923,Stone Park village,fips_place,2000,2025,21,53
+763900,72949,Stonington village,021,Christian County,1772949,Stonington village,fips_place,2000,2025,0,3
+764800,73040,Strasburg village,173,Shelby County,1773040,Strasburg village,fips_place,2002,2025,6,6
+765700,73157,Streamwood village,031,Cook County,1773157,Streamwood village,fips_place,2000,2025,172,1346
+766000,73170,Streator,099,LaSalle County,1773170,Streator city,fips_place,2000,2025,62,301
+766900,73261,Stronghurst village,071,Henderson County,1773261,Stronghurst village,fips_place,2000,2025,2,8
+768700,73391,Sugar Grove village,089,Kane County,1773391,Sugar Grove village,fips_place,2000,2025,540,2422
+769300,73495,Sullivan,139,Moultrie County,1773495,Sullivan city,fips_place,2000,2025,272,436
+770500,73547,Summerfield village,163,St. Clair County,1773547,Summerfield village,fips_place,2000,2025,1,19
+771100,73638,Summit village,031,Cook County,1773638,Summit village,fips_place,2000,2025,167,320
+771400,,Sumner,101,Lawrence County,1773703,Sumner city,name,2000,2004,0,0
+772600,73943,Sun River Terrace village,091,Kankakee County,1773943,Sun River Terrace village,fips_place,2000,2025,1,40
+773800,74119,Swansea village,163,St. Clair County,1774119,Swansea village,fips_place,2000,2025,838,2432
+774100,74223,Sycamore,037,DeKalb County,1774223,Sycamore city,fips_place,2000,2025,826,3398
+774700,74275,Symerton village,197,Will County,1774275,Symerton village,fips_place,2003,2025,2,4
+775300,74301,Table Grove village,057,Fulton County,1774301,Table Grove village,fips_place,2013,2025,0,0
+777400,74470,Tampico village,195,Whiteside County,1774470,Tampico village,fips_place,2000,2025,0,3
+778600,74574,Taylorville,021,Christian County,1774574,Taylorville city,fips_place,2000,2025,205,377
+780700,74743,Teutopolis village,049,Effingham County,1774743,Teutopolis village,fips_place,2000,2025,137,233
+781300,74847,Thawville village,075,Iroquois County,1774847,Thawville village,fips_place,2000,2025,15,47
+781600,74860,Thayer village,167,Sangamon County,1774860,Thayer village,fips_place,2000,2025,1,1
+781900,74873,Thebes village,003,Alexander County,1774873,Thebes village,fips_place,2000,2025,0,1
+782200,75081,Third Lake village,097,Lake County,1775081,Third Lake village,fips_place,2007,2025,7,7
+782500,75107,Thomasboro village,019,Champaign County,1775107,Thomasboro village,fips_place,2000,2025,7,50
+783400,75172,Thomson village,015,Carroll County,1775172,Thomson village,fips_place,2000,2025,10,23
+784000,75185,Thornton village,031,Cook County,1775185,Thornton village,fips_place,2000,2025,46,49
+784600,75276,Tilton village,183,Vermilion County,1775276,Tilton village,fips_place,2000,2025,113,114
+784800,75360,Timberlane village,007,Boone County,1775360,Timberlane village,fips_place,2003,2025,19,132
+785500,75484,Tinley Park village,031,Cook County,1775484,Tinley Park village,fips_place,2000,2025,675,4844
+786100,75549,Tiskilwa village,011,Bureau County,1775549,Tiskilwa village,fips_place,2000,2025,1,5
+787300,75614,Tolono village,019,Champaign County,1775614,Tolono village,fips_place,2000,2025,45,224
+787600,75653,Toluca,123,Marshall County,1775653,Toluca city,fips_place,2000,2025,3,11
+788200,75718,Tonica village,099,LaSalle County,1775718,Tonica village,fips_place,2000,2025,1,30
+789700,75809,Tovey village,021,Christian County,1775809,Tovey village,fips_place,2000,2025,5,7
+790300,75822,Towanda village,113,McLean County,1775822,Towanda village,fips_place,2000,2025,1,8
+790900,75848,Tower Hill village,173,Shelby County,1775848,Tower Hill village,fips_place,2013,2025,2,2
+791200,75874,Tower Lakes village,097,Lake County,1775874,Tower Lakes village,fips_place,2000,2025,0,7
+791800,75965,Tremont village,179,Tazewell County,1775965,Tremont village,fips_place,2000,2025,21,97
+792100,75991,Trenton,027,Clinton County,1775991,Trenton city,fips_place,2000,2025,37,145
+792700,76199,Troy,119,Madison County,1776199,Troy city,fips_place,2000,2025,948,1660
+794500,76407,Tuscola,041,Douglas County,1776407,Tuscola city,fips_place,2000,2025,104,386
+795700,76615,Ullin village,153,Pulaski County,1776615,Ullin village,fips_place,2000,2025,1,8
+798100,76706,Union village,111,McHenry County,1776706,Union village,fips_place,2000,2025,65,88
+796600,76771,Union Hill village,091,Kankakee County,1776771,Union Hill village,fips_place,2000,2025,0,0
+799000,76935,University Park village,197,Will County,1776935,University Park village,fips_place,2000,2025,2,421
+799300,77005,Urbana,019,Champaign County,1777005,Urbana city,fips_place,2000,2025,1683,4383
+801100,77148,Valier village,055,Franklin County,1777148,Valier village,fips_place,2000,2025,1,12
+802000,77265,Valmeyer village,133,Monroe County,1777265,Valmeyer village,fips_place,2003,2025,19,140
+802600,77317,Vandalia,051,Fayette County,1777317,Vandalia city,fips_place,2000,2025,36,114
+804100,77473,Venice,119,Madison County,1777473,Venice city,fips_place,2000,2025,49,57
+805600,77551,Vermilion village,045,Edgar County,1777551,Vermilion village,fips_place,2000,2025,0,3
+806800,77694,Vernon Hills village,097,Lake County,1777694,Vernon Hills village,fips_place,2000,2025,1164,2955
+807700,77707,Verona village,063,Grundy County,1777707,Verona village,fips_place,2000,2025,3,3
+809200,77811,Victoria village,095,Knox County,1777811,Victoria village,fips_place,2000,2025,0,1
+810100,77941,Villa Grove,041,Douglas County,1777941,Villa Grove city,fips_place,2000,2025,11,62
+810400,77993,Villa Park village,043,DuPage County,1777993,Villa Park village,fips_place,2000,2025,86,564
+811300,78123,Viola village,131,Mercer County,1778123,Viola village,fips_place,2000,2025,5,43
+812800,78201,Virginia,017,Cass County,1778201,Virginia city,fips_place,2000,2025,7,20
+813200,78227,Volo village,097,Lake County,1778227,Volo village,fips_place,2007,2025,1428,1880
+814900,78370,Wadsworth village,097,Lake County,1778370,Wadsworth village,fips_place,2000,2025,27,222
+818200,78526,Walnut village,011,Bureau County,1778526,Walnut village,fips_place,2000,2025,2,9
+820000,78721,Wamac,121,Marion County,1778721,Wamac city,fips_place,2000,2025,1,1
+820900,78773,Wapella village,039,De Witt County,1778773,Wapella village,fips_place,2000,2025,3,20
+822400,78851,Warren village,085,Jo Daviess County,1778851,Warren village,fips_place,2000,2025,2,11
+822700,78916,Warrensburg village,115,Macon County,1778916,Warrensburg village,fips_place,2000,2025,5,13
+823000,78929,Warrenville,043,DuPage County,1778929,Warrenville city,fips_place,2000,2025,980,1121
+823300,78942,Warsaw,067,Hancock County,1778942,Warsaw city,fips_place,2000,2025,4,17
+824200,79007,Washburn village,203,Woodford County,1779007,Washburn village,fips_place,2000,2025,0,1
+824500,79033,Washington,179,Tazewell County,1779033,Washington city,fips_place,2000,2025,1180,2697
+825100,79085,Washington Park village,163,St. Clair County,1779085,Washington Park village,fips_place,2000,2025,0,50
+826300,79124,Wataga village,095,Knox County,1779124,Wataga village,fips_place,2000,2025,1,9
+826900,79150,Waterloo,133,Monroe County,1779150,Waterloo city,fips_place,2000,2025,710,1592
+827200,79163,Waterman village,037,DeKalb County,1779163,Waterman village,fips_place,2000,2025,100,219
+827500,79228,Watseka,075,Iroquois County,1779228,Watseka city,fips_place,2000,2025,11,119
+828700,79267,Wauconda village,097,Lake County,1779267,Wauconda village,fips_place,2000,2025,205,1455
+829000,79293,Waukegan,097,Lake County,1779293,Waukegan city,fips_place,2000,2025,283,1932
+829900,79358,Waverly,137,Morgan County,1779358,Waverly city,fips_place,2000,2025,1,3
+831400,79397,Wayne village,089,Kane County,1779397,Wayne village,fips_place,2000,2025,38,148
+833200,79735,Wellington village,075,Iroquois County,1779735,Wellington village,fips_place,2000,2025,0,12
+833800,79813,Wenona,123,Marshall County,1779813,Wenona city,fips_place,2000,2025,2,47
+839200,80047,Westchester village,031,Cook County,1780047,Westchester village,fips_place,2000,2025,0,72
+835000,80060,West Chicago,043,DuPage County,1780060,West Chicago city,fips_place,2000,2025,73,1235
+835300,80073,West City village,055,Franklin County,1780073,West City village,fips_place,2000,2025,6,38
+835900,80125,West Dundee village,089,Kane County,1780125,West Dundee village,fips_place,2000,2025,1004,1911
+839800,80242,Western Springs village,031,Cook County,1780242,Western Springs village,fips_place,2000,2025,534,993
+841000,80281,Westfield village,023,Clark County,1780281,Westfield village,fips_place,2002,2025,0,5
+836200,80333,West Frankfort,055,Franklin County,1780333,West Frankfort city,fips_place,2000,2025,52,129
+841300,80645,Westmont village,043,DuPage County,1780645,Westmont village,fips_place,2000,2025,208,837
+837300,80736,West Peoria,143,Peoria County,1780736,West Peoria city,fips_place,2013,2025,1,1
+841600,80931,Westville village,183,Vermilion County,1780931,Westville village,fips_place,2000,2025,12,36
+843400,81048,Wheaton,043,DuPage County,1781048,Wheaton city,fips_place,2000,2025,800,1491
+844300,81087,Wheeling village,031,Cook County,1781087,Wheeling village,fips_place,2000,2025,1343,2380
+844900,81191,White City village,117,Macoupin County,1781191,White City village,fips_place,2002,2025,19,26
+850300,81815,Williamson village,119,Madison County,1781815,Williamson village,fips_place,2000,2025,0,0
+850600,81854,Williamsville village,167,Sangamon County,1781854,Williamsville village,fips_place,2000,2025,60,105
+853000,81919,Willowbrook village,043,DuPage County,1781919,Willowbrook village,fips_place,2000,2025,68,164
+852100,82010,Willow Hill village,079,Jasper County,1782010,Willow Hill village,fips_place,2002,2025,0,0
+852400,82049,Willow Springs village,031,Cook County,1782049,Willow Springs village,fips_place,2000,2025,73,550
+853300,82075,Wilmette village,031,Cook County,1782075,Wilmette village,fips_place,2000,2025,584,999
+853600,82101,Wilmington,197,Will County,1782101,Wilmington city,fips_place,2000,2025,79,449
+856300,82309,Windsor village,131,Mercer County,1782309,Windsor village,fips_place,2000,2025,45,51
+855700,82322,Windsor,173,Shelby County,1782322,Windsor city,fips_place,2000,2025,6,14
+856900,82400,Winfield village,043,DuPage County,1782400,Winfield village,fips_place,2000,2025,469,1155
+857800,82491,Winnebago village,201,Winnebago County,1782491,Winnebago village,fips_place,2000,2025,11,139
+858100,82530,Winnetka village,031,Cook County,1782530,Winnetka village,fips_place,2000,2025,334,727
+858700,82543,Winslow village,177,Stephenson County,1782543,Winslow village,fips_place,2000,2025,1,5
+859000,82686,Winthrop Harbor village,097,Lake County,1782686,Winthrop Harbor village,fips_place,2000,2025,26,258
+859900,82855,Wonder Lake village,111,McHenry County,1782855,Wonder Lake village,fips_place,2000,2025,812,1240
+860200,82985,Wood Dale,043,DuPage County,1782985,Wood Dale city,fips_place,2000,2025,73,482
+862000,83063,Woodhull village,073,Henry County,1783063,Woodhull village,fips_place,2000,2025,3,21
+862900,83102,Woodland village,075,Iroquois County,1783102,Woodland village,fips_place,2000,2025,5,8
+863500,83245,Woodridge village,043,DuPage County,1783245,Woodridge village,fips_place,2000,2025,784,2680
+860500,83271,Wood River,119,Madison County,1783271,Wood River city,fips_place,2000,2025,111,207
+864700,83349,Woodstock,111,McHenry County,1783349,Woodstock city,fips_place,2000,2025,907,2846
+865900,83505,Worden village,119,Madison County,1783505,Worden village,fips_place,2000,2025,18,104
+866800,83518,Worth village,031,Cook County,1783518,Worth village,fips_place,2000,2025,53,136
+872200,84038,Yorkville,093,Kendall County,1784038,Yorkville city,fips_place,2000,2025,3162,7186
+873400,84155,Zeigler,055,Franklin County,1784155,Zeigler city,fips_place,2000,2025,7,19
+874000,84220,Zion,097,Lake County,1784220,Zion city,fips_place,2000,2025,61,1135

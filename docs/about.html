@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Method, caveats and open items — Illinois Housing Permits</title>
+<meta name="description" content="How the Illinois housing permits map is built, what its numbers do and do not mean, and what still needs a human before it is used in testimony.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="doc-page">
+
+<header>
+  <p class="eyebrow"><a href="index.html">&larr; Back to the map</a></p>
+  <h1>Method, caveats and open items</h1>
+  <p class="subtitle">What this map measures, what it cannot tell you, and what still needs a person before it goes in front of a committee.</p>
+  <p class="sourceline" id="sourceline">U.S. Census Building Permits Survey; 2010 Decennial Census</p>
+</header>
+
+<main class="doc">
+
+<nav class="toc" aria-label="Contents">
+  <a href="#measure">1. What it measures</a>
+  <a href="#notmeasure">2. What it is not</a>
+  <a href="#coverage">3. Gaps are not zeros</a>
+  <a href="#open">4. Open items</a>
+  <a href="#checks">5. How it is checked</a>
+  <a href="#rebuild">6. Rebuilding it</a>
+</nav>
+
+<section id="measure">
+  <h2>1. What the map measures</h2>
+  <p class="lede">For every Illinois municipality whose permit office reports to the Census:</p>
+  <div class="formula">
+    <b>Percent growth</b> = housing units authorized by permit, <span data-meta="metric_start">2010</span>–<span data-meta="ymax">2025</span>
+    &divide; housing units counted in that municipality on April&nbsp;1,&nbsp;2010
+  </div>
+  <p>The numerator is the Census Bureau's <b>Building Permits Survey</b> — administrative counts collected from permit-issuing jurisdictions, not a sample or a survey estimate. The denominator is <b>table H1 of the 2010 Decennial Census</b>, the complete count, not an American Community Survey estimate.</p>
+  <p>The two do not overlap. A unit standing on April 1, 2010 was authorized before that date, so it is in the denominator and not in the numerator. Permits are summed from calendar year 2010 forward.</p>
+
+  <div class="stat-row">
+    <div class="stat"><b id="s-il">—</b><span>Illinois, since 2010</span></div>
+    <div class="stat"><b id="s-us">—</b><span>United States, since 2010</span></div>
+    <div class="stat"><b id="s-zero">—</b><span>municipalities with no 5+ unit building permitted</span></div>
+  </div>
+  <p class="fineprint">The Illinois figure is the midpoint of the map's colour scale, so the colour break means "keeping up with the state." Orange is below it, blue above.</p>
+</section>
+
+<section id="notmeasure">
+  <h2>2. What these numbers are not</h2>
+  <dl class="pairs">
+    <dt>Not units built.</dt>
+    <dd>BPS counts units <b>authorized by permit</b>. A permitted project that was never financed, never started or abandoned still counts here. This is the standard measure of how much housing a jurisdiction has allowed, which is the question in front of the legislature — but it is not a count of completed homes.</dd>
+
+    <dt>Not net change in the housing stock.</dt>
+    <dd>Demolitions are not subtracted. A municipality that permitted 500 units and demolished 400 appears here as 500. Read every number as <b>"how much was added,"</b> never as "how much the stock grew."</dd>
+
+    <dt>Not a measure of need, cost or affordability.</dt>
+    <dd>Nothing here says whether the housing was affordable, who it was for, or whether it met demand. Rent and cost data were deliberately left out of this version.</dd>
+
+    <dt>Not a statement about unincorporated territory.</dt>
+    <dd>See the open items below — county-filed permits are excluded, so this is a map of <b>municipalities</b>, not of all Illinois land.</dd>
+  </dl>
+</section>
+
+<section id="coverage">
+  <h2>3. A coverage gap is never a zero</h2>
+  <p>This is the single most important thing to understand before quoting the map.</p>
+  <p>Not every Illinois place has a permit office reporting to the Census. <b id="s-reporting">—</b> of the state's <b id="s-places">—</b> places do; <b id="s-gap">—</b> do not.</p>
+  <p>A municipality with no permit office reporting <b>is not a municipality that built nothing.</b> It is one the Census has no administrative record for. Those places are drawn with a grey hatch — never with a low-value colour — are excluded from the table, from rankings and from every statewide total, and show an explanation instead of metrics when opened.</p>
+  <div class="callout">
+    <p><b>The same rule applies year by year.</b> A municipality whose permit office first reported in 2013 has <em>no value</em> — not zero — for 2010 through 2012. Its chart shows a shaded gap over those years, and its detail panel says which year its record begins. <b id="s-partial">—</b> reporting municipalities do not have a record for every year in the window.</p>
+  </div>
+  <p class="fineprint">If you are about to say "this town built nothing," check that its coverage is <em>reporting</em> and check the first year of its record. The map will tell you both.</p>
+</section>
+
+<section id="open">
+  <h2>4. Open items — what still needs a person</h2>
+  <p class="lede">These were recorded as they were hit, in <code>BLOCKERS.md</code> in the repository. Nothing below was filled in with a plausible-looking number.</p>
+
+  <article class="item priority">
+    <h3><span class="badge">Needs you</span> The AHPAA list is empty</h3>
+    <p><b>What is missing.</b> The Affordable Housing Planning and Appeals Act non-exempt list is a periodic determination by the Illinois Housing Development Authority. There is no API and no machine-readable feed for it, so it cannot be fetched at build time — and it must never be produced from a language model's recollection. A wrong compliance status attached to a named municipality in legislative testimony is a serious error, so the file ships with headers and <b>zero rows</b>.</p>
+    <p><b>What that means right now.</b> Every municipality's AHPAA status is null, the AHPAA filter on the map is disabled with a tooltip explaining why, and the AHPAA column is absent from the table. <span id="s-ahpaa">This is the current state.</span></p>
+    <p><b>What to do.</b> Fill in <code>data/manual/ahpaa.csv</code> from the current IHDA determination list, one row per municipality:</p>
+    <div class="table-scroll">
+      <table class="spec-table">
+        <thead><tr><th>Column</th><th>What goes in it</th></tr></thead>
+        <tbody>
+          <tr><td><code>geoid</code></td><td>7-character Census place GEOID — <code>17</code> plus the 5-digit FIPS place code. Wilmette is <code>1782075</code>. The join uses this, not the name.</td></tr>
+          <tr><td><code>municipality</code></td><td>Name as IHDA publishes it, so a human can verify the row.</td></tr>
+          <tr><td><code>status</code></td><td>The determination, verbatim — e.g. <code>non-exempt</code>.</td></tr>
+          <tr><td><code>source_url</code></td><td>The IHDA document the row was read from.</td></tr>
+          <tr><td><code>as_of_date</code></td><td>Date of the determination (<code>YYYY-MM-DD</code>) — not the date it was typed. The site displays this.</td></tr>
+          <tr><td><code>notes</code></td><td>Anything a reader needs in order to trust the row.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Then re-run the build. The filter switches itself on, the table grows an AHPAA column, and the as-of date appears under the control. A <code>geoid</code> that does not match a real place is reported by the data check rather than silently dropped. Municipalities absent from the file stay <b>null</b> — unknown — and are never shown as "exempt."</p>
+  </article>
+
+  <article class="item">
+    <h3>County-filed permits are not on the map</h3>
+    <p>About <b id="s-uninc">8%</b> of Illinois permits since 2010 are filed by county permit offices for <b>unincorporated</b> territory, plus a few whole-county and township offices. That territory is not a municipality and has no place boundary to draw, and a county-balance layer was out of scope for this version.</p>
+    <p>Those units are excluded from every municipal figure and are itemised line by line in <code>data/processed/unmatched.csv</code>. The consequence for testimony: <b>statewide totals on this map are municipal totals.</b> They are smaller than Illinois' true permit count, by that 8%.</p>
+    <p class="resolution">Decided and documented, not outstanding. Adding the layer is a v2 question.</p>
+  </article>
+
+  <article class="item">
+    <h3>Three municipalities have no boundary to draw</h3>
+    <p>Centreville, Cahokia village and Gulf Port village carry real FIPS place codes in the permit files, but those codes no longer exist in the 2025 Census boundary file — the municipalities were dissolved or merged. Attributing their permits to a successor municipality would need a municipal-succession record, which is not one of this project's sources, and guessing the link would credit one town with another town's permits.</p>
+    <p>They remain unmatched and their units are excluded: <b>3 units</b> across 2010–2025, out of 272,726. The successor municipality shows only the permits filed under its own record.</p>
+    <p class="resolution">Unresolved by design. Negligible in size, but recorded rather than papered over.</p>
+  </article>
+
+  <article class="item">
+    <h3>A 0.0071% discrepancy whose cause is not established</h3>
+    <p>Summing the place-level permit files gives 297,273 Illinois units for 2010–2025. The Census Bureau's own published state-level file gives 297,252 — a difference of <b>21 units</b>, all single-family, spread over five years. Eleven of the sixteen years reconcile exactly.</p>
+    <p>It was investigated and not explained. It is not a column-reading error (that would be wrong by orders of magnitude, and could not be exact in eleven years). It is not the universe-change footnote in the Census documentation (no Illinois record carries that marker). The likeliest remaining explanation is that the place-level and state-level files are revised on different schedules — but nothing in the documentation says so, so it is recorded as a hypothesis, not a finding.</p>
+    <p>The headline Illinois rate on this site uses the <b>Census-published</b> state figure. The per-municipality numbers come from the place files. The gap is roughly seventy times smaller than the tolerance the build allows.</p>
+    <p class="resolution">Logged, not chased. No effect on any municipality's number.</p>
+  </article>
+
+  <article class="item">
+    <h3>Some county labels are derived, not read</h3>
+    <p>A municipality with a permit record gets its county from that record. A municipality without one has no such field, and none of this project's sources is a place-to-county lookup — so its county label is derived geometrically, by testing the town's interior point against the Census county boundaries.</p>
+    <p>That is a computation on published boundaries, not an estimate, but it is not authoritative either: a town straddling a county line is labelled with whichever county contains its interior point. Every municipality's detail record carries which method produced its label.</p>
+    <p class="resolution">Resolved, with the method recorded per municipality.</p>
+  </article>
+</section>
+
+<section id="checks">
+  <h2>5. How the numbers are checked</h2>
+  <p>Because this is meant for testimony, the build refuses to declare itself finished unless a set of checks passes, and it prints the full report either way. They are not smoke tests — several of them re-read the raw Census files independently rather than trusting anything the build wrote.</p>
+  <ul class="ticks">
+    <li>Every Illinois place appears exactly once, and every one has a coverage status.</li>
+    <li>At least 95% of municipal permit records resolve to a boundary. The actual figure is <b id="s-join">—</b>, and the records that do not resolve are printed, largest first.</li>
+    <li>Every percentage has a real 2010 denominator behind it; none is negative; anything above 200% is flagged for a human to look at.</li>
+    <li>Statewide totals rebuilt from the per-municipality files reconcile with the raw Census rows, with every unit accounted for.</li>
+    <li>The permit-file column positions are verified against the column headers Census ships inside the files <em>and</em> against Census's independently published state totals — because the 2000–2006 files use an older layout that the current documentation does not describe.</li>
+    <li>The page itself is driven in a real browser: it must load with zero console errors, render the map, show a numeric state average, open a municipality's detail panel with a percentage and an absolute count, and restore a shared link.</li>
+  </ul>
+  <p class="fineprint">A check was never loosened to make it pass. Where a check could not be satisfied as literally written — see the unincorporated-permits item above — the reason is documented and both the strict and the achievable figure are printed side by side.</p>
+</section>
+
+<section id="rebuild">
+  <h2>6. Rebuilding it</h2>
+  <p>Every number on this site is reproducible from raw public sources by running one command. From a fresh copy of the repository:</p>
+  <pre><code>uv sync
+uv run scripts/build.py
+uv run scripts/check_data.py</code></pre>
+  <p>The build needs no network access — the downloaded Census files are kept in the repository. To refresh them when new annual data is published, run the three fetch scripts first. Every URL, with the date it was retrieved and the file it produced, is recorded in <code>data/SOURCES.md</code>.</p>
+  <h3>Sources</h3>
+  <ul class="sources" id="sources-list"></ul>
+  <p class="fineprint">Built <span data-meta="build_date">—</span>. Latest final permit year: <span data-meta="ymax">—</span>.</p>
+</section>
+
+</main>
+
+<footer>
+  <p><a href="index.html">&larr; Back to the map</a></p>
+  <p>Built for <a href="https://abundanthousingillinois.org">Abundant Housing Illinois</a>. Accuracy beats features: if a number could not be sourced, it was left out.</p>
+</footer>
+
+<script>
+/* Live figures come from the same meta.json the map reads, so this page cannot
+   drift out of date with the build. No runtime API calls. */
+(async function () {
+  const $ = id => document.getElementById(id);
+  const int = n => (n === null || n === undefined) ? '—' : n.toLocaleString('en-US');
+  const pct = (n, d) => (n === null || n === undefined) ? '—'
+    : n.toLocaleString('en-US', { minimumFractionDigits: d === undefined ? 1 : d,
+                                  maximumFractionDigits: d === undefined ? 1 : d }) + '%';
+  try {
+    const m = await (await fetch('data/meta.json')).json();
+    const c = m.coverage_counts || {};
+
+    document.querySelectorAll('[data-meta]').forEach(el => {
+      const v = m[el.dataset.meta];
+      if (v !== undefined && v !== null) el.textContent = v;
+    });
+
+    $('s-il').textContent = pct(m.il_pct_growth);
+    $('s-us').textContent = pct(m.us_pct_growth);
+    $('s-zero').textContent = int(m.n_zero_mf);
+    $('s-places').textContent = int(m.n_places);
+    $('s-reporting').textContent = int(c.reporting || 0);
+    $('s-gap').textContent = int(c.no_permit_office || 0);
+    $('s-partial').textContent = int(m.n_partial_coverage);
+    $('s-join').textContent = pct(m.join.join_rate_municipal_pct, 3);
+    $('sourceline').textContent = m.source_line + ' · built ' + m.build_date;
+
+    const uninc = 100 - (m.join.join_rate_all_records_pct || 0);
+    $('s-uninc').textContent = pct(uninc, 1);
+
+    $('s-ahpaa').textContent = m.ahpaa.enabled
+      ? `Loaded: ${int(m.ahpaa.rows)} municipalities`
+        + (m.ahpaa.as_of ? `, as of ${m.ahpaa.as_of}.` : '.')
+      : 'The file currently has no rows, so the filter is off.';
+
+    const ul = $('sources-list');
+    for (const s of (m.sources || [])) {
+      const li = document.createElement('li');
+      li.textContent = s;
+      ul.appendChild(li);
+    }
+  } catch (err) {
+    document.body.insertAdjacentHTML('afterbegin',
+      `<div class="loaderr">Could not load the build's figures (${err.message}).
+       The text on this page is still accurate; the numbers are blank.</div>`);
+  }
+})();
+</script>
+</body>
+</html>

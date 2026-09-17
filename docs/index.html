@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" data-palette="#2E6E9E,#E87722,#1F8A70,#9B59B6">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How much housing has your town permitted? — Abundant Housing Illinois</title>
+<meta name="description" content="Housing units authorized by permit in every Illinois municipality since 2010, from the U.S. Census Building Permits Survey, against each town's 2010 housing stock.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">
+<!-- No webfont request. AHIL's Poppins is used when the reader already has it and
+     a system sans-serif otherwise, so the only external request this page makes
+     is the pinned MapLibre CDN. -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="layout">
+<div class="main">
+
+<header>
+  <h1>How much housing has each Illinois town permitted?</h1>
+  <p class="subtitle">Housing units authorized by permit since 2010, measured against the town's own 2010 housing stock.</p>
+  <p class="sourceline" id="sourceline">U.S. Census Building Permits Survey; 2010 Decennial Census</p>
+  <p class="headerlink"><a href="about.html">Method, caveats &amp; open items &rarr;</a></p>
+</header>
+
+<section class="controls" aria-label="Map controls">
+  <div class="control-group">
+    <span class="label" id="lbl-metric">Metric</span>
+    <div class="segmented" role="group" aria-labelledby="lbl-metric">
+      <button type="button" data-metric="pct_growth" aria-pressed="true">Percent growth</button>
+      <button type="button" data-metric="units_total" aria-pressed="false">Total units</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <span class="label" id="lbl-type">Structure type</span>
+    <div class="segmented" role="group" aria-labelledby="lbl-type">
+      <button type="button" data-type="all" aria-pressed="true">All</button>
+      <button type="button" data-type="sf" aria-pressed="false">Single-family</button>
+      <button type="button" data-type="du" aria-pressed="false">Duplex</button>
+      <button type="button" data-type="mf34" aria-pressed="false">3–4 unit</button>
+      <button type="button" data-type="mf5p" aria-pressed="false">5+ unit</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <span class="label" id="lbl-pop">Population</span>
+    <div class="segmented" role="group" aria-labelledby="lbl-pop">
+      <button type="button" data-pop="5000" aria-pressed="true">5,000+</button>
+      <button type="button" data-pop="25000" aria-pressed="false">25,000+</button>
+      <button type="button" data-pop="0" aria-pressed="false">All</button>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <span class="label">Highlights</span>
+    <div class="switch-row">
+      <label class="switch headline" id="label-zero-mf">
+        <input type="checkbox" id="toggle-zero-mf">
+        <strong>Zero multifamily</strong>
+      </label>
+      <label class="switch" id="label-ahpaa">
+        <input type="checkbox" id="toggle-ahpaa">
+        <span>AHPAA non-exempt only</span>
+      </label>
+    </div>
+    <p class="hint" id="ahpaa-hint"></p>
+  </div>
+</section>
+
+<div class="map-wrap">
+  <div id="map" role="application" aria-label="Map of Illinois municipalities coloured by housing permitted since 2010"></div>
+</div>
+
+<section id="legend" aria-live="polite">
+  <div class="legend-title" id="legend-title">Housing units permitted 2010–2025 as a share of 2010 housing stock</div>
+  <div id="legend-midpoint"></div>
+  <div class="ramp" id="legend-ramp"></div>
+  <div class="ramp-labels" id="legend-labels"></div>
+  <div class="legend-note">
+    <span class="swatch" id="legend-gap-swatch"></span>
+    <span>No permit office reporting to Census — <b>not a zero</b></span>
+  </div>
+</section>
+
+<section class="table-section">
+  <h2 id="table-title">Municipalities</h2>
+  <p class="table-meta" id="table-meta"></p>
+  <div class="table-scroll">
+    <table id="table">
+      <thead>
+        <tr id="table-head-row"></tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <p id="footer-method"></p>
+  <p id="footer-coverage"></p>
+  <p id="footer-join"></p>
+  <p><a href="about.html"><b>Method, caveats and open items &rarr;</b></a> — what these numbers do and do not mean, and what still needs a person.</p>
+  <p>Built for <a href="https://abundanthousingillinois.org">Abundant Housing Illinois</a>. Every number here is reproducible from raw public sources by running one build command.</p>
+</footer>
+
+</div><!-- /.main -->
+
+<aside id="detail" hidden aria-live="polite">
+  <div class="detail-head">
+    <div>
+      <h2 id="detail-name"></h2>
+      <p class="detail-sub" id="detail-sub"></p>
+    </div>
+    <button type="button" id="detail-close" aria-label="Close details">&times;</button>
+  </div>
+  <div id="detail-body"></div>
+</aside>
+
+</div><!-- /.layout -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

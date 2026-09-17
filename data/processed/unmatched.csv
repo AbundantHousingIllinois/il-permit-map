@@ -1,0 +1,86 @@
+bps_id,bps_name,county_fips,county_name,fips_place,fips_mcd,record_class,reason,first_year,last_year,units_2010_ymax,units_2000_ymax,sf,du,mf34,mf5p
+464500,Madison County Part Unincorporated Area,119,Madison County,,00000,county_unincorporated,county_unincorporated,2000,2025,1837,4740,1837,0,0,0
+857200,Winnebago County Unincorporated Area,201,Winnebago County,,00000,county_unincorporated,county_unincorporated,2000,2025,1199,8051,1133,48,18,0
+217900,DuPage County Unincorporated Area,043,DuPage County,,00000,county_unincorporated,county_unincorporated,2000,2025,1118,2473,1096,4,12,6
+749800,St. Clair County Part Unincorporated Area,163,St. Clair County,,00000,county_unincorporated,county_unincorporated,2000,2025,970,2629,968,2,0,0
+394300,Kane County Unincorporated Area,089,Kane County,,00000,county_unincorporated,county_unincorporated,2000,2025,926,4807,832,0,0,94
+418000,Lake County Part Unincorporated Area,097,Lake County,,00000,county_unincorporated,county_unincorporated,2000,2025,904,3329,904,0,0,0
+848800,Will County Unincorporated Area,197,Will County,,00000,county_unincorporated,county_unincorporated,2000,2025,783,4160,759,0,0,24
+159100,Clinton County Unincorporated Area,027,Clinton County,,00000,county_unincorporated,county_unincorporated,2002,2025,693,1293,689,0,4,0
+463600,Macoupin County Unincorporated Area,117,Macoupin County,,00000,county_unincorporated,county_unincorporated,2003,2025,661,1117,661,0,0,0
+491200,McHenry County Unincorporated Area,111,McHenry County,,00000,county_unincorporated,county_unincorporated,2000,2025,627,2888,625,2,0,0
+616000,Peoria County Part Unincorporated Area,143,Peoria County,,00000,county_unincorporated,county_unincorporated,2000,2025,600,2245,598,2,0,0
+414700,LaSalle County Unincorporated Area,099,LaSalle County,,00000,county_unincorporated,county_unincorporated,2003,2025,573,1562,491,0,0,82
+701200,Sangamon County Unincorporated Area,167,Sangamon County,,00000,county_unincorporated,county_unincorporated,2000,2025,532,1162,494,2,0,36
+388300,Jo Daviess County Unincorporated Area,085,Jo Daviess County,,00000,county_unincorporated,county_unincorporated,2000,2025,529,1814,529,0,0,0
+618100,Perry County,145,Perry County,,00000,county_unincorporated,county_unincorporated,2003,2025,523,523,523,0,0,0
+288700,Fulton County Unincorporated Area,057,Fulton County,,00000,county_unincorporated,county_unincorporated,2000,2025,511,997,490,0,0,21
+517300,Monroe County Unincorporated Area,133,Monroe County,,00000,county_unincorporated,county_unincorporated,2000,2025,464,1259,462,2,0,0
+779200,Tazewell County Unincorporated Area,179,Tazewell County,,00000,county_unincorporated,county_unincorporated,2000,2025,464,1445,456,8,0,0
+492400,McLean County Part Unincorporated Area,113,McLean County,,00000,county_unincorporated,county_unincorporated,2000,2025,462,1007,456,6,0,0
+861700,Woodford County Unincorporated Area,203,Woodford County,,00000,county_unincorporated,county_unincorporated,2000,2025,441,1091,441,0,0,0
+138400,Champaign County Part Unincorporated Area,019,Champaign County,,00000,county_unincorporated,county_unincorporated,2000,2025,411,1607,411,0,0,0
+718600,Shelby County Unincorporated Area,173,Shelby County,,00000,county_unincorporated,county_unincorporated,2000,2025,410,909,410,0,0,0
+525100,Moultrie County Unincorporated Area,139,Moultrie County,,00000,county_unincorporated,county_unincorporated,2000,2025,404,704,380,24,0,0
+401500,Kendall County Unincorporated Area,093,Kendall County,,00000,county_unincorporated,county_unincorporated,2000,2025,387,1232,387,0,0,0
+676000,Rock Island County Unincorporated Area,161,Rock Island County,,00000,county_unincorporated,county_unincorporated,2000,2025,384,865,384,0,0,0
+578500,Ogle County Unincorporated Area,141,Ogle County,,00000,county_unincorporated,county_unincorporated,2000,2025,372,1402,372,0,0,0
+396100,Kankakee County Unincorporated Area,091,Kankakee County,,00000,county_unincorporated,county_unincorporated,2000,2025,344,1582,344,0,0,0
+518500,Montgomery County Unincorporated Area,135,Montgomery County,,00000,county_unincorporated,county_unincorporated,2003,2025,340,571,327,0,7,6
+171100,Cook County Part Unincorporated Area,031,Cook County,,00000,county_unincorporated,county_unincorporated,2000,2025,313,1413,299,6,8,0
+847300,Whiteside County Unincorporated Area,195,Whiteside County,,00000,county_unincorporated,county_unincorporated,2000,2025,306,945,306,0,0,0
+387100,Jersey County Unincorporated Area,083,Jersey County,,00000,county_unincorporated,county_unincorporated,2000,2025,284,942,284,0,0,0
+126400,Carroll County Unincorporated Area,015,Carroll County,,00000,county_unincorporated,county_unincorporated,2000,2025,280,818,280,0,0,0
+824800,Washington County Unincorporated Area,189,Washington County,,00000,county_unincorporated,county_unincorporated,2000,2025,279,588,277,2,0,0
+378100,Iroquois County Unincorporated Area,075,Iroquois County,,00000,county_unincorporated,county_unincorporated,2000,2025,261,599,261,0,0,0
+463000,Macon County Unincorporated Area,115,Macon County,,00000,county_unincorporated,county_unincorporated,2000,2025,252,803,250,2,0,0
+325900,Grundy County Unincorporated Area,063,Grundy County,,00000,county_unincorporated,county_unincorporated,2000,2025,247,792,247,0,0,0
+150700,Christian County Unincorporated Area,021,Christian County,,00000,county_unincorporated,county_unincorporated,2000,2025,244,612,244,0,0,0
+652900,Randolph County Unincorporated Area,157,Randolph County,,00000,county_unincorporated,county_unincorporated,2000,2025,228,530,228,0,0,0
+078400,Bond County Unincorporated Area,005,Bond County,,00000,county_unincorporated,county_unincorporated,2000,2025,225,655,225,0,0,0
+427900,Lee County Unincorporated Area,103,Lee County,,00000,county_unincorporated,county_unincorporated,2000,2025,221,795,221,0,0,0
+625600,Pike County Unincorporated Area,149,Pike County,,00000,county_unincorporated,county_unincorporated,2000,2025,213,503,213,0,0,0
+196600,De Witt County Unincorporated Area,039,De Witt County,,00000,county_unincorporated,county_unincorporated,2000,2025,212,539,206,0,6,0
+444400,Livingston County Unincorporated Area,105,Livingston County,,00000,county_unincorporated,county_unincorporated,2000,2025,208,544,208,0,0,0
+649300,Putnam County Unincorporated Area,155,Putnam County,,00000,county_unincorporated,county_unincorporated,2000,2025,201,414,201,0,0,0
+105100,Bureau County Unincorporated Area,011,Bureau County,,00000,county_unincorporated,county_unincorporated,2000,2025,189,469,184,2,3,0
+758200,Stephenson County Part Unincorporated Area,177,Stephenson County,,00000,county_unincorporated,county_unincorporated,2000,2025,185,699,185,0,0,0
+080800,Boone County Unincorporated Area,007,Boone County,,00000,county_unincorporated,county_unincorporated,2000,2025,184,1195,184,0,0,0
+796000,Union County Unincorporated Area,181,Union County,,00000,county_unincorporated,county_unincorporated,2000,2025,183,498,183,0,0,0
+497200,Menard County Unincorporated Area,129,Menard County,,00000,county_unincorporated,county_unincorporated,2000,2025,182,572,182,0,0,0
+623800,Piatt County Unincorporated Area,147,Piatt County,,00000,county_unincorporated,county_unincorporated,2000,2025,177,480,177,0,0,0
+197500,DeKalb County Unincorporated Area,037,DeKalb County,,00000,county_unincorporated,county_unincorporated,2000,2025,163,535,163,0,0,0
+212200,Douglas County Part Unincorporated Area,041,Douglas County,,00000,county_unincorporated,county_unincorporated,2003,2025,159,231,159,0,0,0
+349000,Henry County Unincorporated Area,073,Henry County,,00000,county_unincorporated,county_unincorporated,2000,2025,159,447,159,0,0,0
+114100,Calhoun County,013,Calhoun County,,00000,county_unincorporated,county_unincorporated,2000,2025,140,381,140,0,0,0
+410200,Knox County Part Unincorporated Area,095,Knox County,,00000,county_unincorporated,county_unincorporated,2000,2025,132,627,132,0,0,0
+499300,Mercer County Unincorporated Area,131,Mercer County,,00000,county_unincorporated,county_unincorporated,2000,2025,113,300,113,0,0,0
+821500,Warren County Unincorporated Area,187,Warren County,,00000,county_unincorporated,county_unincorporated,2000,2025,105,285,105,0,0,0
+274900,Ford County Unincorporated Area,053,Ford County,,00000,county_unincorporated,county_unincorporated,2000,2025,97,251,97,0,0,0
+447100,Logan County Unincorporated Area,107,Logan County,,00000,county_unincorporated,county_unincorporated,2000,2025,92,289,92,0,0,0
+479800,Marshall County Unincorporated Area,123,Marshall County,,00000,county_unincorporated,county_unincorporated,2003,2025,84,212,84,0,0,0
+648400,Pulaski County Unincorporated Area,153,Pulaski County,,00000,county_unincorporated,county_unincorporated,2003,2025,82,106,82,0,0,0
+346900,Henderson County Unincorporated Area,071,Henderson County,,00000,county_unincorporated,county_unincorporated,2000,2025,81,243,81,0,0,0
+484300,Mason County Unincorporated Area,125,Mason County,,00000,county_unincorporated,county_unincorporated,2000,2025,79,225,79,0,0,0
+131200,Cass County Unincorporated Area,017,Cass County,,00000,county_unincorporated,county_unincorporated,2000,2025,53,150,53,0,0,0
+755800,Stark County,175,Stark County,,00000,county_unincorporated,county_unincorporated,2000,2025,46,113,46,0,0,0
+687100,Ross township,183,Vermilion County,,65949,township,township,2013,2025,9,9,9,0,0,0
+485200,Massac County Unincorporated Area,127,Massac County,,00000,county_unincorporated,county_unincorporated,2013,2025,8,8,8,0,0,0
+135700,Centreville,163,St. Clair County,12203,12210,municipal,no_tiger_match,2000,2023,3,89,3,0,0,0
+554500,Newman township,041,Douglas County,,52636,township,township,2020,2025,2,2,2,0,0,0
+001900,Adams township,099,LaSalle County,,00204,township,township,2000,2007,0,26,0,0,0,0
+006400,Alexander County Unincorporated Area,003,Alexander County,,00000,county_unincorporated,county_unincorporated,2002,2014,0,17,0,0,0,0
+113200,Cahokia village,163,St. Clair County,10370,73456,municipal,no_tiger_match,2000,2023,0,39,0,0,0,0
+283600,Franklin County Unincorporated Area,055,Franklin County,,00000,county_unincorporated,county_unincorporated,2013,2025,0,0,0,0,0,0
+291700,Gallatin County,059,Gallatin County,,,county_wide,county_wide,2000,2004,0,0,0,0,0,0
+315700,Grant township,183,Vermilion County,,30965,township,township,2000,2025,0,38,0,0,0,0
+326500,Gulf Port village,071,Henderson County,31992,11280,municipal,no_tiger_match,2000,2025,0,21,0,0,0,0
+471100,Manlius township,099,LaSalle County,,46448,township,township,2000,2007,0,20,0,0,0,0
+507400,Miller township,099,LaSalle County,,49204,township,township,2000,2007,0,12,0,0,0,0
+536800,Murdock township,041,Douglas County,,51427,township,township,2020,2025,0,0,0,0,0,0
+544000,Neoga township,035,Cumberland County,,51993,township,township,2000,2014,0,49,0,0,0,0
+568300,Northville township,099,LaSalle County,,54248,township,township,2000,2007,0,328,0,0,0,0
+610000,Payson township,001,Adams County,,58278,township,township,2025,2025,0,0,0,0,0,0
+725200,Sidell township,183,Vermilion County,,69849,township,township,2013,2025,0,0,0,0,0,0
+816700,Wallace township,099,LaSalle County,,78487,township,township,2000,2007,0,1,0,0,0,0
+819100,Waltham township,099,LaSalle County,,,township,township,2000,2002,0,0,0,0,0,0

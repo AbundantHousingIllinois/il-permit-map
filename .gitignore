@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+# SPEC.md §8 says to gitignore raw downloads only if they exceed 50 MB. The
+# largest here is the national county archive at 11.8 MB, so everything under
+# data/raw/ is committed and a clean checkout can run build.py and both checks
+# with no network access.
