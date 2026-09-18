@@ -83,6 +83,76 @@ def pct(num, den):
     return round(num / den * 100, 4)
 
 
+# Six mantissas per decade, not the usual three. A 1/2/5 ladder only offers
+# five distinct values between 10 and 200, and the sparse structure types need
+# six breaks inside about that range.
+NICE_MANTISSAS = (1, 1.5, 2, 3, 5, 7)
+
+
+def nice_ceiling(v: float) -> int:
+    """Smallest readable round number at or above ``v``."""
+    if v <= 0:
+        return 0
+    import math
+    exp = math.floor(math.log10(v))
+    for m in NICE_MANTISSAS + (10,):
+        step = m * 10 ** exp
+        if step >= v - 1e-9:
+            return int(round(step))
+    return int(10 ** (exp + 1))
+
+
+def stop_ladder(values, n: int = 7) -> list[int]:
+    """Seven sequential legend breaks fitted to the data actually present.
+
+    The total-units scale used one hard-coded 0-25,000 ladder for every
+    structure type, so filtering to 5+ unit put almost every municipality in the
+    lightest bin and the map went blank.  The breaks are derived per type
+    instead, from the distribution of measured places, and rounded to readable
+    numbers.  Places with no measurement contribute nothing -- a null is not a
+    zero here either.
+    """
+    xs = sorted(v for v in values if v is not None and v > 0)
+    if not xs:
+        return list(range(n))
+    # Geometric between the median and the 99th percentile of the places that
+    # have any of this type. Geometric rather than quantile-spaced because a
+    # quantile ladder collides at the top on the sparse types (most towns permit
+    # no 3-4 unit buildings at all) and because permit counts are long-tailed:
+    # Chicago is three orders of magnitude above the median, and a linear ladder
+    # puts every other municipality in the first bin.
+    hi = nice_ceiling(xs[min(len(xs) - 1, int(0.99 * len(xs)))])
+    lo = max(1, nice_ceiling(xs[len(xs) // 2]))
+    if lo >= hi:
+        lo = max(1, hi // 100)
+    ratio = (hi / lo) ** (1 / (n - 2))
+    stops = [0] + [nice_ceiling(lo * ratio ** i) for i in range(n - 1)]
+    # Strictly increasing: MapLibre's `interpolate` rejects a repeated input.
+    out = [stops[0]]
+    for v in stops[1:]:
+        out.append(max(int(v), out[-1] + 1))
+    return out
+
+
+def year_ranges(years) -> str:
+    """[2010,2011,2012,2014] -> '2010-2012 and 2014'.  For prose, not for data."""
+    years = sorted(years)
+    if not years:
+        return ""
+    runs, run = [], [years[0], years[0]]
+    for y in years[1:]:
+        if y == run[1] + 1:
+            run[1] = y
+        else:
+            runs.append(run)
+            run = [y, y]
+    runs.append(run)
+    parts = [str(a) if a == b else f"{a}\u2013{b}" for a, b in runs]
+    if len(parts) == 1:
+        return parts[0]
+    return ", ".join(parts[:-1]) + " and " + parts[-1]
+
+
 def main() -> int:
     print("=" * 78)
     print("Building docs/data/")
@@ -190,6 +260,13 @@ def main() -> int:
     print("\n[4/6] Reference rates (SPEC.md §4)")
     print("-" * 78)
     il_units = us_units = 0
+    # The same reference rate, per structure type. The map's neutral midpoint is
+    # "the Illinois rate", and when the reader filters to 5+ unit the Illinois
+    # rate they should be compared against is Illinois's 5+ unit rate -- not the
+    # all-types one. Taken from the published state rows for the same reason
+    # il_pct_growth is (BLOCKERS.md #2): the state file is the Census figure.
+    il_by_type = dict.fromkeys(L.STRUCTURE_TYPES, 0)
+    us_by_type = dict.fromkeys(L.STRUCTURE_TYPES, 0)
     for year in L.METRIC_YEARS:
         st = L.read_state_year(year)
         if L.STATE_NAME not in st or "United States" not in st:
@@ -200,8 +277,13 @@ def main() -> int:
             )
         il_units += st[L.STATE_NAME]["units_total"]
         us_units += st["United States"]["units_total"]
+        for k in L.STRUCTURE_TYPES:
+            il_by_type[k] += st[L.STATE_NAME][k]
+            us_by_type[k] += st["United States"][k]
     il_pct_growth = pct(il_units, il_h1)
     us_pct_growth = pct(us_units, us_h1)
+    il_pct_by_type = {k: pct(il_by_type[k], il_h1) for k in L.STRUCTURE_TYPES}
+    us_pct_by_type = {k: pct(us_by_type[k], us_h1) for k in L.STRUCTURE_TYPES}
     il_place_sum = sum(r["units_total"] for r in records
                        if r["year"] >= L.METRIC_START)
     print(f"  Illinois BPS units {L.METRIC_START}-{L.YMAX} (published state row): "
@@ -214,6 +296,11 @@ def main() -> int:
     print(f"  United States BPS units {L.METRIC_START}-{L.YMAX}: {us_units:,}")
     print(f"  United States 2010 H1           : {us_h1:,}")
     print(f"  us_pct_growth = {us_units:,} / {us_h1:,} = {us_pct_growth}%")
+    print("  Illinois reference rate by structure type (the map's midpoint when "
+          "the type filter is on):")
+    for k in L.STRUCTURE_TYPES:
+        print(f"    {k:<5} {il_by_type[k]:>9,} units  il {il_pct_by_type[k]:>7}%"
+              f"   us {us_pct_by_type[k]:>7}%")
 
     # ---------------- features and shards ----------------
     print("\n[5/6] Writing features and shards")
@@ -240,6 +327,36 @@ def main() -> int:
         # a 2010-2025 percentage -- which could only ever come out as 0% -- would be
         # exactly the missing-value-as-zero that SPEC.md §1.3 forbids.
         reporting = bool(metric_years_reported)
+
+        # How many of the 12 months each year the permit office actually reported.
+        # Census publishes a figure either way -- the "Reported and Imputed" block
+        # this build reads carries Census's own imputation for a non-responding
+        # office -- so a 0-month year is a real published number, but an estimate
+        # rather than a count. Illinois 0-month place-years carry 14,709 units in
+        # the metric window, so blanking them would throw away real data; showing
+        # them without saying what they are is the error the site was making.
+        mrep = months_for.get(geoid, {})
+        months_by_year = {}
+        for y in L.METRIC_YEARS:
+            raw = str(mrep.get(y, "")).strip()
+            months_by_year[y] = int(raw) if raw.isdigit() else 0
+        months_sum = sum(months_by_year.values())
+        months_expected = 12 * len(L.METRIC_YEARS)
+        imputed_years = [y for y in L.METRIC_YEARS if months_by_year[y] == 0]
+        full_years = [y for y in L.METRIC_YEARS if months_by_year[y] == 12]
+        if reporting:
+            months_coverage = round(months_sum / months_expected, 4)
+            months_flag = (
+                "none" if months_sum == 0 else
+                "full" if len(full_years) == len(L.METRIC_YEARS) else
+                "partial" if months_coverage >= 0.75 else
+                "low"
+            )
+        else:
+            months_coverage = None
+            months_flag = None
+            imputed_years = []
+            full_years = []
 
         if reporting:
             coverage = "reporting"
@@ -274,14 +391,26 @@ def main() -> int:
             mf5p_total = by_type["mf5p"]
             pct_growth = pct(units_total_2010, h1_2010)
             pct_by_type = {k: pct(by_type[k], h1_2010) for k in L.STRUCTURE_TYPES}
-            zero_mf = (mf5p_total == 0)
+            mf34_total = by_type["mf34"]
+            # A place whose permit office reported no month at all across the whole
+            # metric window has no observed multifamily record -- every figure it
+            # has is imputed. "This town permitted zero apartments" is an advocacy
+            # claim, and it is not one this data can support for those places, so
+            # the flag is null rather than true. Same rule as coverage one level up.
+            if months_flag == "none":
+                zero_mf = None
+                zero_mf3p = None
+            else:
+                zero_mf = (mf5p_total == 0)
+                zero_mf3p = (mf34_total + mf5p_total == 0)
         else:
             # SPEC.md §1.3 / §5: absence of a permit record is not zero housing.
             by_type = {k: None for k in L.STRUCTURE_TYPES}
-            units_total_2010 = mf5p_total = None
+            units_total_2010 = mf5p_total = mf34_total = None
             pct_growth = None
             pct_by_type = {k: None for k in L.STRUCTURE_TYPES}
             zero_mf = None
+            zero_mf3p = None
 
         if years_reported:
             by_type_2000 = {k: sum(yr[y][k] for y in years_reported)
@@ -308,7 +437,12 @@ def main() -> int:
                 "units_total_2010": units_total_2010,
                 "units_total_2000": units_total_2000,
                 "mf5p_total": mf5p_total,
+                "mf34_total": mf34_total,
                 "zero_mf": zero_mf,
+                "zero_mf3p": zero_mf3p,
+                "months_coverage": months_coverage,
+                "months_flag": months_flag,
+                "n_imputed_years": len(imputed_years) if reporting else None,
                 "first_metric_year": (metric_years_reported[0]
                                       if metric_years_reported else None),
                 "n_metric_years": len(metric_years_reported),
@@ -337,7 +471,25 @@ def main() -> int:
             "units_by_type_2000": by_type_2000,
             "pct_growth_by_type": pct_by_type,
             "mf5p_total": mf5p_total,
+            "mf34_total": mf34_total,
             "zero_mf": zero_mf,
+            "zero_mf3p": zero_mf3p,
+            "months_coverage": months_coverage,
+            "months_flag": months_flag,
+            "months_imputed_years": imputed_years,
+            "n_full_months_years": len(full_years) if reporting else None,
+            "months_note": (
+                None if not reporting or not imputed_years else
+                (f"This municipality's permit office reported no months to the "
+                 f"Census in {year_ranges(imputed_years)}. The Census still "
+                 "publishes a figure for those years \u2014 its own estimate for a "
+                 "non-reporting office \u2014 so the numbers below are what the Census "
+                 "published, not what the municipality counted. Treat them as a "
+                 "floor."
+                 + ("" if months_flag != "none" else
+                    " Every year in the window is on this footing, so this place "
+                    "is not counted in the zero-multifamily total."))
+            ),
             "ahpaa_status": status,
             "series": ser,
             "years_reported": years_reported,
@@ -398,7 +550,36 @@ def main() -> int:
     print(f"  Features with a NULL pct_growth: {n_null_pct:,} "
           "(no permit office, or no 2010 count -- never rendered as zero)")
     n_zero_mf = sum(1 for ft in features if ft["properties"]["zero_mf"] is True)
+    n_zero_mf3p = sum(1 for ft in features if ft["properties"]["zero_mf3p"] is True)
     print(f"  Reporting places with zero 5+ unit permits: {n_zero_mf:,}")
+    print(f"  Reporting places with nothing above a duplex: {n_zero_mf3p:,}")
+
+    months_counts: dict[str, int] = defaultdict(int)
+    for ft in features:
+        if ft["properties"]["months_flag"]:
+            months_counts[ft["properties"]["months_flag"]] += 1
+    print("  Months actually reported to Census inside the metric window, across "
+          "the reporting places:")
+    for k in ("full", "partial", "low", "none"):
+        print(f"    {k:<8} {months_counts.get(k, 0):>6,}")
+    print("     A 0-month year still carries a published Census figure; it is an "
+          "estimate for a")
+    print("     non-reporting office, not a count, and the detail panel now says "
+          "which years those are.")
+    print(f"     The {months_counts.get('none', 0)} places with no reported month "
+          "at all get a null zero-multifamily")
+    print("     flag rather than a true one.")
+
+    # Legend breaks fitted per structure type (see stop_ladder).
+    units_stops = {
+        "all": stop_ladder([ft["properties"]["units_total_2010"] for ft in features])
+    }
+    for k in L.STRUCTURE_TYPES:
+        units_stops[k] = stop_ladder(
+            [ft["properties"][f"u_{k}"] for ft in features])
+    print("  Total-units legend breaks, fitted per type:")
+    for k, v in units_stops.items():
+        print(f"    {k:<5} {v}")
     partial = [ft for ft in features
                if ft["properties"]["coverage"] == "reporting"
                and ft["properties"]["n_metric_years"] < len(L.METRIC_YEARS)]
@@ -444,6 +625,10 @@ def main() -> int:
         "tiger_vintage": L.TIGER_VINTAGE,
         "il_pct_growth": il_pct_growth,
         "us_pct_growth": us_pct_growth,
+        "il_pct_growth_by_type": il_pct_by_type,
+        "us_pct_growth_by_type": us_pct_by_type,
+        "il_units_by_type": il_by_type,
+        "units_stops": units_stops,
         "il_units_2010_ymax": il_units,
         "us_units_2010_ymax": us_units,
         "il_h1_2010": il_h1,
@@ -451,7 +636,9 @@ def main() -> int:
         "n_places": len(features),
         "coverage_counts": dict(cov_counts),
         "n_zero_mf": n_zero_mf,
+        "n_zero_mf3p": n_zero_mf3p,
         "n_partial_coverage": len(partial),
+        "months_counts": dict(months_counts),
         "ahpaa": {
             "enabled": ahpaa_enabled,
             "rows": len(ahpaa_rows),

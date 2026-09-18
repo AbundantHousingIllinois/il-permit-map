@@ -113,12 +113,29 @@ written to disk, and the URLs recorded in `data/SOURCES.md` have no key on them.
 `scripts/check_data.py` is the definition of done for the data. It exits 0 only
 if all ten SPEC.md §7 conditions hold, and prints a readable report either way.
 It re-reads the TIGER archive and the raw BPS files itself rather than trusting
-anything the build wrote. It also runs one extra check of its own — check A,
-which verifies the BPS column positions against the shipped column headers and
-against the independently published state totals.
+anything the build wrote. It also runs three extra checks of its own, each
+labelled as an addition:
+
+- **A** verifies the BPS column positions against the shipped column headers and
+  against the independently published state totals.
+- **B** verifies that the months each permit office actually reported are carried
+  through, and that no municipality whose office reported nothing is claimed as
+  having permitted zero multifamily (BLOCKERS.md #5).
+- **C** verifies that the Illinois reference rate and the legend breaks exist per
+  structure type and reconcile with the published state rows.
 
 `scripts/check_site.py` serves `docs/` over HTTP and drives it with headless
-Chromium, installing the browser on first run if needed.
+Chromium, installing the browser on first run if needed. Site checks 8 and 9 are
+additions too: 8 asserts the map's colour break follows the structure-type filter,
+9 asserts the chart separates the pre-2010 context from the metric window and marks
+the years a permit office did not report.
+
+The page's one external dependency is the pinned MapLibre CDN build. `check_site.py`
+fetches those pinned URLs itself, caches them under `data/raw/vendor/`, and serves
+them to the headless browser, so the browser checks do not depend on the test
+machine being able to reach a CDN — which it cannot, behind a TLS-inspecting proxy.
+The page is unmodified and still references the CDN; a URL that stops resolving
+still fails the run.
 
 `scripts/simplify_geo.py` is the offline geometry fallback. `fetch_geo.py`
 normally simplifies with mapshaper, which needs the network; if `data/processed/`

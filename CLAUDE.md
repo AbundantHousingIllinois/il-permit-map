@@ -88,6 +88,52 @@ and an explanation; and the detail panel says "since {first_metric_year}" rather
 than "since 2010" when they differ. This moved `reporting` from 948 to 932 and
 `zero_mf` from 713 to 697.
 
+**A 0-month year is a published estimate, not a count, and not a blank.** Every BPS
+place record carries `months_reported`. A year where an office filed 0 of 12 months
+still has a published figure, because the "Reported and Imputed" block this build
+reads carries Census's own imputation for a non-responder — Illinois 0-month
+place-years hold 14,709 units in the metric window, so blanking them would discard
+real data. They are shown, ticked on the chart, and named in prose in the detail
+panel. The five places that reported no month in *any* metric year get a null
+`zero_mf` rather than `true`, which moved the zero-5+ headline from 697 to 692.
+Raised by Austin Busch asking about Cicero; see BLOCKERS.md #5.
+
+**"Zero multifamily" is two claims, so it is two switches.** The old highlight keyed
+on `mf5p_total == 0` and was labelled "Zero multifamily", which reads as "nothing
+but houses". Glen Ellyn has permitted 4 units in 3–4 unit buildings and 0 in 5+, and
+was in it. The switch is now **"No 5+ unit buildings"** (692 municipalities), with a
+second, stricter **"Nothing above a duplex"** on `mf34 + mf5p == 0` (635). Every
+detail panel prints all four buckets, and a place in the first switch with 3–4 unit
+permits says so in the flag itself.
+
+**The colour break follows the structure-type filter.** `midpoint()` returned
+`il_pct_growth` — the all-types 5.612% — whatever the filter said, so filtering to
+5+ unit compared every municipality against a rate four times its own reference and
+the map went uniformly orange. `meta.json` now carries `il_pct_growth_by_type` and
+`us_pct_growth_by_type`, taken from the published state rows for the same reason
+`il_pct_growth` is (BLOCKERS.md #2). The sequential ladder had the same problem from
+a different direction: one hard-coded `SEQ_STOPS` of 0–25,000 for every type put
+almost everything in the lightest bin. `meta.units_stops` now carries a ladder per
+type, fitted geometrically between the median and the 99th percentile of the places
+that have any of that type, rounded to readable numbers.
+
+**The chart keeps 2000–2009 but marks it as context.** Steffany suggested starting
+the chart at 2010; Austin asked to keep the earlier years and mark them, to show the
+pre-2008 baseline. Austin's is the later message and the better one, so: pre-2010
+bands render at 0.4 opacity with a dashed top outline, a dashed rule sits at 2010
+labelled "context" / "counted in the metric", and the tooltip says so on any year
+before 2010. Only 2010–YMAX feeds a figure, which the chart caption now states.
+
+**`check_site.py` serves the pinned MapLibre bundle from a local cache.** The page's
+one external dependency is the pinned CDN build. On a machine behind a
+TLS-inspecting proxy the headless browser cannot validate that request even when
+everything else on the machine can, and the whole run died on a 45-second timeout
+that said nothing. The pinned URLs are now fetched through Python — which does read
+the machine's CA configuration — cached under `data/raw/vendor/`, and served to the
+browser from the cache. The page is unmodified and still references the CDN; what
+was removed is the *checks'* dependence on the test machine reaching it. A URL that
+404s still fails the run, and which path was taken is printed.
+
 **No webfont.** AHIL's Poppins is requested from the reader's own system and a
 system sans-serif is the fallback. A Google Fonts `<link>` would be a second
 runtime external request that SPEC.md never authorised, and a reader on a
@@ -195,6 +241,36 @@ and no AHPAA data of any kind.
     changed, because this working copy sits on a cloud file provider where one
     small-file open costs about 280 ms.
 
+17. **`months_reported` gates the zero-5+ flag and is surfaced on the page.** §7
+    has no check for it and §6 does not mention it, but §1.3's rule — a missing
+    measurement is never a zero — applies as much to a year an office skipped as to
+    a year with no record. Five places lose their `zero_mf` flag to this; the rest
+    keep their figures and gain a caveat. `check_data.py` check B gates it.
+    (BLOCKERS.md #5.)
+18. **The "Zero multifamily" highlight became two switches with different names.**
+    §6.2 names one highlight. The old label described the 5+ bucket as though it
+    covered all multifamily, which is wrong for any municipality with a 3–4 unit
+    permit. Splitting it is a clarity fix, not a new feature: both switches read the
+    same already-built per-type totals.
+19. **The diverging midpoint and the sequential ladder are per structure type.**
+    §6.2 says the midpoint is "the Illinois average" and gives one figure. Read with
+    §6.2's own type filter, one figure cannot be right for five different views, so
+    `meta.json` carries five. `check_data.py` check C and site check 8 gate it.
+20. **The chart marks 2000–2009 as context rather than dropping it.** §6.4 asks for
+    the full 2000–YMAX series; this keeps it and adds the boundary the metric
+    definition implies.
+21. **Site checks 8 and 9 added**, both labelled as additions, for the two items
+    above. Site check 3's midpoint is now read from its own element rather than
+    scraped as the first number in the sentence — which stopped working the moment
+    the sentence could say "3–4 unit".
+22. **`check_site.py` may cache the pinned MapLibre bundle under
+    `data/raw/vendor/`** and serve it to the headless browser. §8 requires the
+    *build* to run offline and says nothing about the checks; this moves the checks
+    the same way. The page itself is untouched.
+23. **Fixed while in the file:** the legend title in Total units mode said
+    "Total units permitted 2000–YMAX" while the map coloured by the
+    METRIC_START–YMAX total. The label was wrong, not the data.
+
 ---
 
 ## Added after the spec: `docs/about.html`
@@ -202,7 +278,7 @@ and no AHPAA data of any kind.
 SPEC.md §1.6 says "no features beyond §6," and §6 describes only the map page.
 Steffany asked for an explainer page after the build was finished, so this is a
 deliberate, requested departure rather than scope creep, recorded here as
-**deviation 17**.
+**deviation 24**.
 
 The page restates the metric definition, the three things the numbers are *not*
 (authorised rather than built, no demolitions netted out, not a cost measure),
@@ -215,4 +291,10 @@ so it cannot drift out of date with the build; there is no second copy of any
 number in the HTML. `check_site.py` gained a disclosed extra check **B** that
 loads the page, requires zero console errors, and asserts the rendered Illinois
 and U.S. figures match `meta.json` — so a build that changes the numbers without
-updating the page fails the check rather than shipping a stale caveat.
+updating the page fails the check rather than shipping a stale caveat. It now also
+asserts the two multifamily counts and the two months-reported counts, which are the
+figures a reader is most likely to quote.
+
+The page gained a section 4, *What "no 5+ unit" means, and what it does not*, using
+Glen Ellyn as the worked example, and a third callout in section 3 for the
+months-reported rule.

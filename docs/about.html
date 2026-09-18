@@ -22,9 +22,10 @@
   <a href="#measure">1. What it measures</a>
   <a href="#notmeasure">2. What it is not</a>
   <a href="#coverage">3. Gaps are not zeros</a>
-  <a href="#open">4. Open items</a>
-  <a href="#checks">5. How it is checked</a>
-  <a href="#rebuild">6. Rebuilding it</a>
+  <a href="#multifamily">4. What "no 5+ unit" means</a>
+  <a href="#open">5. Open items</a>
+  <a href="#checks">6. How it is checked</a>
+  <a href="#rebuild">7. Rebuilding it</a>
 </nav>
 
 <section id="measure">
@@ -47,6 +48,7 @@
 
 <section id="notmeasure">
   <h2>2. What these numbers are not</h2>
+  <p class="fineprint"><b>The chart goes back further than the metric does.</b> Every municipality's chart runs from <span data-meta="ymin">2000</span> so the pre-2008 baseline is visible, but only <span data-meta="metric_start">2010</span> onward feeds any figure on this page. The earlier years are drawn faded, with a dashed outline, behind a marked boundary.</p>
   <dl class="pairs">
     <dt>Not units built.</dt>
     <dd>BPS counts units <b>authorized by permit</b>. A permitted project that was never financed, never started or abandoned still counts here. This is the standard measure of how much housing a jurisdiction has allowed, which is the question in front of the legislature — but it is not a count of completed homes.</dd>
@@ -70,11 +72,23 @@
   <div class="callout">
     <p><b>The same rule applies year by year.</b> A municipality whose permit office first reported in 2013 has <em>no value</em> — not zero — for 2010 through 2012. Its chart shows a shaded gap over those years, and its detail panel says which year its record begins. <b id="s-partial">—</b> reporting municipalities do not have a record for every year in the window.</p>
   </div>
-  <p class="fineprint">If you are about to say "this town built nothing," check that its coverage is <em>reporting</em> and check the first year of its record. The map will tell you both.</p>
+  <div class="callout">
+    <p><b>And a third level, added after Austin Busch asked about Cicero.</b> A permit office that <em>is</em> in the survey can still file for only part of a year — or for none of it. The Census publishes a figure either way: for a non-reporting office it publishes its own estimate. Those are real published numbers, so the map shows them, but they are not counts the municipality made.</p>
+    <p>Of the reporting municipalities, <b id="s-months-full">—</b> reported all twelve months in every year since <span data-meta="metric_start">2010</span>. <b id="s-months-none">—</b> reported no month at all across the whole window; for those, every figure is an estimate, so they carry no "no 5+ unit" flag and are left out of that count. A municipality's detail panel names the years its office did not report, and the chart puts a tick under them.</p>
+  </div>
+  <p class="fineprint">If you are about to say "this town built nothing," check that its coverage is <em>reporting</em>, check the first year of its record, and check whether its office actually filed. The map will tell you all three.</p>
+</section>
+
+<section id="multifamily">
+  <h2>4. What "no 5+ unit" means, and what it does not</h2>
+  <p class="lede">The Building Permits Survey splits every unit into four buckets by the size of the building it sits in: single-family, two-unit, three-to-four-unit, and five-or-more.</p>
+  <p>The headline highlight — <b>No 5+ unit buildings</b> — counts only the last bucket. A municipality can appear in it and still have permitted a duplex, or a three-flat, or a four-flat. <b>Glen Ellyn is the worked example</b>: it has permitted no units in buildings of five or more since <span data-meta="metric_start">2010</span>, and four units in three-to-four-unit buildings. Both statements are true at once.</p>
+  <p>So there are two switches, not one. <b id="s-zero2">—</b> municipalities have permitted no 5+ unit building since <span data-meta="metric_start">2010</span>; <b id="s-zero3p">—</b> have permitted nothing above a duplex. The second is the stricter claim and the safer one to make in testimony if what you mean is "nothing that looks like an apartment building."</p>
+  <p class="fineprint">Every municipality's detail panel prints all four buckets, so the split is never hidden behind the flag.</p>
 </section>
 
 <section id="open">
-  <h2>4. Open items — what still needs a person</h2>
+  <h2>5. Open items — what still needs a person</h2>
   <p class="lede">These were recorded as they were hit, in <code>BLOCKERS.md</code> in the repository. Nothing below was filled in with a plausible-looking number.</p>
 
   <article class="item priority">
@@ -129,7 +143,7 @@
 </section>
 
 <section id="checks">
-  <h2>5. How the numbers are checked</h2>
+  <h2>6. How the numbers are checked</h2>
   <p>Because this is meant for testimony, the build refuses to declare itself finished unless a set of checks passes, and it prints the full report either way. They are not smoke tests — several of them re-read the raw Census files independently rather than trusting anything the build wrote.</p>
   <ul class="ticks">
     <li>Every Illinois place appears exactly once, and every one has a coverage status.</li>
@@ -143,7 +157,7 @@
 </section>
 
 <section id="rebuild">
-  <h2>6. Rebuilding it</h2>
+  <h2>7. Rebuilding it</h2>
   <p>Every number on this site is reproducible from raw public sources by running one command. From a fresh copy of the repository:</p>
   <pre><code>uv sync
 uv run scripts/build.py
@@ -182,6 +196,10 @@ uv run scripts/check_data.py</code></pre>
     $('s-il').textContent = pct(m.il_pct_growth);
     $('s-us').textContent = pct(m.us_pct_growth);
     $('s-zero').textContent = int(m.n_zero_mf);
+    $('s-zero2').textContent = int(m.n_zero_mf);
+    $('s-zero3p').textContent = int(m.n_zero_mf3p);
+    $('s-months-full').textContent = int((m.months_counts || {}).full || 0);
+    $('s-months-none').textContent = int((m.months_counts || {}).none || 0);
     $('s-places').textContent = int(m.n_places);
     $('s-reporting').textContent = int(c.reporting || 0);
     $('s-gap').textContent = int(c.no_permit_office || 0);

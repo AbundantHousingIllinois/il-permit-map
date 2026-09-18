@@ -1,11 +1,76 @@
 {
-  "build_date": "2026-09-17",
+  "build_date": "2026-09-18",
   "ymax": 2025,
   "ymin": 2000,
   "metric_start": 2010,
   "tiger_vintage": 2025,
   "il_pct_growth": 5.612,
   "us_pct_growth": 15.0266,
+  "il_pct_growth_by_type": {
+    "sf": 2.8945,
+    "du": 0.1235,
+    "mf34": 0.1976,
+    "mf5p": 2.3964
+  },
+  "us_pct_growth_by_type": {
+    "sf": 9.4958,
+    "du": 0.2764,
+    "mf34": 0.2056,
+    "mf5p": 5.0488
+  },
+  "il_units_by_type": {
+    "sf": 153314,
+    "du": 6544,
+    "mf34": 10465,
+    "mf5p": 126929
+  },
+  "units_stops": {
+    "all": [
+      0,
+      30,
+      100,
+      200,
+      500,
+      1500,
+      3000
+    ],
+    "sf": [
+      0,
+      30,
+      100,
+      200,
+      500,
+      1500,
+      3000
+    ],
+    "du": [
+      0,
+      7,
+      15,
+      30,
+      70,
+      150,
+      200
+    ],
+    "mf34": [
+      0,
+      15,
+      50,
+      70,
+      150,
+      300,
+      500
+    ],
+    "mf5p": [
+      0,
+      100,
+      200,
+      500,
+      700,
+      1500,
+      2000
+    ]
+  },
   "il_units_2010_ymax": 297252,
   "us_units_2010_ymax": 19790799,
   "il_h1_2010": 5296715,
@@ -15,8 +80,15 @@
     "reporting": 932,
     "no_permit_office": 529
   },
-  "n_zero_mf": 697,
+  "n_zero_mf": 692,
+  "n_zero_mf3p": 635,
   "n_partial_coverage": 45,
+  "months_counts": {
+    "partial": 402,
+    "low": 248,
+    "full": 277,
+    "none": 5
+  },
   "ahpaa": {
     "enabled": false,
     "rows": 0,
