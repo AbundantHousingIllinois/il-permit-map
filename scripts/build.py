@@ -37,6 +37,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import bps_layout as L
 import crosswalk as CW
+import districts as DI
 import simplify_geo as SG
 
 
@@ -67,6 +68,12 @@ def ensure_geometry() -> None:
         eps = SGM.simplify_to(L.STATE_ZIP, L.STATE_GEOJSON, 60_000,
                               state_fips=L.STATE_FIPS)
         print(f"  state outline simplified at toposimplify {eps}")
+    for chamber, c in L.CHAMBERS.items():
+        dest = L.district_geojson(chamber)
+        if not dest.exists():
+            print(f"  {L.rel(dest)} absent -- simplifying offline")
+            eps = SGM.simplify_to(L.district_zip(chamber), dest, 400_000)
+            print(f"  {c['label']} districts simplified at toposimplify {eps}")
 
 
 def geometry_bbox(fc: dict) -> list[list[float]]:
@@ -202,6 +209,9 @@ def main() -> int:
     need(L.TIGER_ZIP, "fetch_geo.py")
     need(SG.COUNTY_ZIP_FOR_BUILD, "fetch_geo.py")
     need(L.STATE_ZIP, "fetch_geo.py")
+    for chamber in L.CHAMBERS:
+        need(L.district_zip(chamber), "fetch_districts.py")
+    need(L.LEGISLATORS_CSV, "fetch_districts.py")
     ensure_geometry()
 
     # ---------------- crosswalk ----------------
@@ -379,6 +389,11 @@ def main() -> int:
     # some of them seconds after the build had finished. Stale shards are removed
     # after the write instead.
     L.DOCS_SHARDS.mkdir(parents=True, exist_ok=True)
+
+    # Legislative districts: which districts each place overlaps, on unsimplified
+    # geometry, and who represents each one.
+    memb = DI.memberships()
+    legs = DI.legislators()
 
     features = []
     shard_payload: list[tuple[str, str]] = []
@@ -616,6 +631,15 @@ def main() -> int:
             "bps_ids": sorted(bps_ids_for.get(geoid, [])),
             "match_methods": sorted({method_of[b] for b in bps_ids_for.get(geoid, [])}),
             "months_reported": months_for.get(geoid, {}),
+            # Every district the place overlaps by at least 1% of its land, largest
+            # share first, with the member so the map's panel needs no second file.
+            "districts": {
+                ch: [{"d": d, "share": sh,
+                      "name": (legs[ch].get(d) or {}).get("name"),
+                      "party": (legs[ch].get(d) or {}).get("party")}
+                     for d, sh in memb[ch].get(geoid, [])]
+                for ch in L.CHAMBERS
+            },
             "coverage_note": (
                 None if reporting else
                 (f"This place last appears in the Building Permits Survey in "
@@ -659,6 +683,77 @@ def main() -> int:
     L.DOCS_DATA.mkdir(parents=True, exist_ok=True)
     (L.DOCS_DATA / "places.geojson").write_text(
         json.dumps(out, separators=(",", ":")), encoding="utf-8")
+    # ---------------- legislative districts ----------------
+    # districts.json is the reverse index: every district, its member, and the
+    # places overlapping it with their share and their figures. The estimated
+    # district total weights each reporting place's permits by the share of its
+    # land in the district -- an estimate Steffany chose over a plain sum, which
+    # would count Chicago once for each of its 19 Senate districts.
+    props_by_geoid = {ft["properties"]["geoid"]: ft["properties"] for ft in features}
+    leg_as_of = (L.LEGISLATORS_RETRIEVED.read_text(encoding="utf-8").strip()
+                 if L.LEGISLATORS_RETRIEVED.exists() else None)
+    districts_out: dict[str, dict] = {}
+    for ch, c in L.CHAMBERS.items():
+        rev: dict[int, list] = defaultdict(list)
+        for g, hits in memb[ch].items():
+            for d, sh in hits:
+                rev[d].append((g, sh))
+        labels = DI.label_points(ch)
+        rows = []
+        for d in range(1, c["n"] + 1):
+            members = sorted(rev.get(d, []), key=lambda h: -h[1])
+            places_d, est, n_rep, n_zero, n_gap = [], 0.0, 0, 0, 0
+            for g, sh in members:
+                p = props_by_geoid.get(g)
+                if p is None:
+                    continue
+                places_d.append({
+                    "geoid": g, "name": p["name"], "share": sh,
+                    "coverage": p["coverage"], "pop2020": p["pop2020"],
+                    "pct_growth": p["pct_growth"],
+                    "units_total_2010": p["units_total_2010"],
+                    "mf5p_total": p["mf5p_total"], "zero_mf": p["zero_mf"],
+                    "built_gap": p["built_gap"],
+                })
+                if p["coverage"] == "reporting" and p["units_total_2010"] is not None:
+                    n_rep += 1
+                    est += sh * p["units_total_2010"]
+                else:
+                    n_gap += 1
+                if p["zero_mf"] is True:
+                    n_zero += 1
+            rows.append({
+                "district": d,
+                "member": legs[ch].get(d),
+                "places": places_d,
+                "n_places": len(places_d),
+                "n_reporting": n_rep,
+                "n_no_permit_office": n_gap,
+                "n_zero_mf": n_zero,
+                "est_units_2010": round(est),
+                "label": list(labels[d][:2]) if d in labels else None,
+                "aland": labels[d][2] if d in labels else None,
+            })
+        districts_out[ch] = {"label": c["label"], "title": c["title"],
+                             "n": c["n"], "districts": rows}
+        # The outline layer the page draws, keyed by an integer district number.
+        gj = json.loads(L.district_geojson(ch).read_text(encoding="utf-8"))
+        for f in gj["features"]:
+            f["properties"] = {"district": int(f["properties"].get(c["field"])
+                                               or f["properties"]["NAME"])}
+        (L.DOCS_DATA / f"{ch}.geojson").write_text(
+            json.dumps(gj, separators=(",", ":")), encoding="utf-8")
+        print(f"  {ch}.geojson    : {len(gj['features'])} districts, "
+              f"{(L.DOCS_DATA / f'{ch}.geojson').stat().st_size:,} bytes")
+    (L.DOCS_DATA / "districts.json").write_text(json.dumps({
+        "share_min": L.DISTRICT_SHARE_MIN,
+        "legislators_as_of": leg_as_of,
+        "boundary_vintage": f"cb_{L.TIGER_VINTAGE} (LSY 2024)",
+        "chambers": districts_out,
+    }, separators=(",", ":")), encoding="utf-8")
+    print(f"  districts.json  : {(L.DOCS_DATA / 'districts.json').stat().st_size:,} "
+          f"bytes, legislators as of {leg_as_of}")
+
     # County outlines: SPEC.md §6.1's keyless-basemap fallback, and the only thing
     # standing in for a basemap, so it ships with the site rather than being fetched.
     shutil.copyfile(CW.COUNTIES_GEOJSON, L.DOCS_DATA / "counties.geojson")
@@ -753,6 +848,11 @@ def main() -> int:
         f"cb_{L.TIGER_VINTAGE}_{L.STATE_FIPS}_place_500k, "
         f"cb_{L.TIGER_VINTAGE}_us_county_500k and "
         f"cb_{L.TIGER_VINTAGE}_us_state_500k",
+        f"U.S. Census Bureau, TIGER cartographic boundary files, "
+        f"cb_{L.TIGER_VINTAGE}_{L.STATE_FIPS}_sldu_500k and _sldl_500k, State Senate and "
+        "House districts (legislator view)",
+        "Open States, current Illinois legislators "
+        "(data.openstates.org/people/current/il.csv; legislator view)",
         "Illinois Housing Development Authority AHPAA determination list "
         "(data/manual/ahpaa.csv, hand-maintained; "
         f"{len(ahpaa_rows)} rows loaded)",

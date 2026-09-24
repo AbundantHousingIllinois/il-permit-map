@@ -42,3 +42,33 @@ Appeals Act program pages (ihda.org). The determination is periodic, so the
 
 A `geoid` in this file that does not exist in the built data is reported by
 `scripts/check_data.py` rather than silently dropped.
+
+## `legislator_overrides.csv`
+
+Hand corrections to the legislator snapshot. **Ships with headers and zero rows;
+that is the normal state.**
+
+The legislators themselves come from the Open States bulk file, fetched by
+`scripts/fetch_districts.py` into `data/raw/legislators/il.csv` with its
+provenance in `data/SOURCES.md`. That file is a download, not hand-maintained,
+so it lives in `data/raw/`. If it is wrong about a member — a vacancy, a new
+appointment, a changed district office phone — add a row here rather than
+editing the snapshot, which the next fetch would overwrite.
+
+As with AHPAA: never fill a row from memory. A wrong name or phone number
+attached to a district is exactly the error a legislator meeting cannot absorb.
+
+### Columns
+
+| Column | Meaning |
+|---|---|
+| `chamber` | `senate` or `house`. |
+| `district` | District number, e.g. `28`. |
+| `field` | The field to replace: `name`, `party`, `email`, `phone`, `url`, or `vacant` (value `true` blanks the member). |
+| `value` | The corrected value, verbatim. |
+| `source_url` | Where it was read, e.g. the member's ilga.gov page. |
+| `as_of_date` | Date the source says it is current as of (`YYYY-MM-DD`). |
+| `notes` | Anything a reader needs in order to trust the row. |
+
+An override naming a chamber, district or field that does not exist fails
+`scripts/check_data.py` rather than being silently dropped.

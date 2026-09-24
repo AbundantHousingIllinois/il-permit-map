@@ -909,6 +909,112 @@ def cE():
     return ok
 
 
+@check("F", "Every place has a Senate and a House district, every district has a "
+            "member and a place, and the named cases hold", gating=True)
+def cF():
+    R.out("  Not in SPEC.md §7. Added with the legislator view (CLAUDE.md deviation")
+    R.out("  31). A municipality attributed to the wrong legislator in a meeting is")
+    R.out("  the error this guards against, so membership is recomputed here from")
+    R.out("  the unsimplified TIGER files rather than read back from the build.")
+    R.out("")
+    import districts as DI
+
+    path = L.DOCS_DATA / "districts.json"
+    if not path.exists():
+        raise FileNotFoundError(f"{L.rel(path)} does not exist. Run build.py first.")
+    D = json.loads(path.read_text(encoding="utf-8"))
+    memb = DI.memberships()
+    legs = DI.legislators()
+    ok = True
+    names = {p["geoid"]: p["name"] for p in props()}
+
+    for ch, c in L.CHAMBERS.items():
+        rows = D["chambers"][ch]["districts"]
+        nums = [r["district"] for r in rows]
+        good_n = nums == list(range(1, c["n"] + 1))
+        no_place = [r["district"] for r in rows if not r["places"]]
+        no_member = [r["district"] for r in rows
+                     if not r.get("member") or not (r["member"].get("name")
+                                                    or r["member"].get("vacant"))]
+        homeless = [g for g in names if not memb[ch].get(g)]
+        # The build's reverse index must equal the recomputed membership.
+        want = {(g, d, sh) for g, hits in memb[ch].items() for d, sh in hits}
+        got = {(p["geoid"], r["district"], p["share"]) for r in rows for p in r["places"]}
+        bad_share = [x for x in got if not (L.DISTRICT_SHARE_MIN <= x[2] <= 1)]
+        shard_bad = []
+        for g in names:
+            sh = shards().get(g)
+            if not isinstance(sh, dict):
+                continue
+            mine = [(x["d"], x["share"]) for x in sh.get("districts", {}).get(ch, [])]
+            if mine != memb[ch].get(g, []):
+                shard_bad.append(g)
+        R.out(f"  F.1  {c['label']}: districts 1-{c['n']} each once: {good_n};  "
+              f"without a place: {len(no_place)};  without a member: {len(no_member)}")
+        R.out(f"       places in no {ch} district: {len(homeless)};  "
+              f"districts.json vs recomputed membership: "
+              f"{'identical' if got == want else f'{len(got ^ want)} differ'};  "
+              f"shares outside [{L.DISTRICT_SHARE_MIN}, 1]: {len(bad_share)};  "
+              f"shards disagreeing: {len(shard_bad)}")
+        for x in (no_place + no_member + homeless + shard_bad)[:8]:
+            R.out(f"         {x}")
+        ok = ok and good_n and not (no_place or no_member or homeless or bad_share
+                                    or shard_bad) and got == want
+
+        # The estimate is recomputed from the place figures, never trusted.
+        est_bad = []
+        for r in rows:
+            e = sum(p["share"] * p["units_total_2010"] for p in r["places"]
+                    if p["coverage"] == "reporting" and p["units_total_2010"] is not None)
+            if round(e) != r["est_units_2010"]:
+                est_bad.append(r["district"])
+        R.out(f"       district estimates that do not recompute: {len(est_bad)}")
+        ok = ok and not est_bad
+
+    # Overrides must name something real.
+    bad_ov = [o for o in DI.read_overrides()
+              if o["chamber"].strip() not in L.CHAMBERS
+              or not o["district"].strip().isdigit()
+              or not 1 <= int(o["district"]) <= L.CHAMBERS[o["chamber"].strip()]["n"]
+              or o["field"].strip() not in DI.OVERRIDE_FIELDS]
+    R.out(f"  F.2  legislator overrides: {len(DI.read_overrides())} rows, "
+          f"{len(bad_ov)} naming a chamber, district or field that does not exist")
+    ok = ok and not bad_ov
+
+    # Conservation, the same shape as check 6: across a chamber, the estimates
+    # should count every municipal permit about once. Only the sub-1% slivers
+    # are lost.
+    total = sum(p["units_total_2010"] or 0 for p in props() if p["coverage"] == "reporting")
+    for ch in L.CHAMBERS:
+        est = sum(r["est_units_2010"] for r in D["chambers"][ch]["districts"])
+        share = est / total * 100 if total else 0
+        good = 99.0 <= share <= 100.0 + 1e-9
+        R.out(f"  F.4  {ch:<6} district estimates sum to {est:,} of {total:,} municipal "
+              f"units ({share:.2f}%, must be 99-100%)  {'ok' if good else 'BAD'}")
+        ok = ok and good
+
+    R.out("  F.3  Named cases:")
+    def districts_of(geoid, ch):
+        return [d for d, _ in memb[ch].get(geoid, [])]
+    ah = "1702154"                       # Arlington Heights
+    s28 = {p["geoid"] for p in D["chambers"]["senate"]["districts"][27]["places"]}
+    m28 = D["chambers"]["senate"]["districts"][27]["member"] or {}
+    cases = {
+        "Arlington Heights is in Senate 27 alone":
+            districts_of(ah, "senate") == [27],
+        "Arlington Heights is split between House 54 and 53":
+            sorted(districts_of(ah, "house")) == [53, 54],
+        "Senate 28 is Laura Murphy":
+            m28.get("name") == "Laura Murphy" and legs["senate"][28]["name"] == "Laura Murphy",
+        "Senate 28 includes Park Ridge, Des Plaines and Schaumburg":
+            {"1757875", "1719642", "1768003"} <= s28,
+    }
+    for k, v in cases.items():
+        R.out(f"         {'ok  ' if v else 'FAIL'} {k}")
+        ok = ok and v
+    return ok
+
+
 # --------------------------------------------------------------------------
 # Extra, disclosed: layout verification against the published state totals
 # --------------------------------------------------------------------------

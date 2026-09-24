@@ -26,11 +26,15 @@ per-year stacked chart on each municipality, and a **zero multifamily** highligh
 for municipalities that have permitted no building of five or more units since
 2010.
 
-The site has two pages: the map (`docs/index.html`) and
+The site has three pages: the map (`docs/index.html`); the **legislator view**
+(`docs/districts.html`), one map with a State Senate / State House toggle where
+choosing a district shows its member's contact details, every municipality it
+overlaps with the share of its land inside, and an estimated district total; and
 **[Method, caveats and open items](docs/about.html)** (`docs/about.html`), which
 explains what the numbers mean and lists what still needs a person — the empty
 AHPAA list first. Its figures are read from the build's own `meta.json`, so it
-cannot go stale.
+cannot go stale. Each district has its own link (`districts.html#senate-28`), and
+the page prints cleanly for a meeting.
 
 ## Caveats that matter, especially in testimony
 
@@ -104,12 +108,13 @@ uv sync
 uv run scripts/fetch_bps.py        # Building Permits Survey flat files
 uv run scripts/fetch_census.py     # 2010 SF1 H1, 2020 PL P1, 2020 DHC H1  (needs CENSUS_API_KEY)
 uv run scripts/fetch_geo.py        # TIGER places, counties, state outline + mapshaper
+uv run scripts/fetch_districts.py  # State Senate/House districts + Open States legislators
 uv run scripts/build.py            # regenerates everything under docs/data/
 uv run scripts/check_data.py       # SPEC.md §7 data checks
 uv run scripts/check_site.py       # SPEC.md §7 browser checks (Playwright)
 ```
 
-The three `fetch_*` scripts are the only ones that touch the network, and they
+The four `fetch_*` scripts are the only ones that touch the network, and they
 are idempotent — a file already in `data/raw/` is left alone. Once `data/raw/` is
 populated (it is committed, so a fresh clone already has it):
 
@@ -127,7 +132,7 @@ written to disk, and the URLs recorded in `data/SOURCES.md` have no key on them.
 `scripts/check_data.py` is the definition of done for the data. It exits 0 only
 if all ten SPEC.md §7 conditions hold, and prints a readable report either way.
 It re-reads the TIGER archive and the raw BPS files itself rather than trusting
-anything the build wrote. It also runs five extra checks of its own, each
+anything the build wrote. It also runs six extra checks of its own, each
 labelled as an addition:
 
 - **A** verifies the BPS column positions against the shipped column headers and
@@ -141,20 +146,27 @@ labelled as an addition:
   `meta.state_bbox` matches it, and that every place sits inside it.
 - **E** recomputes every permits-vs-2020 figure from the raw Census files, and
   fails if any municipality has one without a fully reported 2010–2019.
+- **F** recomputes every place's Senate and House districts from the
+  unsimplified boundary files, requires every district to have a member and at
+  least one municipality, recomputes each district's estimate, and holds the named
+  cases (Senate 28 is Laura Murphy and includes Park Ridge, Des Plaines and
+  Schaumburg; Arlington Heights is in one Senate and two House districts).
 
 Check 7 is also held stricter than §7.7 reads: the shard directory may contain
 nothing but the current shards (the cloud file provider this copy lives under
 has left conflict copies there, and `build.py` now sweeps them).
 
 `scripts/check_site.py` serves `docs/` over HTTP and drives it with headless
-Chromium, installing the browser on first run if needed. Site checks 8, 9, 10 and
-11 are additions too: 8 asserts the map's colour break follows the structure-type filter,
+Chromium, installing the browser on first run if needed. Site checks 8 to 12 are
+additions too: 8 asserts the map's colour break follows the structure-type filter,
 9 asserts the chart separates the pre-2010 context from the metric window and marks
 the years a permit office did not report, and 10 asserts the state silhouette is
 drawn beneath the places, the state edge above the county lines, and the opening
 view contains the whole state, and 11 asserts the permits-vs-2020 section shows
 its parts where the decade was fully reported, says why where it was not, and
-that the table sorts blanks last.
+that the table sorts blanks last, and 12 drives the legislator view: a district
+link restores its member and towns, the chamber toggle swaps the outlines, a
+search by name finds the district, and a place's panel links to its districts.
 
 The page's one external dependency is the pinned MapLibre CDN build. `check_site.py`
 fetches those pinned URLs itself, caches them under `data/raw/vendor/`, and serves
@@ -199,9 +211,11 @@ data/
   raw/                     downloaded sources, cached (committed; all < 50 MB)
   processed/               crosswalk.csv, unmatched.csv, tidy permits, geometry
   manual/ahpaa.csv         hand-maintained, headers only
+  manual/legislator_overrides.csv   hand corrections to the legislator snapshot
   SOURCES.md               every URL, date retrieved, file produced
-scripts/                   fetch_*, crosswalk, build, check_data, check_site
-docs/                      GitHub Pages root (index.html + about.html)
+scripts/                   fetch_*, crosswalk, districts, build, check_data, check_site
+docs/                      GitHub Pages root (index.html, districts.html, about.html;
+                           shared.js holds the palette and formats both maps use)
 ```
 
 ## Sources
@@ -212,7 +226,10 @@ docs/                      GitHub Pages root (index.html + about.html)
 | Statewide and national totals | Building Permits Survey, state-level annual files (`Illinois` and `United States` rows) |
 | 2010 housing units | 2010 Decennial Census SF1, table H1, variable `H001001` |
 | 2020 population | 2020 Decennial Census PL, table P1, variable `P1_001N` |
-| Boundaries | TIGER cartographic boundary files, `cb_2025_17_place_500k`, `cb_2025_us_county_500k` |
+| 2020 housing units | 2020 Decennial Census DHC, table H1, variable `H1_001N` (permits-vs-2020 comparison only) |
+| Boundaries | TIGER cartographic boundary files, `cb_2025_17_place_500k`, `cb_2025_us_county_500k`, `cb_2025_us_state_500k` |
+| Legislative districts | TIGER cartographic boundary files, `cb_2025_17_sldu_500k`, `cb_2025_17_sldl_500k` (LSY 2024) |
+| Legislators | Open States, `data.openstates.org/people/current/il.csv`, snapshot in `data/raw/legislators/` |
 | AHPAA status | Illinois Housing Development Authority determination list, hand-entered |
 
 Every URL, with the date it was retrieved and the file it produced, is in

@@ -102,6 +102,31 @@ SIMPLIFIED_GEOJSON = PROCESSED / "places_simplified.geojson"
 # archive at this vintage; it is filtered to Illinois when simplified.
 STATE_ZIP = RAW_GEO / f"cb_{TIGER_VINTAGE}_us_state_500k.zip"
 STATE_GEOJSON = PROCESSED / "state_simplified.geojson"
+
+# State legislative districts. TIGER cb_2025 carries LSY 2024: the map adopted in
+# 2021 and in force from the 2022 election, which is the map the current General
+# Assembly was elected on. Legislators are the Open States "current" bulk file.
+CHAMBERS = {
+    "senate": {"zip_key": "sldu", "field": "SLDUST", "n": 59, "openstates": "upper",
+               "label": "State Senate", "title": "Sen."},
+    "house": {"zip_key": "sldl", "field": "SLDLST", "n": 118, "openstates": "lower",
+              "label": "State House", "title": "Rep."},
+}
+def district_zip(chamber: str) -> Path:
+    return RAW_GEO / f"cb_{TIGER_VINTAGE}_{STATE_FIPS}_{CHAMBERS[chamber]['zip_key']}_500k.zip"
+def district_geojson(chamber: str) -> Path:
+    return PROCESSED / f"{CHAMBERS[chamber]['zip_key']}_simplified.geojson"
+LEGISLATORS_CSV = RAW / "legislators" / "il.csv"
+# data/SOURCES.md keeps the FIRST retrieval of a URL, but "current legislators"
+# is only as current as the latest fetch, so that date is kept beside the file.
+LEGISLATORS_RETRIEVED = RAW / "legislators" / "retrieved.txt"
+LEGISLATOR_OVERRIDES_CSV = MANUAL / "legislator_overrides.csv"
+LEGISLATOR_OVERRIDE_HEADERS = ["chamber", "district", "field", "value", "source_url",
+                               "as_of_date", "notes"]
+# A place is listed under a district when at least this share of its land area
+# falls inside it. Below 1% the overlaps are boundary slivers; the share itself is
+# carried so a partial member is never presented as a whole one.
+DISTRICT_SHARE_MIN = 0.01
 CROSSWALK_CSV = PROCESSED / "crosswalk.csv"
 UNMATCHED_CSV = PROCESSED / "unmatched.csv"
 PERMITS_CSV = PROCESSED / "permits_tidy.csv"

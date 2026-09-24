@@ -187,6 +187,39 @@ and flags a gap beyond 5% of the 2010 stock in either direction
 town *allowed* as new construction, which is the question the map exists for, and
 the census count cannot answer that annually or after 2020.
 
+**The legislator view is its own page, not a filter on the map.** Austin asked to
+"filter, don't display" by legislator. A 177-entry control on a page that already
+carries metric, type, population, two highlights and a caveat would crowd it, and
+would silently change what every legend and total means. Steffany chose a separate
+`districts.html`: one map with a Senate / House toggle, municipalities coloured as
+on the main map, district outlines over them, and a district panel with the
+member, the towns and an estimate. The main map gains only a header link and one
+line in each detail panel. District numbers are drawn as **icons, not text**:
+MapLibre text labels need a glyph server, which would be a second runtime request,
+but an icon needs nothing, so each number is painted to a canvas in the page's own
+font and placed at the district's pole of inaccessibility (`shapely polylabel`,
+computed in the build). MapLibre's collision detection hides numbers that would
+overlap, largest district first; the selected one is orange and always wins.
+
+Membership is an areal overlap on the **unsimplified** TIGER files (`scripts/
+districts.py`), listed when at least 1% of a place's land is inside
+(`L.DISTRICT_SHARE_MIN`), and the share travels with it. The plan's named case
+"Arlington Heights appears in more than one district list" is true only for the
+House (54 and 53, 70/30); in the Senate it is 99.9% in District 27. Check F asserts
+what is true. The district total is **area-weighted** — each reporting place's
+units × its share inside — which Steffany chose over a plain sum (Chicago is in 19
+Senate districts) and over a sum of towns mostly inside. It is printed rounded
+with an "estimate" tag and its assumption stated beside it.
+
+The Open States file is a download, so it lives in `data/raw/legislators/`, not
+`data/manual/` (whose README says nothing there is script-written). Corrections go
+in `data/manual/legislator_overrides.csv`. `SOURCES.md` keeps a URL's first
+retrieval date only, and "current legislators" is only as current as the latest
+fetch, so `fetch_districts.py` writes `retrieved.txt` beside the snapshot and the
+page prints it. The palette, the diverging ladder, the number formats, the hatch
+and `esc()` moved from `app.js` to `docs/shared.js` so both maps colour a town
+identically from one definition.
+
 **Colour.** AHIL orange `#E87722` and blue `#004B87` as the diverging pair, with
 a neutral grey midpoint pinned to `il_pct_growth`. The pair was checked against a
 colour-vision-deficiency simulation rather than assumed, as §6.6 requires: OKLab
@@ -348,6 +381,16 @@ and no AHPAA data of any kind.
     measure of what exists. It pushed the map below a phone-height viewport, so
     site check 4 now scrolls the map into view before its click, as a reader
     would. The click must still land on the target place.
+31. **The legislator view** (`docs/districts.html`) and its two new sources:
+    TIGER `cb_2025_17_sldu_500k` / `_sldl_500k` and the Open States current
+    legislators file. §3 names neither and §6 describes no such page; both were
+    requested (Austin's legislator filter, Steffany's choice of a separate page).
+    It adds an estimated, area-weighted district total — a new figure, labelled
+    as an estimate everywhere it appears. Its source line adds "Open States" to
+    §6.6's fixed wording, because the member details are from there. Data check
+    **F** (including F.4: the estimates sum to 99–100% of municipal permits in each
+    chamber; 99.8% Senate, 99.5% House) and site check **12** gate it, both
+    labelled as additions.
 
 ---
 

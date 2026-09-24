@@ -140,6 +140,8 @@
     "U.S. Census Bureau, 2020 Decennial Census PL, table P1 (P1_001N), total population, Illinois places",
     "U.S. Census Bureau, 2020 Decennial Census DHC, table H1 (H1_001N), total housing units, Illinois places / Illinois / United States (permits-vs-built comparison only)",
     "U.S. Census Bureau, TIGER cartographic boundary files, cb_2025_17_place_500k, cb_2025_us_county_500k and cb_2025_us_state_500k",
+    "U.S. Census Bureau, TIGER cartographic boundary files, cb_2025_17_sldu_500k and _sldl_500k, State Senate and House districts (legislator view)",
+    "Open States, current Illinois legislators (data.openstates.org/people/current/il.csv; legislator view)",
     "Illinois Housing Development Authority AHPAA determination list (data/manual/ahpaa.csv, hand-maintained; 0 rows loaded)"
   ]
 }

@@ -24,9 +24,10 @@
   <a href="#coverage">3. Gaps are not zeros</a>
   <a href="#multifamily">4. What "no 5+ unit" means</a>
   <a href="#built">5. Permits vs. the 2020 count</a>
-  <a href="#open">6. Open items</a>
-  <a href="#checks">7. How it is checked</a>
-  <a href="#rebuild">8. Rebuilding it</a>
+  <a href="#districts">6. By legislative district</a>
+  <a href="#open">7. Open items</a>
+  <a href="#checks">8. How it is checked</a>
+  <a href="#rebuild">9. Rebuilding it</a>
 </nav>
 
 <section id="measure">
@@ -105,8 +106,18 @@
   <p class="fineprint">The 2020 count is used for this comparison and nothing else. Percent growth, everywhere on the map, is still measured against the 2010 count.</p>
 </section>
 
+<section id="districts">
+  <h2>6. By legislative district</h2>
+  <p class="lede">The <a href="districts.html">legislator view</a> shows every State Senate and House district, the municipalities it takes in, and the member's contact details.</p>
+  <p><b>How a municipality is matched to a district.</b> By land area, on the Census's full-detail boundaries: a municipality is listed under a district when at least 1% of its land falls inside it, and the share is printed beside it. Below 1% the overlaps are slivers where two boundaries do not quite meet. A municipality split between districts is listed under each of them — Arlington Heights sits entirely in one Senate district but is split 70/30 between two House districts, and Chicago spans 19 Senate and 33 House districts.</p>
+  <div class="callout">
+    <p><b>The district total is an estimate.</b> Permits are counted by municipality, not by district, so a district's total counts each municipality's permits in proportion to the share of its land inside the district. That assumes a town's permits are spread evenly across it, which they rarely are exactly. It is printed rounded, with an "estimate" tag. The municipality rows beneath it are exact. Permits filed by a county for unincorporated land are not in it, and municipalities with no permit office add nothing to it and are named as such.</p>
+  </div>
+  <p><b>Where the names come from.</b> District boundaries are the Census's current cartographic files, drawn for the map in force since the 2022 election. Members and their contact details come from Open States' list of current Illinois legislators, a public file refreshed as members change; the page shows the date it was retrieved. A member listed wrongly is corrected by hand in <code>data/manual/legislator_overrides.csv</code>, never filled in from memory.</p>
+</section>
+
 <section id="open">
-  <h2>6. Open items — what still needs a person</h2>
+  <h2>7. Open items — what still needs a person</h2>
   <p class="lede">These were recorded as they were hit, in <code>BLOCKERS.md</code> in the repository. Nothing below was filled in with a plausible-looking number.</p>
 
   <article class="item priority">
@@ -161,7 +172,7 @@
 </section>
 
 <section id="checks">
-  <h2>7. How the numbers are checked</h2>
+  <h2>8. How the numbers are checked</h2>
   <p>Because this is meant for testimony, the build refuses to declare itself finished unless a set of checks passes, and it prints the full report either way. They are not smoke tests — several of them re-read the raw Census files independently rather than trusting anything the build wrote.</p>
   <ul class="ticks">
     <li>Every Illinois place appears exactly once, and every one has a coverage status.</li>
@@ -170,18 +181,19 @@
     <li>Statewide totals rebuilt from the per-municipality files reconcile with the raw Census rows, with every unit accounted for.</li>
     <li>The permit-file column positions are verified against the column headers Census ships inside the files <em>and</em> against Census's independently published state totals — because the 2000–2006 files use an older layout that the current documentation does not describe.</li>
     <li>Every permits-vs-2020 figure is recomputed from the raw Census files, and none may exist for a municipality whose permit office missed a month in the decade.</li>
+    <li>Every municipality has a Senate and a House district, every district has a member and at least one municipality, and each district's list and estimate are recomputed from the boundary files.</li>
     <li>The page itself is driven in a real browser: it must load with zero console errors, render the map, show a numeric state average, open a municipality's detail panel with a percentage and an absolute count, and restore a shared link.</li>
   </ul>
   <p class="fineprint">A check was never loosened to make it pass. Where a check could not be satisfied as literally written — see the unincorporated-permits item above — the reason is documented and both the strict and the achievable figure are printed side by side.</p>
 </section>
 
 <section id="rebuild">
-  <h2>8. Rebuilding it</h2>
+  <h2>9. Rebuilding it</h2>
   <p>Every number on this site is reproducible from raw public sources by running one command. From a fresh copy of the repository:</p>
   <pre><code>uv sync
 uv run scripts/build.py
 uv run scripts/check_data.py</code></pre>
-  <p>The build needs no network access — the downloaded Census files are kept in the repository. To refresh them when new annual data is published, run the three fetch scripts first. Every URL, with the date it was retrieved and the file it produced, is recorded in <code>data/SOURCES.md</code>.</p>
+  <p>The build needs no network access — the downloaded Census files are kept in the repository. To refresh them when new annual data is published, run the four fetch scripts first. Every URL, with the date it was retrieved and the file it produced, is recorded in <code>data/SOURCES.md</code>.</p>
   <h3>Sources</h3>
   <ul class="sources" id="sources-list"></ul>
   <p class="fineprint">Built <span data-meta="build_date">—</span>. Latest final permit year: <span data-meta="ymax">—</span>.</p>

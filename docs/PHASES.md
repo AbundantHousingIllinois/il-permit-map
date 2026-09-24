@@ -33,7 +33,17 @@ panel and table only, not on the map. 373 municipalities qualify; Illinois is
 −53,533. Gated by data check E and site check 11; CLAUDE.md deviations 27–30. After a Cicero/Berwyn double-check, a top-of-page caveat says permits are a floor and the census count is the better measure of what exists (BLOCKERS.md #6).
 15/15 data checks and 12/12 site checks pass.
 
-**Phases 4–5 below are not started.** They are intended to be run locally.
+**Phase 4 is done** (local session, 2026-09-23) as a separate page rather than a
+filter: `docs/districts.html`, one map with a Senate / House toggle, a district
+panel with the member's contact details, every overlapping municipality with its
+share, and an area-weighted district estimate (Steffany's choice). The plan's
+Arlington Heights case holds only in the House (Senate 27 alone; House 54 and 53).
+Open States is snapshotted into `data/raw/legislators/`, with hand corrections in
+`data/manual/legislator_overrides.csv`. Data check F and site check 12; CLAUDE.md
+deviation 31.
+
+**Phase 5 below is not started.** Median home value collides with SPEC.md §10
+("Housing cost or rent data from ACS"); decide before starting.
 
 ### Picking this up on your own machine
 

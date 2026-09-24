@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Housing permitted by legislative district — Abundant Housing Illinois</title>
+<meta name="description" content="Every Illinois State Senate and House district: the municipalities it overlaps, the housing each has permitted since 2010, and the member's contact details.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="district-page">
+
+<header>
+  <h1>Housing permitted, by legislative district</h1>
+  <p class="subtitle">Pick a State Senate or House district to see the municipalities it takes in, what each has permitted since 2010, and who represents it.</p>
+  <p class="sourceline" id="sourceline">U.S. Census Building Permits Survey; 2010 Decennial Census; Open States</p>
+  <p class="headerlink"><a href="index.html">&larr; Map of every municipality</a> · <a href="about.html#districts">How districts are matched</a></p>
+</header>
+
+<section class="controls" aria-label="District controls">
+  <div class="control-group">
+    <span class="label" id="lbl-chamber">Chamber</span>
+    <div class="segmented" role="group" aria-labelledby="lbl-chamber">
+      <button type="button" data-chamber="senate" aria-pressed="true">State Senate</button>
+      <button type="button" data-chamber="house" aria-pressed="false">State House</button>
+    </div>
+  </div>
+  <div class="control-group district-search">
+    <label class="label" for="district-search">Find a legislator or district</label>
+    <input type="search" id="district-search" list="district-options" autocomplete="off"
+           placeholder="e.g. Laura Murphy, or Senate 28">
+    <datalist id="district-options"></datalist>
+  </div>
+</section>
+
+<div class="map-wrap">
+  <div id="map" role="application" aria-label="Map of Illinois legislative districts over municipalities coloured by housing permitted since 2010"></div>
+  <div class="district-tip" id="district-tip" hidden></div>
+</div>
+
+<section id="legend" class="district-legend">
+  <div class="legend-title">Municipalities: units permitted <span data-meta="metric_start">2010</span>–<span data-meta="ymax">2025</span> as a share of 2010 housing stock</div>
+  <div class="ramp" id="legend-ramp"></div>
+  <div class="ramp-labels" id="legend-labels"></div>
+  <div class="legend-note">
+    <span class="swatch" id="legend-gap-swatch"></span>
+    <span>No permit office reporting to Census — <b>not a zero</b></span>
+  </div>
+  <div class="legend-note">
+    <span class="swatch swatch-line"></span>
+    <span>District boundary. Tap a district to see it.</span>
+  </div>
+</section>
+
+<section class="district-panel" id="district-panel" aria-live="polite">
+  <p class="district-empty" id="district-empty">Tap a district on the map, or search for a legislator above.</p>
+  <div id="district-body" hidden></div>
+</section>
+
+<footer>
+  <p id="footer-districts"></p>
+  <p><a href="about.html#districts"><b>How districts are matched &rarr;</b></a> — and why a municipality can appear under more than one legislator.</p>
+  <p>Built for <a href="https://abundanthousingillinois.org">Abundant Housing Illinois</a>.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js"></script>
+<script src="shared.js"></script>
+<script src="districts.js"></script>
+</body>
+</html>

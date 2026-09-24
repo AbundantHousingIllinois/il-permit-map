@@ -113,6 +113,10 @@ def preflight() -> tuple[bool, dict]:
         L.DOCS / "style.css",
         L.DOCS_DATA / "places.geojson",
         L.DOCS_DATA / "state.geojson",
+        L.DOCS / "districts.html",
+        L.DOCS / "districts.js",
+        L.DOCS / "shared.js",
+        L.DOCS_DATA / "districts.json",
         L.DOCS_DATA / "meta.json",
     ]
     missing = [p for p in needed if not p.exists()]
@@ -680,6 +684,77 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             return ok
         R.run(11, "Permits vs built shows its parts where the decade was fully "
                   "reported, and says why where it was not", s11)
+
+        # ---------------- 12 (added, disclosed) ----------------
+        def s12():
+            R.out("  Not in SPEC.md §7. Added with the legislator view (CLAUDE.md")
+            R.out("  deviation 31). The page must load clean, restore a district from its")
+            R.out("  link, switch chambers, find a legislator by name, and the map's")
+            R.out("  detail panel must link each place to its districts.")
+            errs: list[str] = []
+            p4 = context.new_page()
+            p4.on("console", lambda m: errs.append(f"console.{m.type}: {m.text}")
+                  if m.type == "error" else None)
+            p4.on("pageerror", lambda e: errs.append(f"pageerror: {e}"))
+            p4.on("requestfailed",
+                  lambda r: errs.append(f"requestfailed: {r.url} {r.failure}"))
+            p4.goto(f"{base}/districts.html#senate-28", wait_until="load")
+            p4.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            p4.wait_for_timeout(600)
+            got = p4.evaluate("window.districtsApp.panel()")
+            R.out(f"    #senate-28 restores: {got['member']!r}, {len(got['rows'])} places, "
+                  f"estimate {got['estimate']!r}")
+            checks = {
+                "link restores Senate 28 and its member": "Laura Murphy" in got["member"],
+                "Senate 28 lists Park Ridge, Des Plaines and Schaumburg":
+                    {"Park Ridge", "Des Plaines", "Schaumburg"} <= set(got["rows"]),
+                "estimate shown": any(ch.isdigit() for ch in got["estimate"]),
+            }
+            shown = p4.evaluate("() => window.map.queryRenderedFeatures("
+                                "{layers: ['senate-labels']}).map(f => f.properties.district)")
+            R.out(f"    district numbers drawn with Senate 28 selected: {sorted(shown)}")
+            checks["district numbers are drawn, including the selected one"] = 28 in shown
+            p4.click("[data-chamber=house]")
+            p4.wait_for_timeout(400)
+            vis = p4.evaluate("() => ['senate-line', 'house-line'].map(l =>"
+                              " window.map.getLayoutProperty(l, 'visibility'))")
+            R.out(f"    after the House toggle, senate/house outline visibility: {vis}")
+            checks["the toggle swaps the district outlines"] = vis == ["none", "visible"]
+            p4.fill("#district-search", "Laura Murphy")
+            p4.press("#district-search", "Enter")
+            p4.wait_for_timeout(600)
+            v = p4.evaluate("window.districtsApp.view()")
+            R.out(f"    searching 'Laura Murphy' selects: {v}")
+            checks["search by name finds the district"] = v == {"chamber": "senate", "district": 28}
+            p4.goto(f"{base}/districts.html#house-54", wait_until="load")
+            p4.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            got = p4.evaluate("window.districtsApp.panel()")
+            R.out(f"    #house-54 restores: {got['member']!r}; first place {got['rows'][:1]}")
+            checks["a House link restores its district"] = (
+                "Arlington Heights" in got["rows"] and got["member"].startswith("Rep."))
+            p4.close()
+
+            page.evaluate("(g) => window.app.selectPlace(g)", "1702154")
+            page.wait_for_function(
+                "() => window.app.detail().geoid === '1702154'"
+                " && document.querySelector('#detail .detail-districts')", timeout=15_000)
+            links = page.evaluate("() => [...document.querySelectorAll('#detail .detail-districts a')]"
+                                  ".map(a => a.getAttribute('href'))")
+            page.evaluate("() => window.app.closeDetail()")
+            R.out(f"    Arlington Heights' panel links: {links}")
+            checks["a place's panel links to each of its districts"] = sorted(links) == sorted(
+                ["districts.html#senate-27", "districts.html#house-54", "districts.html#house-53"])
+            R.out(f"    console errors / failed requests on the district page: {len(errs)}")
+            for e in errs[:10]:
+                R.out(f"      {e}")
+            checks["district page has no console errors"] = not errs
+            for k, val in checks.items():
+                R.out(f"    {'ok  ' if val else 'FAIL'} {k}")
+            return all(checks.values())
+        R.run(12, "The legislator view restores a district from its link, switches "
+                  "chambers and finds a legislator; places link to their districts", s12)
 
         # ---------------- B ----------------
         def sB():
