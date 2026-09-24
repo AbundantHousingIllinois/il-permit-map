@@ -635,7 +635,10 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 }""")
 
             nap = open_built("1751622")          # Naperville
-            R.out(f"    Naperville: gap {nap['gap']!r}, Illinois {nap['il']!r}")
+            census = page.evaluate("() => (document.querySelector('#detail .census-net') || {}).innerText")
+            R.out(f"    Naperville: gap {nap['gap']!r}, Illinois {nap['il']!r}, "
+                  f"census change in the headline {census!r}")
+            ok = ok and census == "+3,078"
             il_want = ("\u2212" if meta["built"]["il_gap"] < 0 else "+") \
                 + f"{abs(meta['built']['il_gap']):,}"
             good = nap["gap"] == "\u2212733" and nap["il"] == il_want \
@@ -710,6 +713,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 "Senate 28 lists Park Ridge, Des Plaines and Schaumburg":
                     {"Park Ridge", "Des Plaines", "Schaumburg"} <= set(got["rows"]),
                 "estimate shown": any(ch.isdigit() for ch in got["estimate"]),
+                "census count change shown": any(ch.isdigit() for ch in got["netChange"]),
             }
             shown = p4.evaluate("() => window.map.queryRenderedFeatures("
                                 "{layers: ['senate-labels']}).map(f => f.properties.district)")

@@ -968,6 +968,10 @@ def cF():
                     if p["coverage"] == "reporting" and p["units_total_2010"] is not None)
             if round(e) != r["est_units_2010"]:
                 est_bad.append(r["district"])
+            n = sum(p["share"] * p["net_change"] for p in r["places"]
+                    if p["net_change"] is not None)
+            if round(n) != r["est_net_change"]:
+                est_bad.append(f"{r['district']} (count change)")
         R.out(f"       district estimates that do not recompute: {len(est_bad)}")
         ok = ok and not est_bad
 
@@ -991,6 +995,21 @@ def cF():
         good = 99.0 <= share <= 100.0 + 1e-9
         R.out(f"  F.4  {ch:<6} district estimates sum to {est:,} of {total:,} municipal "
               f"units ({share:.2f}%, must be 99-100%)  {'ok' if good else 'BAD'}")
+        ok = ok and good
+        # Same for the census count change. It can be negative in places, so
+        # compare the difference against the gross movement, not the net total.
+        h10 = {r_["state"] + r_["place"]: int(r_["H001001"]) for r_ in
+               L.read_census_json(L.RAW_CENSUS / "h1_2010_place_17.json")}
+        h20 = {r_["state"] + r_["place"]: int(r_["H1_001N"]) for r_ in
+               L.read_census_json(L.RAW_CENSUS / "h1_2020_place_17.json")}
+        nets = [h20[g] - h10[g] for g in names if g in h10 and g in h20]
+        net_total, gross = sum(nets), sum(abs(x) for x in nets)
+        est_net = sum(r["est_net_change"] for r in D["chambers"][ch]["districts"])
+        drift = abs(est_net - net_total) / gross * 100 if gross else 0
+        good = drift <= 1.0
+        R.out(f"       {ch:<6} count-change estimates sum to {est_net:+,} vs {net_total:+,} "
+              f"across places (drift {drift:.2f}% of gross change, must be <=1%)  "
+              f"{'ok' if good else 'BAD'}")
         ok = ok and good
 
     R.out("  F.3  Named cases:")

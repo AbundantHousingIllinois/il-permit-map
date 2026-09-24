@@ -83,6 +83,46 @@ header {
   background: var(--surface-raised);
 }
 
+/* The two views of the site, as tabs at the top of each page. A text link in
+ * the header was too easy to miss. */
+.view-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 4px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  width: fit-content;
+  max-width: 100%;
+}
+.view-tabs a {
+  flex: 1 1 auto;
+  padding: 8px 16px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  text-decoration: none;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.view-tabs a:hover { color: var(--ink); background: var(--surface-raised); }
+.view-tabs a[aria-current="page"] {
+  background: var(--ahil-blue);
+  color: #fff;
+}
+.view-tabs a:focus-visible { outline: 2px solid var(--ahil-orange); outline-offset: 2px; }
+@media (max-width: 480px) {
+  .view-tabs { width: 100%; }
+  .view-tabs a { padding: 8px 10px; font-size: 13px; }
+}
+@media print { .view-tabs { display: none; } }
+
 h1 {
   margin: 0 0 3px;
   font-size: 17px;
@@ -745,6 +785,8 @@ ul.sources { font-size: 12.5px; color: var(--ink-secondary); }
 .muted { color: var(--ink-muted); font-size: 11px; }
 
 .detail-districts { font-size: 12px; margin: 10px 0 0; }
+.census-line { font-size: 13px; margin: -4px 0 12px; color: var(--ink-secondary); }
+.census-line .census-net { color: var(--ink); font-variant-numeric: tabular-nums; }
 .detail-districts a { color: var(--ahil-blue); font-weight: 600; text-decoration: none; }
 
 @media (prefers-color-scheme: dark) {

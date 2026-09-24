@@ -209,7 +209,13 @@ House (54 and 53, 70/30); in the Senate it is 99.9% in District 27. Check F asse
 what is true. The district total is **area-weighted** — each reporting place's
 units × its share inside — which Steffany chose over a plain sum (Chicago is in 19
 Senate districts) and over a sum of towns mostly inside. It is printed rounded
-with an "estimate" tag and its assumption stated beside it.
+with an "estimate" tag and its assumption stated beside it. Beside it, at
+Steffany's request, sits the change in the census housing count 2010→2020,
+weighted the same way (every place with both counts contributes, permit office or
+not), and each town's headline shows its own 2010 and 2020 counts. Both are
+labelled a change in homes standing, not homes built. The headline's comparison
+sentence said a town "grew its housing stock" by its permit share; with the real
+count now beside it, that became "has permitted".
 
 The Open States file is a download, so it lives in `data/raw/legislators/`, not
 `data/manual/` (whose README says nothing there is script-written). Corrections go

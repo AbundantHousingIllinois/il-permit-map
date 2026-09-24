@@ -272,6 +272,7 @@ function renderPanel() {
       <td class="num">${measured ? fmtPct(p.pct_growth) : '<span class="muted">no permit office</span>'}</td>
       <td class="num">${measured ? fmtInt(p.units_total_2010) : '—'}</td>
       <td class="num">${measured ? fmtInt(p.mf5p_total) : '—'}</td>
+      <td class="num">${fmtSigned(p.net_change)}</td>
       <td class="num">${fmtSigned(p.built_gap)}</td>
     </tr>`;
   }).join('');
@@ -291,10 +292,15 @@ function renderPanel() {
         row.n_no_permit_office ? ` ${fmtInt(row.n_no_permit_office)} have no permit office reporting to the Census and are not counted in the estimate below.` : ''}</p>
       <p class="district-est">About <b id="district-est">${roughly(row.est_units_2010)}</b> units permitted
         ${META.metric_start}–${META.ymax} inside this district <span class="est-tag">estimate</span></p>
+      <p class="district-est">The census housing count here changed by about
+        <b id="district-net">${row.est_net_change < 0 ? '\u2212' : '+'}${roughly(Math.abs(row.est_net_change))}</b>
+        units from 2010 to 2020 <span class="est-tag">estimate</span></p>
       <p class="fineprint">Each municipality's permits are counted in proportion to the share of its land inside
         the district, which assumes they are spread evenly across the town. Permits filed by the county for
-        unincorporated land are not included. Illinois as a whole permitted ${fmtPct(META.il_pct_growth)} of its
-        2010 housing stock over the same years.</p>
+        unincorporated land are not included. The census change is weighted the same way, covers 2010–2020
+        only, and counts every home that appeared or disappeared, so it is not a count of homes built.
+        Illinois as a whole permitted ${fmtPct(META.il_pct_growth)} of its 2010 housing stock over
+        ${META.metric_start}–${META.ymax}, and its housing count rose by ${fmtInt(META.built.il_net_change)} from 2010 to 2020.</p>
     </div>
 
     <div class="table-scroll">
@@ -304,7 +310,8 @@ function renderPanel() {
         <thead><tr>
           <th scope="col">Municipality</th><th scope="col">Share of its land in district</th>
           <th scope="col">% growth since ${META.metric_start}</th><th scope="col">Units since ${META.metric_start}</th>
-          <th scope="col">5+ unit units</th><th scope="col">2020 count vs permits</th>
+          <th scope="col">5+ unit units</th><th scope="col">Census count change 2010–20</th>
+          <th scope="col">2020 count vs permits</th>
         </tr></thead>
         <tbody id="district-rows">${rows}</tbody>
       </table>
@@ -413,7 +420,8 @@ const districtsApp = {
   panel: () => ({
     member: (document.getElementById('member-name') || {}).textContent || '',
     rows: [...document.querySelectorAll('#district-rows tr td:first-child a')].map(a => a.textContent),
-    estimate: (document.getElementById('district-est') || {}).textContent || ''
+    estimate: (document.getElementById('district-est') || {}).textContent || '',
+    netChange: (document.getElementById('district-net') || {}).textContent || ''
   })
 };
 window.districtsApp = districtsApp;

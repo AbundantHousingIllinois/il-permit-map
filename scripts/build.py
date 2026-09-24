@@ -703,6 +703,10 @@ def main() -> int:
         for d in range(1, c["n"] + 1):
             members = sorted(rev.get(d, []), key=lambda h: -h[1])
             places_d, est, n_rep, n_zero, n_gap = [], 0.0, 0, 0, 0
+            # The change in the census housing count, weighted the same way. Every
+            # place with both counts contributes, permit office or not: the count
+            # is a census fact whatever the office filed.
+            est_net, n_net = 0.0, 0
             for g, sh in members:
                 p = props_by_geoid.get(g)
                 if p is None:
@@ -714,7 +718,12 @@ def main() -> int:
                     "units_total_2010": p["units_total_2010"],
                     "mf5p_total": p["mf5p_total"], "zero_mf": p["zero_mf"],
                     "built_gap": p["built_gap"],
+                    "net_change": (h1_20[g] - p["h1_2010"]
+                                   if p["h1_2010"] is not None and g in h1_20 else None),
                 })
+                if places_d[-1]["net_change"] is not None:
+                    n_net += 1
+                    est_net += sh * places_d[-1]["net_change"]
                 if p["coverage"] == "reporting" and p["units_total_2010"] is not None:
                     n_rep += 1
                     est += sh * p["units_total_2010"]
@@ -731,6 +740,8 @@ def main() -> int:
                 "n_no_permit_office": n_gap,
                 "n_zero_mf": n_zero,
                 "est_units_2010": round(est),
+                "est_net_change": round(est_net),
+                "n_net_change": n_net,
                 "label": list(labels[d][:2]) if d in labels else None,
                 "aland": labels[d][2] if d in labels else None,
             })

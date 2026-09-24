@@ -610,11 +610,13 @@ async function renderDetail(geoid) {
   const pctText = shard.pct_growth === null
     ? 'Not available'
     : fmtPct(shard.pct_growth);
-  const compare = `Since ${META.metric_start}, Illinois grew its housing stock by `
-    + `${fmtPct(META.il_pct_growth)} and the U.S. by ${fmtPct(META.us_pct_growth)}. `
+  /* "Permitted", never "grew": this is permits against the 2010 stock, and the
+   * census line just above it is what the stock actually did. */
+  const compare = `Since ${META.metric_start}, Illinois has permitted new housing equal to `
+    + `${fmtPct(META.il_pct_growth)} of its 2010 stock, and the U.S. ${fmtPct(META.us_pct_growth)}. `
     + (shard.pct_growth === null
         ? `${shard.short_name} has no 2010 housing count published, so a percentage cannot be computed.`
-        : `${shard.short_name} grew by ${fmtPct(shard.pct_growth)} — ${fmtInt(shard.units_total_2010)} units.`);
+        : `${shard.short_name} has permitted ${fmtPct(shard.pct_growth)} — ${fmtInt(shard.units_total_2010)} units.`);
 
   const chart = stackedAreaChart(shard.series.map(d => ({ ...d })), shard);
 
@@ -634,6 +636,7 @@ async function renderDetail(geoid) {
         shard.metric_years_reported < (META.ymax - META.metric_start + 1)
           ? ` This place has a permit record for ${shard.metric_years_reported} of the ${META.ymax - META.metric_start + 1} years since ${META.metric_start}; the rest are blank in the chart, not zero.`
           : ''}</p>
+    ${censusLine(shard)}
 
     <div class="compare">${compare}</div>
     ${districtsLine(shard)}
@@ -677,6 +680,16 @@ async function renderDetail(geoid) {
       subtract demolitions.${shard.ahpaa_status ? ' AHPAA status: ' + shard.ahpaa_status + '.' : ''}</p>`;
 
   wireChartHover(chart.geom);
+}
+
+/* The census count, 2010 to 2020, right under the permit headline: permits are
+ * what the town approved, the count is what was standing. */
+function censusLine(shard) {
+  const net = shard.built && shard.built.net_change;
+  if (net === null || net === undefined) return '';
+  return `<p class="census-line"><b>Census housing count:</b> ${fmtInt(shard.h1_2010)} (2010) →
+    ${fmtInt(shard.h1_2020)} (2020), <b class="census-net">${fmtSigned(net)}</b> units.
+    <span class="muted">A change in homes standing, not homes built — see below.</span></p>`;
 }
 
 /* Which legislators represent this place, each linking to the district view.
