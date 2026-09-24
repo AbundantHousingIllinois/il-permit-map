@@ -37,6 +37,18 @@ CHROMIUM_ARGS = ["--enable-unsafe-swiftshader", "--use-gl=angle",
 READY_TIMEOUT_MS = 45_000
 W = 78
 
+# The page's one external dependency is the pinned MapLibre build. Headless
+# Chromium on a machine behind a TLS-inspecting proxy cannot validate that
+# request even when everything else can, and the whole run then dies on a
+# 45-second timeout that says nothing useful. So the pinned URLs are fetched
+# here -- through Python, which does read the machine's CA configuration --
+# cached, and served to the browser from the cache. The page itself is
+# unchanged and still references the CDN; what is being removed is the browser
+# checks' dependence on the *test machine's* ability to reach it. Which path
+# was used is printed either way, and a URL that 404s still fails the run.
+VENDOR_DIR = L.ROOT / "data" / "raw" / "vendor"
+CDN_HOST_PREFIX = "https://cdnjs.cloudflare.com/"
+
 
 class Report:
     def __init__(self) -> None:
@@ -214,12 +226,74 @@ def ensure_browser(attempts: int = 3):
     return True
 
 
+def cdn_urls_in_page() -> list[str]:
+    """Every external asset docs/index.html references, read from the file.
+
+    Read rather than hard-coded so this can never drift from the page: a version
+    bump in index.html is picked up here without anyone remembering to.
+    """
+    import re
+    html = (L.DOCS / "index.html").read_text(encoding="utf-8")
+    # <script src> and <link href> only. An <a href> to abundanthousingillinois.org
+    # is a link the reader may follow, not an asset the page loads, and mirroring
+    # it would both waste a fetch and intercept the click.
+    urls = re.findall(r'<script[^>]+src="(https://[^"]+)"', html)
+    urls += re.findall(r'<link[^>]+href="(https://[^"]+)"', html)
+    return sorted(set(urls))
+
+
+CONTENT_TYPES = {".js": "application/javascript", ".css": "text/css"}
+
+
+def read_midpoint(pg):
+    """The rendered Illinois midpoint, as a number.
+
+    Read from its own element. Scraping the first number out of the sentence
+    stopped working the moment the sentence could say "3-4 unit", which is
+    exactly the case this has to measure.
+    """
+    return pg.evaluate(
+        "(() => { const el = document.querySelector('#legend-midpoint-value');"
+        " const t = (el || document.querySelector('#legend-midpoint')).innerText;"
+        " const m = t.match(/-?\\d+(?:\\.\\d+)?/); "
+        " return m ? parseFloat(m[0]) : null; })()")
+
+
+def mirror_cdn(urls: list[str]) -> tuple[dict[str, bytes], list[str]]:
+    """Fetch each URL once into data/raw/vendor/ and return {url: bytes}."""
+    import requests
+
+    VENDOR_DIR.mkdir(parents=True, exist_ok=True)
+    got: dict[str, bytes] = {}
+    notes: list[str] = []
+    for url in urls:
+        cache = VENDOR_DIR / url.rsplit("/", 1)[-1]
+        try:
+            resp = requests.get(url, timeout=60)
+            resp.raise_for_status()
+            cache.write_bytes(resp.content)
+            got[url] = resp.content
+            notes.append(f"  fetched {url}  ({len(resp.content):,} bytes)")
+        except Exception as exc:
+            if cache.exists():
+                got[url] = cache.read_bytes()
+                notes.append(f"  {url}\n    unreachable now ({exc.__class__.__name__}); "
+                             f"using the cached copy at {L.rel(cache)}")
+            else:
+                notes.append(f"  {url}\n    FAILED and no cached copy: {exc}")
+    return got, notes
+
+
 def run_checks(sync_playwright, base, built, target, console_errors):
     """Drive the built site once.  Raises on a transient driver failure so
     main() can retry before any check has recorded a result."""
     with sync_playwright() as pw:
         browser = pw.chromium.launch(args=CHROMIUM_ARGS)
-        page = browser.new_page(viewport={"width": 420, "height": 900})
+        # One context for the whole run: the asset routes below are registered on
+        # it, so check 7's second page inherits them instead of going to the CDN
+        # on its own and timing out.
+        context = browser.new_context(viewport={"width": 420, "height": 900})
+        page = context.new_page()
 
         page.on("console", lambda m: console_errors.append(f"console.{m.type}: {m.text}")
                 if m.type == "error" else None)
@@ -227,9 +301,37 @@ def run_checks(sync_playwright, base, built, target, console_errors):
         page.on("requestfailed",
                 lambda r: console_errors.append(f"requestfailed: {r.url} {r.failure}"))
 
+        urls = cdn_urls_in_page()
+        R.out("")
+        R.out(f"  External assets referenced by docs/index.html: {len(urls)}")
+        mirrored, notes = mirror_cdn(urls)
+        for line in notes:
+            R.out(line)
+        missing = [u for u in urls if u not in mirrored]
+        if missing:
+            R.out("  Could not obtain: " + ", ".join(missing))
+            R.out("  Letting the browser request those directly instead.")
+        for url, body in mirrored.items():
+            ext = "." + url.rsplit(".", 1)[-1]
+            context.route(url, functools.partial(
+                lambda route, _b, _t: route.fulfill(
+                    status=200, body=_b, content_type=_t),
+                _b=body, _t=CONTENT_TYPES.get(ext, "application/octet-stream")))
+        if mirrored:
+            R.out(f"  Serving {len(mirrored)} of them to the browser from the local "
+                  "cache; the page is unmodified.")
+
         page.goto(f"{base}/index.html", wait_until="load")
-        page.wait_for_function("window.app && window.app.ready === true",
-                               timeout=READY_TIMEOUT_MS)
+        try:
+            page.wait_for_function("window.app && window.app.ready === true",
+                                   timeout=READY_TIMEOUT_MS)
+        except Exception as exc:
+            R.out("")
+            R.out(f"  The page never reached app.ready within "
+                  f"{READY_TIMEOUT_MS / 1000:.0f}s: {exc.__class__.__name__}")
+            for e in console_errors[:20]:
+                R.out(f"    {e}")
+            raise
         page.wait_for_timeout(1200)   # let the first paint settle
 
         # ---------------- 1 ----------------
@@ -258,10 +360,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
         # ---------------- 3 ----------------
         def s3():
             txt = page.inner_text("#legend-midpoint")
-            val = page.evaluate(
-                "(() => { const t = document.querySelector('#legend-midpoint').innerText;"
-                " const m = t.match(/-?\\d+(?:\\.\\d+)?/); return m ? parseFloat(m[0]) : null; })()"
-            )
+            val = read_midpoint(page)
             expected = built["meta"].get("il_pct_growth")
             R.out(f"  Legend midpoint element text : {txt!r}")
             R.out(f"  Numeric value parsed from it : {val!r}")
@@ -344,13 +443,13 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             after = page.evaluate("window.app.highlightedCount()")
             on = page.evaluate("window.app.state().zeroMf")
             R.out(f"  Highlighted features before : {before:,}")
-            R.out(f"  'Zero multifamily' switch on : {on}")
+            R.out(f"  'No 5+ unit buildings' switch on : {on}")
             R.out(f"  Highlighted features after  : {after:,}")
             page.click("#toggle-zero-mf")
             page.wait_for_timeout(400)
             R.out(f"  Reduced: {after < before}   (and still non-empty: {after > 0})")
             return bool(on) and after < before
-        R.run(6, '"Zero multifamily" reduces the count of highlighted features', s6)
+        R.run(6, '"No 5+ unit buildings" reduces the count of highlighted features', s6)
 
         # ---------------- 7 ----------------
         def s7():
@@ -362,7 +461,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             if geoid not in h:
                 R.out("  The hash does not encode the selected place.")
                 return False
-            p2 = browser.new_page(viewport={"width": 420, "height": 900})
+            p2 = context.new_page()
             errs: list[str] = []
             p2.on("pageerror", lambda e: errs.append(str(e)))
             p2.goto(f"{base}/index.html{h}", wait_until="load")
@@ -382,6 +481,73 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                     and bool((got.get("name") or "").strip()) and not errs)
         R.run(7, "A URL hash with a selected place restores that selection on load", s7)
 
+        # ---------------- 8 (added, disclosed) ----------------
+        def s8():
+            R.out("  Not in SPEC.md §7. The map's neutral colour break is 'the Illinois")
+            R.out("  average', and with the structure-type filter on that has to be")
+            R.out("  Illinois's average FOR THAT TYPE. It was pinned to the all-types")
+            R.out("  figure, so filtering to 5+ unit compared every town to the wrong")
+            R.out("  number. This asserts the rendered midpoint follows the filter.")
+            page.evaluate("() => { location.hash = '#metric=pct_growth&type=all&pop=5000'; }")
+            page.wait_for_timeout(500)
+            ok = True
+            for t in ["all", "sf", "du", "mf34", "mf5p"]:
+                page.evaluate("(t) => { location.hash = "
+                              "`#metric=pct_growth&type=${t}&pop=5000`; }", t)
+                page.wait_for_timeout(350)
+                val = read_midpoint(page)
+                want = (built["meta"]["il_pct_growth"] if t == "all"
+                        else built["meta"]["il_pct_growth_by_type"][t])
+                close = val is not None and abs(val - float(want)) <= 0.011
+                R.out(f"    type={t:<5} legend shows {val!r}   meta says {want!r}   "
+                      f"{'ok' if close else 'MISMATCH'}")
+                ok = ok and close
+            distinct = page.evaluate(
+                "() => new Set(Object.values(window.app.meta().units_stops)"
+                ".map(v => v.join(','))).size")
+            R.out(f"    distinct total-units legend ladders across the types: {distinct}")
+            if distinct < 2:
+                R.out("    Every type shares one ladder, which is the flattened ramp.")
+                ok = False
+            page.evaluate("() => { location.hash = "
+                          "'#metric=pct_growth&type=all&pop=5000'; }")
+            page.wait_for_timeout(350)
+            return ok
+        R.run(8, "The Illinois colour break follows the structure-type filter", s8)
+
+        # ---------------- 9 (added, disclosed) ----------------
+        def s9():
+            R.out("  Not in SPEC.md §7. The chart runs from 2000 but the metric starts")
+            R.out("  in 2010, and nothing said so. This asserts the rendered chart")
+            R.out("  actually marks the two eras apart, and that a place whose permit")
+            R.out("  office skipped years is marked as such rather than shown as zero.")
+            geoid = "1714351"   # Cicero: 0 of 12 months in six metric years
+            page.evaluate("(g) => window.app.selectPlace(g)", geoid)
+            page.wait_for_function(
+                "() => document.querySelector('#detail .chart-holder svg')",
+                timeout=15_000)
+            page.wait_for_timeout(400)
+            svg = page.evaluate(
+                "() => document.querySelector('#detail .chart-holder svg').outerHTML")
+            faded = svg.count('fill-opacity="0.4"')
+            dashed = svg.count('stroke-dasharray')
+            R.out(f"    faded pre-{built['meta']['metric_start']} band paths : {faded}")
+            R.out(f"    dashed strokes (era outline + boundary rule): {dashed}")
+            note = page.evaluate(
+                "() => { const n = document.querySelector('#detail .chart-note');"
+                " return n ? n.innerText : ''; }")
+            R.out(f"    chart note: {note[:150]!r}")
+            body = page.inner_text("#detail-body")
+            names_years = "2010" in body and "2023" in body
+            R.out("    the detail panel names the years the office did not report: "
+                  f"{names_years}")
+            page.evaluate("() => window.app.closeDetail()")
+            page.wait_for_timeout(300)
+            return (faded >= len(["sf", "du", "mf34", "mf5p"]) and dashed >= 2
+                    and bool(note) and names_years)
+        R.run(9, "The chart separates the pre-2010 context from the metric window, "
+                 "and marks unreported years", s9)
+
         # ---------------- B ----------------
         def sB():
             R.out("  Not in SPEC.md §7. about.html was added at the user's request,")
@@ -390,7 +556,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             R.out("  Its figures are read from the same meta.json the map uses, so this")
             R.out("  also catches the page drifting out of date with the build.")
             errs: list[str] = []
-            p3 = browser.new_page(viewport={"width": 420, "height": 900})
+            p3 = context.new_page()
             p3.on("console", lambda m: errs.append(f"console.{m.type}: {m.text}")
                   if m.type == "error" else None)
             p3.on("pageerror", lambda e: errs.append(f"pageerror: {e}"))
@@ -406,6 +572,10 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 " gap: document.getElementById('s-gap').innerText,"
                 " join: document.getElementById('s-join').innerText,"
                 " ahpaa: document.getElementById('s-ahpaa').innerText,"
+                " zero5p: document.getElementById('s-zero2').innerText,"
+                " zero3p: document.getElementById('s-zero3p').innerText,"
+                " mfull: document.getElementById('s-months-full').innerText,"
+                " mnone: document.getElementById('s-months-none').innerText,"
                 " sources: document.querySelectorAll('#sources-list li').length,"
                 " back: !!document.querySelector('a[href=\"index.html\"]')"
                 "}))()"
@@ -418,6 +588,10 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             R.out(f"  Coverage reporting / gap  : {got['reporting']!r} / {got['gap']!r}")
             R.out(f"  Join rate rendered        : {got['join']!r}")
             R.out(f"  AHPAA state sentence      : {got['ahpaa']!r}")
+            R.out(f"  No 5+ unit / nothing above a duplex : "
+                  f"{got['zero5p']!r} / {got['zero3p']!r}")
+            R.out(f"  Full-month / no-month places       : "
+                  f"{got['mfull']!r} / {got['mnone']!r}")
             R.out(f"  Source list entries       : {got['sources']}")
             R.out(f"  Links back to the map     : {got['back']}")
             meta = built["meta"]
@@ -431,6 +605,15 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                     got["reporting"] not in ("—", "") and got["gap"] not in ("—", ""),
                 "join rate filled in": got["join"] not in ("—", ""),
                 "AHPAA state described": bool(got["ahpaa"].strip()),
+                "no-5+-unit count matches meta.json":
+                    got["zero5p"].replace(",", "") == str(meta["n_zero_mf"]),
+                "nothing-above-a-duplex count matches meta.json":
+                    got["zero3p"].replace(",", "") == str(meta["n_zero_mf3p"]),
+                "months-reported counts match meta.json":
+                    got["mfull"].replace(",", "")
+                    == str(meta["months_counts"].get("full", 0))
+                    and got["mnone"].replace(",", "")
+                    == str(meta["months_counts"].get("none", 0)),
                 "sources listed": got["sources"] > 0,
                 "links back to the map": bool(got["back"]),
             }

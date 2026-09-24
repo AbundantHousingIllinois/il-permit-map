@@ -30,6 +30,9 @@ const DIVERGING = {
 
 /* Sequential scale, total-units mode: one hue, light to dark (SPEC.md §6.2). */
 const SEQUENTIAL = ['#EEF4F9', '#CFE0EE', '#A3C4DE', '#6F9FC6', '#3C79A8', '#17578A', '#00365F'];
+/* Only a fallback now. The real breaks are fitted per structure type in the
+ * build and arrive in meta.units_stops: one hard-coded ladder put almost every
+ * municipality in the lightest bin as soon as the type filter was on. */
 const SEQ_STOPS = [0, 25, 100, 400, 1500, 6000, 25000];
 
 /* Four categorical series for the stacked area chart, assigned in fixed order
@@ -60,6 +63,7 @@ const state = {
   type: 'all',
   popMin: 5000,
   zeroMf: false,
+  zeroMf3p: false,
   ahpaa: false,
   selected: null,
   sort: { key: 'pct_growth', dir: 'asc' }
@@ -95,6 +99,7 @@ function isMeasured(p) { return metricValue(p) !== null; }
 function passesFilters(p) {
   if ((p.pop2020 || 0) < state.popMin) return false;
   if (state.zeroMf && p.zero_mf !== true) return false;
+  if (state.zeroMf3p && p.zero_mf3p !== true) return false;
   if (state.ahpaa) {
     const s = (p.ahpaa_status || '').toLowerCase();
     if (!s.includes('non-exempt')) return false;
@@ -106,7 +111,23 @@ function isHighlighted(p) { return isMeasured(p) && passesFilters(p); }
 
 /* ---------------------------------------------------------------- scales */
 
-function midpoint() { return META.il_pct_growth; }
+/* The neutral break on the diverging scale: the Illinois rate the reader is
+ * being asked to compare against. With the structure-type filter on, that has
+ * to be Illinois's rate FOR THAT TYPE -- pinning it to the all-types 5.6% made
+ * every town look far below average the moment you filtered to 5+ unit. */
+function midpoint() {
+  if (state.type === 'all') return META.il_pct_growth;
+  const byType = META.il_pct_growth_by_type || {};
+  const v = byType[state.type];
+  return (v === null || v === undefined) ? META.il_pct_growth : v;
+}
+
+function usMidpoint() {
+  if (state.type === 'all') return META.us_pct_growth;
+  const byType = META.us_pct_growth_by_type || {};
+  const v = byType[state.type];
+  return (v === null || v === undefined) ? META.us_pct_growth : v;
+}
 
 function divergingStops() {
   const m = midpoint();
@@ -122,7 +143,9 @@ function divergingStops() {
 }
 
 function sequentialStops() {
-  return SEQ_STOPS.map((v, i) => [v, SEQUENTIAL[i]]);
+  const fitted = (META.units_stops || {})[state.type];
+  const stops = (fitted && fitted.length === SEQUENTIAL.length) ? fitted : SEQ_STOPS;
+  return stops.map((v, i) => [v, SEQUENTIAL[i]]);
 }
 
 function currentStops() {
@@ -263,16 +286,25 @@ function renderLegend() {
 
   document.getElementById('legend-title').textContent = isPct
     ? `Units permitted ${META.metric_start}–${META.ymax} as a share of 2010 housing stock${typeLabel}`
-    : `Total units permitted ${META.ymin}–${META.ymax}${typeLabel}`;
+    : `Total units permitted ${META.metric_start}–${META.ymax}${typeLabel}`;
 
   /* Always numeric and always present: check 3 of the browser checks reads it,
    * and a reader needs the midpoint stated outright (SPEC.md §6.1). */
   const mid = midpoint();
+  const midWhat = state.type === 'all'
+    ? 'Illinois average'
+    : `Illinois average, ${TYPE_LABEL_SHORT[state.type].toLowerCase()}`;
+  /* The value gets its own element. The label can now contain a digit ("3-4
+   * unit"), so anything reading the midpoint out of the sentence -- site check 3
+   * did -- would pick up the wrong number. */
+  const midValue = `<b>${midWhat}: <span id="legend-midpoint-value">${fmtPct(mid, 2)}</span></b>`;
   document.getElementById('legend-midpoint').innerHTML = isPct
-    ? `Colour break is the state average — <b>Illinois average: ${fmtPct(mid)}</b>. `
-      + `Orange is below it, blue above.`
-    : `Sequential scale, light to dark. Reference: <b>Illinois average: ${fmtPct(mid)}</b> `
-      + `growth since 2010 (the midpoint used in Percent growth mode).`;
+    ? `Colour break is the state average for whatever is being shown — `
+      + `${midValue}. Orange is below it, blue above.`
+    : `Sequential scale, light to dark, with breaks fitted to `
+      + `${state.type === 'all' ? 'all types' : TYPE_LABEL_SHORT[state.type].toLowerCase()}. `
+      + `Reference: ${midValue} growth since ${META.metric_start} `
+      + `(the midpoint used in Percent growth mode).`;
 
   const ramp = document.getElementById('legend-ramp');
   ramp.innerHTML = '';
@@ -286,9 +318,12 @@ function renderLegend() {
   labels.innerHTML = '';
   stops.forEach(([v], i) => {
     const s = document.createElement('span');
-    if (i === 0 || i === stops.length - 1 || (isPct && i === 3)) {
+    if (i === 0 || i === stops.length - 1 || i === 3) {
+      /* Sub-1% midpoints on the sparse types need a second decimal or every
+       * label reads "0%". */
+      const dp = Math.abs(midpoint()) < 1 ? 2 : (i === 3 ? 1 : 0);
       s.textContent = isPct
-        ? (i === stops.length - 1 ? fmtPct(v, 0) + '+' : fmtPct(v, i === 3 ? 1 : 0))
+        ? (i === stops.length - 1 ? fmtPct(v, dp) + '+' : fmtPct(v, dp))
         : (i === stops.length - 1 ? fmtInt(v) + '+' : fmtInt(v));
     } else {
       s.textContent = '';
@@ -399,8 +434,8 @@ function renderTable() {
 /* Stacked area, units by structure type per year (SPEC.md §6.4). Four series in
  * fixed order, a legend plus direct hover readout, and a 2px surface-coloured
  * gap between stacked bands so adjacent fills stay separable. */
-function stackedAreaChart(series) {
-  const W = 320, H = 150, PAD = { t: 6, r: 6, b: 18, l: 34 };
+function stackedAreaChart(series, shard) {
+  const W = 320, H = 164, PAD = { t: 16, r: 6, b: 30, l: 34 };
   const colors = seriesColors();
   const surface = cssVar('--surface-raised') || '#fff';
   const ink = cssVar('--ink-muted') || '#888';
@@ -412,6 +447,17 @@ function stackedAreaChart(series) {
   const totals = series.map((d, i) => reported[i]
     ? TYPE_ORDER.reduce((s, k) => s + (d[k] || 0), 0) : 0);
   const maxY = Math.max(1, ...totals);
+
+  /* The percent-growth metric starts in 2010, but the chart runs from 2000 so a
+   * reader can see the pre-crash baseline. Everything left of 2010 is therefore
+   * context, not part of any number on this page, and is drawn faded with a
+   * dashed outline so it cannot be read as part of the metric. */
+  const mStart = META.metric_start;
+  const mIdx = series.findIndex(d => d.year === mStart);
+  /* Years where the permit office reported 0 of 12 months. The Census still
+   * publishes a figure -- its own estimate for a non-reporting office -- so the
+   * band is drawn, but it is marked and the tooltip says what it is. */
+  const imputed = new Set((shard && shard.months_imputed_years) || []);
 
   const x = i => PAD.l + (W - PAD.l - PAD.r) * (series.length < 2 ? 0 : i / (series.length - 1));
   const y = v => PAD.t + (H - PAD.t - PAD.b) * (1 - v / maxY);
@@ -434,8 +480,18 @@ function stackedAreaChart(series) {
   });
   if (run) runs.push(run);
 
+  /* Split every run at 2010 so the two eras can be drawn differently. The two
+   * halves share the boundary vertex, so they abut exactly with no seam. */
+  const segs = [];
+  for (const [a, z] of runs) {
+    if (mIdx > a && mIdx < z) { segs.push([a, mIdx]); segs.push([mIdx, z]); }
+    else segs.push([a, z]);
+  }
+  const isContext = ([a]) => mIdx >= 0 && series[a].year < mStart;
+
   let svg = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" `
-    + `aria-label="Units permitted per year by structure type, ${years[0]} to ${years[years.length - 1]}">`;
+    + `aria-label="Units permitted per year by structure type, ${years[0]} to ${years[years.length - 1]}. `
+    + `Years before ${mStart} are shown faded because the percent-growth metric starts in ${mStart}.">`;
 
   // recessive gridlines + y labels
   const ticks = [0, maxY / 2, maxY];
@@ -447,27 +503,58 @@ function stackedAreaChart(series) {
   }
 
   for (const b of bands) {
-    for (const [a, z] of runs) {
+    for (const seg of segs) {
+      const [a, z] = seg;
       let d = '';
       for (let i = a; i <= z; i++) d += (i === a ? 'M' : 'L') + x(i).toFixed(1) + ' ' + y(b.upper[i]).toFixed(1) + ' ';
       for (let i = z; i >= a; i--) d += 'L' + x(i).toFixed(1) + ' ' + y(b.lower[i]).toFixed(1) + ' ';
       d += 'Z';
-      svg += `<path d="${d}" fill="${colors[b.key]}" stroke="${surface}" stroke-width="2" `
-        + `stroke-linejoin="round"/>`;
+      svg += `<path d="${d}" fill="${colors[b.key]}" fill-opacity="${isContext(seg) ? 0.4 : 1}" `
+        + `stroke="${surface}" stroke-width="2" stroke-linejoin="round"/>`;
     }
   }
 
+  /* Dashed outline along the top of the faded era, so the pre-2010 span reads as
+   * a dashed line rather than merely a lighter one (the shape Austin asked for). */
+  for (const seg of segs) {
+    if (!isContext(seg)) continue;
+    const [a, z] = seg;
+    let d = '';
+    for (let i = a; i <= z; i++) d += (i === a ? 'M' : 'L') + x(i).toFixed(1) + ' ' + y(base[i]).toFixed(1) + ' ';
+    svg += `<path d="${d}" fill="none" stroke="${ink}" stroke-width="1.2" stroke-opacity="0.75" `
+      + `stroke-dasharray="3 2" stroke-linejoin="round"/>`;
+  }
+
   // Mark the unreported span so a gap reads as "no record", not as "no permits".
+  const bandW = (W - PAD.l - PAD.r) / Math.max(1, series.length - 1);
   reported.forEach((ok, i) => {
     if (ok) return;
-    const w = (W - PAD.l - PAD.r) / Math.max(1, series.length - 1);
-    svg += `<rect x="${(x(i) - w / 2).toFixed(1)}" y="${PAD.t}" width="${w.toFixed(1)}" `
+    svg += `<rect x="${(x(i) - bandW / 2).toFixed(1)}" y="${PAD.t}" width="${bandW.toFixed(1)}" `
       + `height="${(H - PAD.t - PAD.b).toFixed(1)}" fill="${ink}" fill-opacity="0.07"/>`;
   });
 
-  // x labels: first, middle, last only
-  [0, Math.floor(series.length / 2), series.length - 1].forEach(i => {
-    svg += `<text x="${x(i).toFixed(1)}" y="${H - 5}" text-anchor="${i === 0 ? 'start' : i === series.length - 1 ? 'end' : 'middle'}" `
+  /* A tick under every year the permit office reported no month at all. The
+   * number above it is the Census's estimate, not the town's count. */
+  series.forEach((d, i) => {
+    if (!imputed.has(d.year)) return;
+    svg += `<rect x="${(x(i) - bandW / 2 + 0.5).toFixed(1)}" y="${(H - PAD.b + 1).toFixed(1)}" `
+      + `width="${Math.max(2, bandW - 1).toFixed(1)}" height="3" fill="${ink}" fill-opacity="0.55"/>`;
+  });
+
+  // the 2010 boundary
+  if (mIdx > 0) {
+    svg += `<line x1="${x(mIdx).toFixed(1)}" x2="${x(mIdx).toFixed(1)}" y1="${PAD.t - 10}" `
+      + `y2="${H - PAD.b}" stroke="${ink}" stroke-width="1" stroke-opacity="0.55" stroke-dasharray="2 2"/>`
+      + `<text x="${(x(mIdx) - 3).toFixed(1)}" y="${PAD.t - 4}" text-anchor="end" font-size="7.5" `
+      + `fill="${ink}" fill-opacity="0.9">context</text>`
+      + `<text x="${(x(mIdx) + 3).toFixed(1)}" y="${PAD.t - 4}" text-anchor="start" font-size="7.5" `
+      + `fill="${ink}" fill-opacity="0.9">counted in the metric →</text>`;
+  }
+
+  // x labels: first, the metric boundary, last
+  const labelIdx = [...new Set([0, mIdx > 0 ? mIdx : Math.floor(series.length / 2), series.length - 1])];
+  labelIdx.forEach(i => {
+    svg += `<text x="${x(i).toFixed(1)}" y="${H - PAD.b + 13}" text-anchor="${i === 0 ? 'start' : i === series.length - 1 ? 'end' : 'middle'}" `
       + `font-size="8" fill="${ink}">${years[i]}</text>`;
   });
 
@@ -477,11 +564,22 @@ function stackedAreaChart(series) {
     + `height="${H - PAD.t - PAD.b}" fill="transparent" style="cursor:crosshair"/>`;
   svg += '</svg>';
 
+  const notes = [];
+  if (mIdx > 0) {
+    notes.push(`Faded and dashed before ${mStart}: shown for the pre-2008 baseline, `
+      + `not counted in any figure on this page.`);
+  }
+  if (imputed.size) {
+    notes.push(`Ticked years are ones this permit office reported no months to the `
+      + `Census; the figure shown for them is the Census's own estimate.`);
+  }
+
   const legend = '<div class="chart-legend">' + TYPE_ORDER.map(k =>
-    `<span><i style="background:${colors[k]}"></i>${TYPE_LABEL[k]}</span>`).join('') + '</div>';
+    `<span><i style="background:${colors[k]}"></i>${TYPE_LABEL[k]}</span>`).join('') + '</div>'
+    + (notes.length ? `<p class="chart-note">${notes.join(' ')}</p>` : '');
 
   return { html: `<div class="chart-holder">${svg}<div class="chart-tip" id="chart-tip" hidden></div></div>${legend}`,
-           geom: { W, PAD, series, colors } };
+           geom: { W, PAD, series, colors, imputed, mStart } };
 }
 
 function wireChartHover(geom) {
@@ -491,7 +589,7 @@ function wireChartHover(geom) {
   const hit = holder.querySelector('#chart-hit');
   const tip = holder.querySelector('#chart-tip');
   const cross = holder.querySelector('#chart-crosshair');
-  const { W, PAD, series, colors } = geom;
+  const { W, PAD, series, colors, imputed, mStart } = geom;
   if (!hit) return;
 
   function move(ev) {
@@ -504,10 +602,14 @@ function wireChartHover(geom) {
     const cx = PAD.l + (W - PAD.l - PAD.r) * (series.length < 2 ? 0 : i / (series.length - 1));
     cross.setAttribute('x1', cx); cross.setAttribute('x2', cx);
     tip.hidden = false;
+    const caveats = [];
+    if (imputed && imputed.has(d.year)) caveats.push('Census estimate — the permit office reported no months this year');
+    if (mStart !== undefined && d.year < mStart) caveats.push(`Before ${mStart}: context only, not counted in the metric`);
     tip.innerHTML = (d.total === null || d.total === undefined)
       ? `<b>${d.year}</b><div class="row"><span>No BPS record for this year</span></div>`
       : `<b>${d.year} — ${fmtInt(d.total)} units</b>`
-        + TYPE_ORDER.map(k => `<div class="row"><span><i style="background:${colors[k]}"></i>${TYPE_LABEL[k]}</span><span>${fmtInt(d[k])}</span></div>`).join('');
+        + TYPE_ORDER.map(k => `<div class="row"><span><i style="background:${colors[k]}"></i>${TYPE_LABEL[k]}</span><span>${fmtInt(d[k])}</span></div>`).join('')
+        + caveats.map(c => `<div class="row caveat"><span>${c}</span></div>`).join('');
     const left = Math.max(0, Math.min(holder.clientWidth - 150, cx / W * holder.clientWidth - 70));
     tip.style.left = left + 'px';
     tip.style.top = '0px';
@@ -574,7 +676,7 @@ async function renderDetail(geoid) {
         ? `${shard.short_name} has no 2010 housing count published, so a percentage cannot be computed.`
         : `${shard.short_name} grew by ${fmtPct(shard.pct_growth)} — ${fmtInt(shard.units_total_2010)} units.`);
 
-  const chart = stackedAreaChart(shard.series.map(d => ({ ...d })));
+  const chart = stackedAreaChart(shard.series.map(d => ({ ...d })), shard);
 
   const byTypeRows = TYPE_ORDER.map(k => `<tr>
       <td style="text-align:left"><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${seriesColors()[k]};margin-right:6px"></i>${TYPE_LABEL[k]}</td>
@@ -595,13 +697,20 @@ async function renderDetail(geoid) {
 
     <div class="compare">${compare}</div>
 
-    ${shard.zero_mf ? `<div class="flag">No units in buildings of 5+ have been permitted here since ${shard.first_metric_year || META.metric_start}.${
+    ${shard.months_note ? `<div class="coverage-note">${shard.months_note}</div>` : ''}
+
+    ${shard.zero_mf ? `<div class="flag"><strong>No 5+ unit buildings.</strong> No units in
+      buildings of five or more have been permitted here since ${shard.first_metric_year || META.metric_start}.${
+        shard.mf34_total
+          ? ` ${fmtInt(shard.mf34_total)} unit${shard.mf34_total === 1 ? '' : 's'} in 3–4 unit buildings ${shard.mf34_total === 1 ? 'was' : 'were'} permitted over the same period — this measure counts those separately, so a town can appear here and still have permitted a small apartment building.`
+          : ' No 3–4 unit buildings either.'}${
         shard.first_metric_year && shard.first_metric_year > META.metric_start
           ? ` This place's permit office first reported to the Census in ${shard.first_metric_year}, so there is no record for ${META.metric_start}–${shard.first_metric_year - 1}.`
           : ''}</div>` : ''}
 
     <p class="chart-title">Units permitted per year by structure type</p>
-    <p class="chart-sub">${META.ymin}–${META.ymax}. Hover or drag across the chart for a year.</p>
+    <p class="chart-sub">${META.ymin}–${META.ymax}. Hover or drag across the chart for a year.
+      Only ${META.metric_start}–${META.ymax} feeds the figures above.</p>
     ${chart.html}
 
     <div class="detail-table">
@@ -652,6 +761,7 @@ function writeHash() {
   parts.push('type=' + state.type);
   parts.push('pop=' + state.popMin);
   if (state.zeroMf) parts.push('zeromf=1');
+  if (state.zeroMf3p) parts.push('zeromf3p=1');
   if (state.ahpaa) parts.push('ahpaa=1');
   parts.push('sort=' + state.sort.key + ':' + state.sort.dir);
   const h = '#' + parts.join('&');
@@ -670,6 +780,7 @@ function readHash() {
   if (TYPE_ORDER.includes(q.type) || q.type === 'all') state.type = q.type;
   if (q.pop !== undefined && ['0', '5000', '25000'].includes(q.pop)) state.popMin = +q.pop;
   state.zeroMf = q.zeromf === '1';
+  state.zeroMf3p = q.zeromf3p === '1';
   state.ahpaa = q.ahpaa === '1' && !!(META && META.ahpaa.enabled);
   if (q.sort) {
     const [k, d] = q.sort.split(':');
@@ -688,6 +799,7 @@ function syncControls() {
   document.querySelectorAll('[data-pop]').forEach(b =>
     b.setAttribute('aria-pressed', String(+b.dataset.pop === state.popMin)));
   document.getElementById('toggle-zero-mf').checked = state.zeroMf;
+  document.getElementById('toggle-zero-mf3p').checked = state.zeroMf3p;
   document.getElementById('toggle-ahpaa').checked = state.ahpaa;
 }
 
@@ -712,6 +824,23 @@ function wireControls() {
   document.getElementById('toggle-zero-mf').onchange = e => {
     state.zeroMf = e.target.checked; refresh();
   };
+  document.getElementById('toggle-zero-mf3p').onchange = e => {
+    state.zeroMf3p = e.target.checked; refresh();
+  };
+  /* .hint is a single clipped line by design, so the short form goes here and
+   * the counts go in the footer, which has room for them. */
+  const mfFull = `"5+ unit" counts units in buildings of five or more; buildings of `
+    + `three or four are counted separately, so a municipality can have permitted no `
+    + `5+ unit building and still have permitted a 3–4 unit one. `
+    + `${fmtInt(META.n_zero_mf)} municipalities have permitted no 5+ unit building since `
+    + `${META.metric_start}; ${fmtInt(META.n_zero_mf3p)} have permitted nothing above a duplex.`;
+  const mfHint = document.getElementById('mf-hint');
+  mfHint.textContent = '3–4 unit buildings are counted separately from 5+ unit ones.';
+  mfHint.title = mfFull;
+  document.getElementById('label-zero-mf').title = mfFull;
+  document.getElementById('label-zero-mf3p').title =
+    'Municipalities that have permitted nothing larger than a two-unit building since '
+    + META.metric_start + '.';
   document.getElementById('detail-close').onclick = closeDetail;
 
   /* SPEC.md §3.5 / §6.2: with no AHPAA rows loaded the filter is disabled and
@@ -768,7 +897,12 @@ function renderFooter() {
     + `reporting to the Census; ${fmtInt(c.no_permit_office || 0)} do not and are drawn with a hatch `
     + `rather than a zero-value colour, excluded from rankings and from statewide totals. `
     + `${fmtInt(META.n_zero_mf)} reporting municipalities have permitted no building of 5+ units since `
-    + `${META.metric_start}.`;
+    + `${META.metric_start}, and ${fmtInt(META.n_zero_mf3p)} have permitted nothing above a duplex. `
+    + `A permit office can also file for only part of a year: `
+    + `${fmtInt((META.months_counts || {}).full || 0)} of the reporting municipalities reported all `
+    + `twelve months in every year since ${META.metric_start}, and `
+    + `${fmtInt((META.months_counts || {}).none || 0)} reported none at all — for those, every figure `
+    + `is the Census's own estimate, and they are left out of the counts above.`;
   document.getElementById('footer-join').textContent =
     `Illinois permitted ${fmtInt(META.il_units_2010_ymax)} units ${META.metric_start}–${META.ymax} `
     + `against ${fmtInt(META.il_h1_2010)} housing units in 2010 (${fmtPct(META.il_pct_growth)}); the `
@@ -783,7 +917,8 @@ const app = {
   ready: false,
   state: () => ({
     metric: state.metric, structure: state.type, popMin: state.popMin,
-    zeroMf: state.zeroMf, ahpaa: state.ahpaa, selected: state.selected
+    zeroMf: state.zeroMf, zeroMf3p: state.zeroMf3p,
+    ahpaa: state.ahpaa, selected: state.selected
   }),
   featureCount: () => FEATURES.length,
   highlightedCount: () => activeGeoids.length,

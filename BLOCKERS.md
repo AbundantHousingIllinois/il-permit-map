@@ -157,3 +157,71 @@ is not an authoritative assignment either — a place straddling a county line i
 labelled with the county containing its interior point. Every shard carries
 `county_source` (`bps_record` or `derived_from_geometry`) so a reader can tell
 which is which.
+
+---
+
+## 5. A permit office can be *in* the survey and still report no months
+
+**Status:** partly resolved — surfaced everywhere it matters, and it now gates the
+zero-multifamily flag. The underlying under-count cannot be fixed from published data.
+
+Raised by Austin Busch, who noticed multifamily in Cicero and Glen Ellyn that the
+"zero multifamily" highlight said did not exist. Glen Ellyn turned out to be a
+labelling problem (BLOCKERS.md is not where that lives — see the deviation list).
+Cicero turned out to be this.
+
+Every BPS place record carries `months_reported`, the number of the year's twelve
+months the permit office actually filed for. The build read the field and wrote it
+into each shard, but nothing used it, so a year an office skipped was rendered as a
+counted zero — the same mistake as colouring a `no_permit_office` place as zero, one
+level further down.
+
+Cicero, 2010–2025:
+
+| Years | Months reported |
+|---|---|
+| 2010, 2011, 2012, 2013, 2014 | 0 of 12 |
+| 2015, 2016 | 1 of 12 |
+| 2023 | 0 of 12 |
+| 2017–2022, 2024, 2025 | 12 of 12 |
+
+Across all 932 reporting places, counting whole months filed inside the metric window:
+
+| Months coverage | Places | of which "no 5+ unit" |
+|---|---|---|
+| 100% | 277 | 180 |
+| 90–99% | 223 | 145 |
+| 75–90% | 179 | 147 |
+| 50–75% | 138 | 118 |
+| 1–50% | 110 | 102 |
+| 0% | 5 | 5 |
+
+**A 0-month year is not an empty year.** Census publishes a figure for it either
+way: the "Reported and Imputed" block this build reads (see the layout decision in
+CLAUDE.md) carries Census's own imputation for a non-responding office. Illinois
+0-month place-years carry **14,709 units** in the metric window — 4.9% of the state
+total. So those years cannot be blanked the way a year with no record at all is;
+the numbers are real published figures. What was wrong was presenting them as
+counts.
+
+**What was done.**
+
+- Every reporting place carries `months_coverage` (0–1), `months_flag`
+  (`full` / `partial` / `low` / `none`) and, in its shard, the list of years its
+  office reported nothing.
+- The chart puts a tick under each such year and the detail panel names them in
+  prose: *"reported no months to the Census in 2010–2014 and 2023 … treat them as
+  a floor."*
+- The **5 places that reported no month in any year of the window** get a null
+  `zero_mf` rather than `true`. Every figure they have is an estimate, and "this
+  town permitted zero apartments" is an advocacy claim the data cannot support for
+  them. This moved the headline from 697 to **692**.
+- `check_data.py` check B gates all of the above, including the two municipalities
+  the question was asked about.
+
+**What was not done.** The under-count itself. If a Cicero permit issued in 2012
+was never filed and Census's estimate for that office was 0, no published source
+recovers it. The honest form is the one now on the page: the figure is a floor,
+and the years it rests on are named. A municipality-level FOIA of the permit
+office is the only thing that would settle a specific case, and that is a person's
+job, not the build's.

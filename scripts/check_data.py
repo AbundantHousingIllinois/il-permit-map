@@ -12,6 +12,7 @@ files itself rather than trusting anything the build wrote.
 
 from __future__ import annotations
 
+import collections
 import csv
 import json
 import sys
@@ -564,6 +565,182 @@ def c10():
 
 
 # --------------------------------------------------------------------------
+# Extra, disclosed: reporting-coverage and per-type scale integrity
+# --------------------------------------------------------------------------
+
+@check("B", "Months actually reported to Census are carried, and no unreported "
+            "place is claimed as zero-multifamily", gating=True)
+def cB():
+    R.out("  Not in SPEC.md §7. Added because a BPS place-year can exist with the")
+    R.out("  permit office having reported 0 of 12 months: the Census still publishes")
+    R.out("  a figure (its own imputation for a non-responder), and the site was")
+    R.out("  rendering those as counted zeros. SPEC.md §1.3 forbids exactly that one")
+    R.out("  level up, for a year with no record at all.")
+    R.out("")
+    ps = props()
+    sh = shards()
+    reporting = [p for p in ps if p["coverage"] == "reporting"]
+    ok = True
+
+    missing = [p["geoid"] for p in reporting
+               if p.get("months_coverage") is None or p.get("months_flag") is None]
+    R.out(f"  B.1  Reporting places carrying months_coverage and months_flag: "
+          f"{len(reporting) - len(missing):,} of {len(reporting):,}")
+    if missing:
+        R.out(f"       {len(missing)} without it: {missing[:10]}")
+        ok = False
+
+    out_of_range = [p["geoid"] for p in reporting
+                    if p.get("months_coverage") is not None
+                    and not (0.0 <= p["months_coverage"] <= 1.0)]
+    if out_of_range:
+        R.out(f"       months_coverage outside [0,1]: {out_of_range[:10]}")
+        ok = False
+
+    counts = collections.Counter(p.get("months_flag") for p in reporting)
+    R.out("")
+    R.out("  B.2  Distribution across the metric window:")
+    for k in ("full", "partial", "low", "none"):
+        R.out(f"         {k:<8} {counts.get(k, 0):>6,}")
+    R.out("       'none' means the office reported no month in any year of the window,")
+    R.out("       so every figure that place has is an estimate.")
+
+    claimed = [p["geoid"] for p in reporting
+               if p.get("months_flag") == "none" and p.get("zero_mf") is True]
+    R.out("")
+    R.out(f"  B.3  Places with no reported month claimed as zero-multifamily: "
+          f"{len(claimed)}")
+    if claimed:
+        R.out(f"       {claimed[:10]}")
+        R.out("       These must carry a null zero_mf, not a true one.")
+        ok = False
+    else:
+        R.out("       None. Their zero_mf is null, and they are out of the headline count.")
+
+    m = meta()
+    n_zero = sum(1 for p in ps if p.get("zero_mf") is True)
+    n_zero3p = sum(1 for p in ps if p.get("zero_mf3p") is True)
+    R.out("")
+    R.out(f"  B.4  meta n_zero_mf {m.get('n_zero_mf')} vs features {n_zero}   "
+          f"n_zero_mf3p {m.get('n_zero_mf3p')} vs features {n_zero3p}")
+    if m.get("n_zero_mf") != n_zero or m.get("n_zero_mf3p") != n_zero3p:
+        R.out("       meta and the features disagree.")
+        ok = False
+
+    # zero_mf3p is the stricter flag, so it can never be true where zero_mf is not.
+    contradictory = [p["geoid"] for p in ps
+                     if p.get("zero_mf3p") is True and p.get("zero_mf") is not True]
+    if contradictory:
+        R.out(f"  B.5  'nothing above a duplex' true where 'no 5+ unit' is not: "
+              f"{contradictory[:10]}")
+        ok = False
+    else:
+        R.out("  B.5  'Nothing above a duplex' is a strict subset of 'no 5+ unit'.")
+
+    # The shard has to carry the years, so the detail panel can name them.
+    bad_shard = []
+    for p in reporting[:]:
+        d = sh.get(p["geoid"])
+        if not isinstance(d, dict):
+            continue
+        n_imp = len(d.get("months_imputed_years") or [])
+        if n_imp != (p.get("n_imputed_years") or 0):
+            bad_shard.append(p["geoid"])
+    R.out(f"  B.6  Shard imputed-year lists agree with the feature counts: "
+          f"{'yes' if not bad_shard else 'NO ' + str(bad_shard[:10])}")
+    if bad_shard:
+        ok = False
+
+    named = {"1714351": "Cicero", "1729756": "Glen Ellyn"}
+    R.out("")
+    R.out("  B.7  The two places this check was written for:")
+    for geoid, label in named.items():
+        d = sh.get(geoid)
+        if not isinstance(d, dict):
+            R.out(f"         {label}: shard missing")
+            ok = False
+            continue
+        R.out(f"         {label:<11} months_flag={d.get('months_flag'):<8} "
+              f"coverage={d.get('months_coverage')}  "
+              f"3-4 unit={d.get('mf34_total')}  5+ unit={d.get('mf5p_total')}  "
+              f"zero_mf={d.get('zero_mf')}")
+    return ok
+
+
+@check("C", "The Illinois reference rate and the legend breaks follow the "
+            "structure-type filter", gating=True)
+def cC():
+    R.out("  Not in SPEC.md §7. Added because the map's neutral colour break and its")
+    R.out("  total-units ramp were both fixed to all-types values, so filtering to a")
+    R.out("  single structure type compared every municipality against the wrong")
+    R.out("  reference and flattened the ramp.")
+    R.out("")
+    m = meta()
+    ok = True
+
+    by_type = m.get("il_pct_growth_by_type") or {}
+    us_by_type = m.get("us_pct_growth_by_type") or {}
+    il_units_by_type = m.get("il_units_by_type") or {}
+    missing = [k for k in L.STRUCTURE_TYPES
+               if k not in by_type or k not in us_by_type]
+    R.out(f"  C.1  meta carries a per-type Illinois and U.S. rate for all "
+          f"{len(L.STRUCTURE_TYPES)} types: {'yes' if not missing else 'NO ' + str(missing)}")
+    if missing:
+        return False
+
+    # Recomputed straight from the published state rows, the same source
+    # il_pct_growth uses (BLOCKERS.md #2).
+    want = dict.fromkeys(L.STRUCTURE_TYPES, 0)
+    for year in L.METRIC_YEARS:
+        st = L.read_state_year(year)
+        for k in L.STRUCTURE_TYPES:
+            want[k] += st[L.STATE_NAME][k]
+    R.out("")
+    R.out("  C.2  Per-type Illinois units recomputed from st<YYYY>a.txt:")
+    for k in L.STRUCTURE_TYPES:
+        same = want[k] == il_units_by_type.get(k)
+        R.out(f"         {k:<5} meta {il_units_by_type.get(k):>9,}  "
+              f"recomputed {want[k]:>9,}  {'exact' if same else 'DIFFERS'}")
+        if not same:
+            ok = False
+    total_by_type = sum(want.values())
+    R.out(f"       sum over types {total_by_type:,} vs il_units_2010_ymax "
+          f"{m.get('il_units_2010_ymax'):,}  "
+          f"{'exact' if total_by_type == m.get('il_units_2010_ymax') else 'DIFFERS'}")
+    if total_by_type != m.get("il_units_2010_ymax"):
+        ok = False
+
+    # Each rate is that type's units over the same 2010 denominator.
+    R.out("")
+    R.out("  C.3  Each rate is units / il_h1_2010, to 4 dp:")
+    for k in L.STRUCTURE_TYPES:
+        expect = round(want[k] / m["il_h1_2010"] * 100, 4)
+        same = abs(expect - by_type[k]) < 1e-6
+        R.out(f"         {k:<5} {by_type[k]:>8}%  expected {expect:>8}%  "
+              f"{'ok' if same else 'DIFFERS'}")
+        if not same:
+            ok = False
+
+    stops = m.get("units_stops") or {}
+    R.out("")
+    R.out("  C.4  Total-units legend breaks, one ladder per type, 7 strictly "
+          "increasing stops:")
+    for k in ["all", *L.STRUCTURE_TYPES]:
+        v = stops.get(k)
+        good = (isinstance(v, list) and len(v) == 7
+                and all(isinstance(x, int) for x in v)
+                and all(v[i] < v[i + 1] for i in range(len(v) - 1)))
+        R.out(f"         {k:<5} {v}  {'ok' if good else 'BAD'}")
+        if not good:
+            ok = False
+    if len({tuple(stops.get(k, ())) for k in L.STRUCTURE_TYPES}) == 1:
+        R.out("       Every type got the identical ladder, which is the bug this "
+              "check exists to catch.")
+        ok = False
+    return ok
+
+
+# --------------------------------------------------------------------------
 # Extra, disclosed: layout verification against the published state totals
 # --------------------------------------------------------------------------
 
@@ -645,7 +822,8 @@ def cA():
 # --------------------------------------------------------------------------
 
 def main() -> int:
-    for name in ("c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cA"):
+    for name in ("c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10",
+                 "cB", "cC", "cA"):
         globals()[name]  # checks run at decoration time; this keeps ordering explicit
 
     R.out("")
