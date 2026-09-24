@@ -90,6 +90,10 @@ AHPAA_HEADERS = ["geoid", "municipality", "status", "source_url", "as_of_date", 
 
 TIGER_ZIP = RAW_GEO / f"cb_{TIGER_VINTAGE}_{STATE_FIPS}_place_500k.zip"
 SIMPLIFIED_GEOJSON = PROCESSED / "places_simplified.geojson"
+# The state outline, like the county layer, is published only as a national
+# archive at this vintage; it is filtered to Illinois when simplified.
+STATE_ZIP = RAW_GEO / f"cb_{TIGER_VINTAGE}_us_state_500k.zip"
+STATE_GEOJSON = PROCESSED / "state_simplified.geojson"
 CROSSWALK_CSV = PROCESSED / "crosswalk.csv"
 UNMATCHED_CSV = PROCESSED / "unmatched.csv"
 PERMITS_CSV = PROCESSED / "permits_tidy.csv"

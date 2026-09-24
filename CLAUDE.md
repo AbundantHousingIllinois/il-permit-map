@@ -146,6 +146,21 @@ when no keyless basemap is usable. That is the choice here: it keeps the page
 free of any runtime third-party request, which matters both for §1.4 and for
 loading on a phone signal in a committee room.
 
+**The state silhouette refines "no basemap tiles"; it does not reverse it.** Austin
+said the map looked "wonky-shaped". The cause was not the place geometry: the only
+polygons on screen were incorporated places, so unincorporated Illinois was a hole
+and the state had no outline. `fetch_geo.py` now also takes
+`cb_2025_us_state_500k` (national-only, like counties), filters to Illinois and
+simplifies it at 10%. The page fills it beneath the places in `--map-land` and
+draws its edge above the county lines. It is static geometry shipped with the site,
+so the page still makes no tile request and no new runtime request of any kind.
+`meta.state_bbox` is computed from it and replaces the hand-typed map bounds. The
+fill colour was checked, not assumed: OKLab ΔE×100 from `#c9c6bb` is 10.0 to the
+diverging midpoint, 14.0 to the lightest sequential step and 8.0 to the hatch base;
+in dark mode `#20201e` is 5.0 from the hatch base, whose stripes carry the rest of
+the difference. The legend names it "Unincorporated — no municipality, not in this
+data," so land that is not measured cannot read as a measurement.
+
 **Colour.** AHIL orange `#E87722` and blue `#004B87` as the diverging pair, with
 a neutral grey midpoint pinned to `il_pct_growth`. The pair was checked against a
 colour-vision-deficiency simulation rather than assumed, as §6.6 requires: OKLab
@@ -270,6 +285,18 @@ and no AHPAA data of any kind.
 23. **Fixed while in the file:** the legend title in Total units mode said
     "Total units permitted 2000–YMAX" while the map coloured by the
     METRIC_START–YMAX total. The label was wrong, not the data.
+24. *Recorded below, under "Added after the spec: `docs/about.html`".*
+25. **A state silhouette, a third legend swatch, and computed bounds.** §6.1
+    describes a plain background with county outlines. The state outline is a
+    fourth TIGER file (`cb_2025_us_state_500k`, same host and vintage as §3.4's),
+    rendered beneath the places so unincorporated land reads as territory.
+    Decision 8 still holds: no tiles, no runtime third-party request. Data check
+    **D** and site check **10** gate it, both labelled as additions. The offline
+    fallback in `build.py` rebuilds it with `topojson` like the other layers.
+26. **Fixed while in the file:** `fetch_geo.py` recorded `-clean` in the
+    provenance line it appends to `data/SOURCES.md`, though `-clean` is
+    deliberately not used. Earlier rows in that append-only log still say it; new
+    rows do not.
 
 ---
 

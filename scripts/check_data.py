@@ -15,6 +15,7 @@ from __future__ import annotations
 import collections
 import csv
 import json
+import math
 import sys
 import traceback
 from concurrent.futures import ThreadPoolExecutor
@@ -738,6 +739,55 @@ def cC():
               "check exists to catch.")
         ok = False
     return ok
+
+
+@check("D", "The state silhouette is one Illinois polygon, sets the opening view, "
+            "and sits under every place", gating=True)
+def cD():
+    R.out("  Not in SPEC.md §7. Added with the state silhouette (CLAUDE.md deviation")
+    R.out("  25): the page's opening view is read from meta.state_bbox, and the")
+    R.out("  silhouette is what makes unincorporated land read as territory, so a")
+    R.out("  wrong or missing outline would put a hole back in the map.")
+    R.out("")
+    from shapely.geometry import shape
+
+    path = L.DOCS_DATA / "state.geojson"
+    if not path.exists():
+        raise FileNotFoundError(f"{L.rel(path)} does not exist. "
+                                "Run `uv run scripts/build.py` first.")
+    sj = json.loads(path.read_text(encoding="utf-8"))
+    feats = sj.get("features", [])
+    props = feats[0].get("properties", {}) if feats else {}
+    one = len(feats) == 1 and props.get("STATEFP") == L.STATE_FIPS
+    R.out(f"  D.1  {L.rel(path)}: {len(feats)} feature(s), STATEFP="
+          f"{props.get('STATEFP')!r}, {path.stat().st_size:,} bytes  "
+          f"{'ok' if one else 'BAD'}")
+    if not one:
+        return False
+
+    state = shape(feats[0]["geometry"])
+    w, s_, e, n = state.bounds
+    want = [[math.floor(w * 1000) / 1000, math.floor(s_ * 1000) / 1000],
+            [math.ceil(e * 1000) / 1000, math.ceil(n * 1000) / 1000]]
+    got = meta().get("state_bbox")
+    same = got == want
+    R.out(f"  D.2  meta.state_bbox {got}  recomputed {want}  "
+          f"{'exact' if same else 'DIFFERS'}")
+
+    # Place and state outlines are simplified independently, so along the rivers
+    # a place can poke a few metres past the silhouette. What must hold is that
+    # every place's interior point is inside it.
+    outside = []
+    for f in features():
+        if not f.get("geometry"):
+            continue
+        if not state.contains(shape(f["geometry"]).representative_point()):
+            outside.append(f["properties"].get("geoid"))
+    R.out(f"  D.3  places whose interior point is outside the silhouette: "
+          f"{len(outside)} of {len(features()):,}  {'ok' if not outside else 'BAD'}")
+    for g in outside[:10]:
+        R.out(f"         {g}")
+    return one and same and not outside
 
 
 # --------------------------------------------------------------------------

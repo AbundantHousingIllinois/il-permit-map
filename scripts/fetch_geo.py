@@ -12,6 +12,11 @@
                                   this build makes (see README). The county file is
                                   also how a county name is attached to a place
                                   that has no BPS record to read one from.
+  cb_<vintage>_us_state_500k   -- the Illinois outline, filtered from the national
+                                  file (states, like counties, are national-only).
+                                  Drawn as a silhouette beneath the places so the
+                                  unincorporated land between them reads as
+                                  territory rather than as a hole in the map.
 
 Simplification runs here, in the fetch step, because it needs ``npx mapshaper``
 and therefore the network; SPEC.md §8 requires ``build.py`` to run with no network
@@ -47,6 +52,10 @@ RETENTION_LADDER = ["12%", "10%", "8%", "5%", "3%", "2%", "1%"]
 # geometry, so the simplified geometry is held well under the 3 MB budget.
 GEOMETRY_BUDGET_BYTES = 2_100_000
 COORD_PRECISION = "0.00001"              # ~5 decimal places (SPEC.md §3.4)
+# One polygon with a long river boundary. Its edge is drawn over the county
+# lines, so it is kept finer than the county layer's 3% to stay crisp at the
+# state-wide zoom the page opens at.
+STATE_RETENTION = "10%"
 
 
 def mapshaper(args: list[str]) -> None:
@@ -105,6 +114,12 @@ def main() -> int:
         "TIGER cartographic boundary: US counties, 1:500k, filtered to Illinois "
         "(county outlines basemap + county names)",
     )
+    L.download(
+        f"{TIGER_BASE}/cb_{L.TIGER_VINTAGE}_us_state_500k.zip",
+        L.STATE_ZIP,
+        "TIGER cartographic boundary: US states, 1:500k, filtered to Illinois "
+        "(state silhouette and outline; its bbox sets the initial map view)",
+    )
 
     print("\nTIGER place attribute table (read straight from the archive):")
     places = L.tiger_places()
@@ -135,8 +150,31 @@ def main() -> int:
     print(f"  {len(cj['features']):,} counties in {L.rel(COUNTIES_GEOJSON)} "
           f"({COUNTIES_GEOJSON.stat().st_size:,} bytes)")
 
+    print("\nSimplifying the state outline (silhouette beneath the places):")
+    mapshaper([
+        str(L.STATE_ZIP),
+        "-filter", f'STATEFP == "{L.STATE_FIPS}"',
+        "-filter-fields", "GEOID,NAME,STATEFP",
+        "-simplify", STATE_RETENTION, "keep-shapes",
+        "-o", f"precision={COORD_PRECISION}", "format=geojson", "force",
+        str(L.STATE_GEOJSON),
+    ])
+    sj = json.loads(L.STATE_GEOJSON.read_text(encoding="utf-8"))
+    print(f"  {len(sj['features']):,} feature in {L.rel(L.STATE_GEOJSON)} "
+          f"({L.STATE_GEOJSON.stat().st_size:,} bytes)")
+    if len(sj["features"]) != 1:
+        raise RuntimeError(f"Expected exactly one Illinois feature, got "
+                           f"{len(sj['features'])}")
     L.record_source(
-        f"npx {MAPSHAPER} -simplify {retention} keep-shapes -clean "
+        f"npx {MAPSHAPER} -filter STATEFP==\"{L.STATE_FIPS}\" "
+        f"-simplify {STATE_RETENTION} keep-shapes -o precision={COORD_PRECISION}",
+        L.rel(L.STATE_GEOJSON),
+        f"Simplification step, not a download. Illinois outline, retention "
+        f"{STATE_RETENTION}, coordinates quantized to {COORD_PRECISION}.",
+    )
+
+    L.record_source(
+        f"npx {MAPSHAPER} -simplify {retention} keep-shapes "
         f"-o precision={COORD_PRECISION}",
         L.rel(L.SIMPLIFIED_GEOJSON),
         f"Simplification step, not a download. Retention {retention}, "

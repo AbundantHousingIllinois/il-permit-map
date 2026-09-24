@@ -17,6 +17,12 @@
   --surface-raised: #ffffff;
   --surface-sunken: #f2f3f1;
   --map-bg: #eef0ec;
+  /* Unincorporated Illinois: the state silhouette beneath the places. Chosen to
+   * sit apart from every colour a reader maps to a value -- OKLab dE x100 is
+   * 10.0 from the diverging midpoint #E9E6E1, 14.0 from the lightest sequential
+   * step #EEF4F9, 8.0 from the hatch base #dfe0dc and 12.7 from --map-bg. */
+  --map-land: #c9c6bb;
+  --state-line: #6b6b68;
 
   --ink: #1E1E1E;
   --ink-secondary: #3C3C3C;
@@ -40,6 +46,10 @@
     --surface-raised: #232322;
     --surface-sunken: #141413;
     --map-bg: #111110;
+    /* dE x100: 6.1 from --map-bg, 5.0 from the hatch base #2b2b29 (whose
+     * stripes carry the difference), 68+ from every value colour. */
+    --map-land: #20201e;
+    --state-line: #9a9a95;
     --ink: #f2f2f0;
     --ink-secondary: #d2d2ce;
     --ink-muted: #9a9a95;

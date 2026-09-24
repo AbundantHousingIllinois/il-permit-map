@@ -183,12 +183,16 @@ function hatchImage() {
 
 /* ---------------------------------------------------------------- map */
 
-function buildMap(placesGeojson, countiesGeojson) {
+function buildMap(placesGeojson, countiesGeojson, stateGeojson) {
   map = new maplibregl.Map({
     container: 'map',
     /* SPEC.md §6.1: no keyless basemap is used. The map renders on a plain
      * background with county outlines, which keeps the page free of any runtime
      * third-party tile request and of any API key. Documented in the README.
+     *
+     * The state silhouette is filled beneath the places, so the land between
+     * municipalities reads as unincorporated territory rather than as a hole
+     * cut out of the map. It uses no image, so it can be declared here.
      *
      * Only the background layer is declared up front. The fill layers are added
      * in the load handler, after the hatch image exists -- a layer that names a
@@ -198,13 +202,17 @@ function buildMap(placesGeojson, countiesGeojson) {
       version: 8,
       sources: {
         places: { type: 'geojson', data: placesGeojson, promoteId: 'geoid' },
-        counties: { type: 'geojson', data: countiesGeojson }
+        counties: { type: 'geojson', data: countiesGeojson },
+        state: { type: 'geojson', data: stateGeojson }
       },
       layers: [
-        { id: 'bg', type: 'background', paint: { 'background-color': cssVar('--map-bg') } }
+        { id: 'bg', type: 'background', paint: { 'background-color': cssVar('--map-bg') } },
+        { id: 'state-fill', type: 'fill', source: 'state',
+          paint: { 'fill-color': cssVar('--map-land') } }
       ]
     },
-    bounds: [[-91.6, 36.9], [-87.0, 42.6]],
+    /* Computed from the state outline by the build, not typed in. */
+    bounds: META.state_bbox,
     fitBoundsOptions: { padding: 12 },
     attributionControl: false,
     dragRotate: false,
@@ -241,6 +249,12 @@ function buildMap(placesGeojson, countiesGeojson) {
     map.addLayer({
       id: 'counties-line', type: 'line', source: 'counties',
       paint: { 'line-color': darkMode() ? '#55554f' : '#b3b4af', 'line-width': 0.7 }
+    });
+    /* Above the county lines so the state edge is the crispest line on the map,
+     * but below the selection ring so a border town's outline is not cut. */
+    map.addLayer({
+      id: 'state-line', type: 'line', source: 'state',
+      paint: { 'line-color': cssVar('--state-line'), 'line-width': 1.2 }
     });
     map.addLayer({
       id: 'places-selected', type: 'line', source: 'places',
@@ -335,6 +349,7 @@ function renderLegend() {
   sw.style.background = darkMode()
     ? 'repeating-linear-gradient(45deg,#2b2b29 0 3px,#6a6a64 3px 4px)'
     : 'repeating-linear-gradient(45deg,#dfe0dc 0 3px,#a6a7a2 3px 4px)';
+  document.getElementById('legend-land-swatch').style.background = cssVar('--map-land');
 }
 
 /* ---------------------------------------------------------------- table */
@@ -879,6 +894,8 @@ function wireControls() {
     if (state.selected) renderDetail(state.selected);
     if (map && layersReady) {
       map.setPaintProperty('bg', 'background-color', cssVar('--map-bg'));
+      map.setPaintProperty('state-fill', 'fill-color', cssVar('--map-land'));
+      map.setPaintProperty('state-line', 'line-color', cssVar('--state-line'));
       if (map.hasImage('hatch')) map.updateImage('hatch', hatchImage());
     }
   });
@@ -942,10 +959,11 @@ window.app = app;
 
 (async function boot() {
   try {
-    const [meta, places, counties] = await Promise.all([
+    const [meta, places, counties, stateOutline] = await Promise.all([
       fetch('data/meta.json').then(r => r.json()),
       fetch('data/places.geojson').then(r => r.json()),
-      fetch('data/counties.geojson').then(r => r.json())
+      fetch('data/counties.geojson').then(r => r.json()),
+      fetch('data/state.geojson').then(r => r.json())
     ]);
     META = meta;
     FEATURES = places.features.map(f => f.properties);
@@ -954,7 +972,7 @@ window.app = app;
     const place = readHash();
     renderFooter();
     wireControls();
-    buildMap(places, counties);
+    buildMap(places, counties, stateOutline);
     syncControls();
     renderLegend();
     renderTable();

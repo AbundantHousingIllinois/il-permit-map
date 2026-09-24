@@ -69,6 +69,7 @@
   <p>This is the single most important thing to understand before quoting the map.</p>
   <p>Not every Illinois place has a permit office reporting to the Census. <b id="s-reporting">—</b> of the state's <b id="s-places">—</b> places do; <b id="s-gap">—</b> do not.</p>
   <p>A municipality with no permit office reporting <b>is not a municipality that built nothing.</b> It is one the Census has no administrative record for. Those places are drawn with a grey hatch — never with a low-value colour — are excluded from the table, from rankings and from every statewide total, and show an explanation instead of metrics when opened.</p>
+  <p>The flat, unpatterned land between municipalities is something else again: <b>unincorporated Illinois</b>, which belongs to no municipality at all. It is filled in so the state reads as one piece of territory rather than as scattered towns on a blank page, but it carries no value — permits filed there are county permits, covered under <a href="#open">“County-filed permits are not on the map”</a> below. The legend shows all three: a colour is a measurement, the hatch is a municipality with no permit office, and the flat, unpatterned fill is land with no municipality.</p>
   <div class="callout">
     <p><b>The same rule applies year by year.</b> A municipality whose permit office first reported in 2013 has <em>no value</em> — not zero — for 2010 through 2012. Its chart shows a shaded gap over those years, and its detail panel says which year its record begins. <b id="s-partial">—</b> reporting municipalities do not have a record for every year in the window.</p>
   </div>
@@ -114,7 +115,7 @@
 
   <article class="item">
     <h3>County-filed permits are not on the map</h3>
-    <p>About <b id="s-uninc">8%</b> of Illinois permits since 2010 are filed by county permit offices for <b>unincorporated</b> territory, plus a few whole-county and township offices. That territory is not a municipality and has no place boundary to draw, and a county-balance layer was out of scope for this version.</p>
+    <p>About <b id="s-uninc">8%</b> of Illinois permits since 2010 are filed by county permit offices for <b>unincorporated</b> territory, plus a few whole-county and township offices. That territory is not a municipality and has no place boundary to draw, and a county-balance layer was out of scope for this version. On the map it is the flat, unpatterned land between the towns.</p>
     <p>Those units are excluded from every municipal figure and are itemised line by line in <code>data/processed/unmatched.csv</code>. The consequence for testimony: <b>statewide totals on this map are municipal totals.</b> They are smaller than Illinois' true permit count, by that 8%.</p>
     <p class="resolution">Decided and documented, not outstanding. Adding the layer is a v2 question.</p>
   </article>

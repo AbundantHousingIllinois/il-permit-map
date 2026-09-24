@@ -62,6 +62,34 @@ def ensure_geometry() -> None:
         eps = SGM.simplify_to(SGM.COUNTY_ZIP_FOR_BUILD, CW.COUNTIES_GEOJSON,
                               400_000, state_fips=L.STATE_FIPS)
         print(f"  counties simplified at toposimplify {eps}")
+    if not L.STATE_GEOJSON.exists():
+        print(f"  {L.rel(L.STATE_GEOJSON)} absent -- simplifying offline")
+        eps = SGM.simplify_to(L.STATE_ZIP, L.STATE_GEOJSON, 60_000,
+                              state_fips=L.STATE_FIPS)
+        print(f"  state outline simplified at toposimplify {eps}")
+
+
+def geometry_bbox(fc: dict) -> list[list[float]]:
+    """[[west, south], [east, north]] of every coordinate in ``fc``, rounded
+    outward to 3 decimals so the initial view never clips the state's edge."""
+    import math
+
+    xs: list[float] = []
+    ys: list[float] = []
+
+    def walk(c):
+        if c and isinstance(c[0], (int, float)):
+            xs.append(c[0])
+            ys.append(c[1])
+        else:
+            for sub in c:
+                walk(sub)
+
+    for f in fc["features"]:
+        walk(f["geometry"]["coordinates"])
+    down = lambda v: math.floor(v * 1000) / 1000
+    up = lambda v: math.ceil(v * 1000) / 1000
+    return [[down(min(xs)), down(min(ys))], [up(max(xs)), up(max(ys))]]
 
 
 def need(path: Path, fetcher: str) -> Path:
@@ -170,6 +198,7 @@ def main() -> int:
     us_h1_path = need(L.RAW_CENSUS / "h1_2010_us.json", "fetch_census.py")
     need(L.TIGER_ZIP, "fetch_geo.py")
     need(SG.COUNTY_ZIP_FOR_BUILD, "fetch_geo.py")
+    need(L.STATE_ZIP, "fetch_geo.py")
     ensure_geometry()
 
     # ---------------- crosswalk ----------------
@@ -539,6 +568,17 @@ def main() -> int:
     shutil.copyfile(CW.COUNTIES_GEOJSON, L.DOCS_DATA / "counties.geojson")
     print(f"  counties.geojson: "
           f"{(L.DOCS_DATA / 'counties.geojson').stat().st_size:,} bytes")
+    # The state silhouette: drawn beneath the places so unincorporated land reads
+    # as territory, not as a hole, and its bbox is the map's opening view.
+    state_gj = json.loads(L.STATE_GEOJSON.read_text(encoding="utf-8"))
+    if len(state_gj["features"]) != 1:
+        raise SystemExit(f"{L.rel(L.STATE_GEOJSON)} should hold exactly one "
+                         f"Illinois feature, not {len(state_gj['features'])}")
+    shutil.copyfile(L.STATE_GEOJSON, L.DOCS_DATA / "state.geojson")
+    state_bbox = geometry_bbox(state_gj)
+    print(f"  state.geojson   : "
+          f"{(L.DOCS_DATA / 'state.geojson').stat().st_size:,} bytes, "
+          f"bbox {state_bbox}")
 
     size = (L.DOCS_DATA / "places.geojson").stat().st_size
     print(f"  places.geojson : {len(features):,} features, {size:,} bytes "
@@ -611,8 +651,9 @@ def main() -> int:
         "U.S. Census Bureau, 2020 Decennial Census PL, table P1 (P1_001N), "
         "total population, Illinois places",
         f"U.S. Census Bureau, TIGER cartographic boundary files, "
-        f"cb_{L.TIGER_VINTAGE}_{L.STATE_FIPS}_place_500k and "
-        f"cb_{L.TIGER_VINTAGE}_us_county_500k",
+        f"cb_{L.TIGER_VINTAGE}_{L.STATE_FIPS}_place_500k, "
+        f"cb_{L.TIGER_VINTAGE}_us_county_500k and "
+        f"cb_{L.TIGER_VINTAGE}_us_state_500k",
         "Illinois Housing Development Authority AHPAA determination list "
         "(data/manual/ahpaa.csv, hand-maintained; "
         f"{len(ahpaa_rows)} rows loaded)",
@@ -623,6 +664,7 @@ def main() -> int:
         "ymin": L.YMIN,
         "metric_start": L.METRIC_START,
         "tiger_vintage": L.TIGER_VINTAGE,
+        "state_bbox": state_bbox,
         "il_pct_growth": il_pct_growth,
         "us_pct_growth": us_pct_growth,
         "il_pct_growth_by_type": il_pct_by_type,

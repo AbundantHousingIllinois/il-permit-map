@@ -112,6 +112,7 @@ def preflight() -> tuple[bool, dict]:
         L.DOCS / "app.js",
         L.DOCS / "style.css",
         L.DOCS_DATA / "places.geojson",
+        L.DOCS_DATA / "state.geojson",
         L.DOCS_DATA / "meta.json",
     ]
     missing = [p for p in needed if not p.exists()]
@@ -334,6 +335,20 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             raise
         page.wait_for_timeout(1200)   # let the first paint settle
 
+        # Captured now, before any check moves the camera, for check 10.
+        opening = page.evaluate("""() => {
+            const m = window.map, b = m.getBounds();
+            return {
+                layers: m.getStyle().layers.map(l => l.id),
+                view: [[b.getWest(), b.getSouth()], [b.getEast(), b.getNorth()]],
+                stateRendered: m.queryRenderedFeatures({ layers: ['state-fill'] }).length,
+                landSwatch: getComputedStyle(
+                    document.getElementById('legend-land-swatch')).backgroundColor,
+                gapSwatch: getComputedStyle(
+                    document.getElementById('legend-gap-swatch')).backgroundImage
+            };
+        }""")
+
         # ---------------- 1 ----------------
         def s1():
             R.out(f"  Console errors, page errors and failed requests: {len(console_errors)}")
@@ -547,6 +562,42 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                     and bool(note) and names_years)
         R.run(9, "The chart separates the pre-2010 context from the metric window, "
                  "and marks unreported years", s9)
+
+        # ---------------- 10 (added, disclosed) ----------------
+        def s10():
+            R.out("  Not in SPEC.md §7. Added with the state silhouette (CLAUDE.md")
+            R.out("  deviation 25). Unincorporated land has to be filled beneath the")
+            R.out("  places, the state edge drawn above the county lines, the opening")
+            R.out("  view has to come from meta.state_bbox, and the legend has to say")
+            R.out("  what the new fill means.")
+            ids = opening["layers"]
+            R.out(f"    layer order: {' > '.join(ids)}")
+            idx = {k: (ids.index(k) if k in ids else -1) for k in (
+                "bg", "state-fill", "places-gap", "places-fill",
+                "counties-line", "state-line", "places-selected")}
+            order = (-1 not in idx.values()
+                     and idx["bg"] < idx["state-fill"] < idx["places-gap"]
+                     < idx["places-fill"] < idx["counties-line"]
+                     < idx["state-line"] < idx["places-selected"])
+            R.out(f"    silhouette under the places, outline over the counties and "
+                  f"under the selection: {order}")
+            (bw, bs), (be, bn) = built["meta"]["state_bbox"]
+            (vw, vs), (ve, vn) = opening["view"]
+            fits = vw <= bw and vs <= bs and ve >= be and vn >= bn
+            R.out(f"    meta.state_bbox {built['meta']['state_bbox']}")
+            R.out(f"    opening view    {[[round(vw, 3), round(vs, 3)], [round(ve, 3), round(vn, 3)]]}"
+                  f"  contains the state: {fits}")
+            drawn = opening["stateRendered"] > 0
+            R.out(f"    state-fill rendered features in the opening view: "
+                  f"{opening['stateRendered']}")
+            swatch = opening["landSwatch"]
+            distinct = (swatch not in ("", "rgba(0, 0, 0, 0)")
+                        and "gradient" in opening["gapSwatch"])
+            R.out(f"    legend swatches: unincorporated {swatch!r}, "
+                  f"no-permit-office hatch present: {'gradient' in opening['gapSwatch']}")
+            return order and fits and drawn and distinct
+        R.run(10, "Unincorporated land is filled beneath the places, and the "
+                  "opening view is the state's own extent", s10)
 
         # ---------------- B ----------------
         def sB():
