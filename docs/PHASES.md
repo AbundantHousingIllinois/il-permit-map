@@ -25,7 +25,15 @@ new data check D and site check 10; CLAUDE.md deviations 25–26. 14/14 data che
 and 11/11 site checks pass, on both the mapshaper artefacts and an offline rebuild
 with `data/processed/` deleted.
 
-**Phases 3–5 below are not started.** They are intended to be run locally.
+**Phase 3 is done** (local session, 2026-09-23), with a changed formula. The data
+showed the housing count fell 2010→2020 in 780 of 1,360 places, so the planned
+ratio (permits ÷ net change) was negative or undefined for much of the state.
+Steffany chose the signed difference `net change − permits` in units, in the detail
+panel and table only, not on the map. 373 municipalities qualify; Illinois is
+−53,533. Gated by data check E and site check 11; CLAUDE.md deviations 27–30. After a Cicero/Berwyn double-check, a top-of-page caveat says permits are a floor and the census count is the better measure of what exists (BLOCKERS.md #6).
+15/15 data checks and 12/12 site checks pass.
+
+**Phases 4–5 below are not started.** They are intended to be run locally.
 
 ### Picking this up on your own machine
 
@@ -37,7 +45,7 @@ claude
 ```
 
 `CLAUDE.md` is committed, so a local session reads the conventions, the decision
-log and all 24 deviations without being told. Keep this plan file alongside it —
+log and every deviation without being told. Keep this plan file alongside it —
 `docs/PHASES.md` or similar — so the next session can read it directly.
 
 Two things a local session needs that the cloud one had:
@@ -63,8 +71,8 @@ doing before 3 and 5 if his calendar is the constraint. Phase 2 is first here
 only because it is the smallest and re-establishes the workflow.
 
 After each phase: `uv run scripts/build.py && uv run scripts/check_data.py &&
-uv run scripts/check_site.py`. All 23 checks pass on `main` today, so any
-failure is from that phase's change.
+uv run scripts/check_site.py`. Every check passes on `main` after each phase
+(27 after Phase 3), so any failure is from that phase's change.
 
 ---
 

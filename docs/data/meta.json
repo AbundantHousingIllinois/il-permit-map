@@ -93,6 +93,26 @@
   "n_zero_mf": 692,
   "n_zero_mf3p": 635,
   "n_partial_coverage": 45,
+  "built": {
+    "years": [
+      2010,
+      2019
+    ],
+    "il_h1_2020": 5426429,
+    "us_h1_2020": 140498736,
+    "il_permits": 183247,
+    "us_permits": 10481590,
+    "il_net_change": 129714,
+    "us_net_change": 8794006,
+    "il_gap": -53533,
+    "us_gap": -1687584,
+    "n_places": 373,
+    "flag_pct": 5.0,
+    "n_flag_rose": 5,
+    "n_flag_fell": 61,
+    "n_count_fell": 148,
+    "n_reporting_short": 559
+  },
   "months_counts": {
     "partial": 402,
     "low": 248,
@@ -118,6 +138,7 @@
     "U.S. Census Bureau, Building Permits Survey, state-level annual files, 2010-2025, Illinois and United States totals (www2.census.gov/econ/bps/State/stYYYYa.txt)",
     "U.S. Census Bureau, 2010 Decennial Census SF1, table H1 (H001001), total housing units, Illinois places / Illinois / United States",
     "U.S. Census Bureau, 2020 Decennial Census PL, table P1 (P1_001N), total population, Illinois places",
+    "U.S. Census Bureau, 2020 Decennial Census DHC, table H1 (H1_001N), total housing units, Illinois places / Illinois / United States (permits-vs-built comparison only)",
     "U.S. Census Bureau, TIGER cartographic boundary files, cb_2025_17_place_500k, cb_2025_us_county_500k and cb_2025_us_state_500k",
     "Illinois Housing Development Authority AHPAA determination list (data/manual/ahpaa.csv, hand-maintained; 0 rows loaded)"
   ]

@@ -161,6 +161,32 @@ in dark mode `#20201e` is 5.0 from the hatch base, whose stripes carry the rest 
 the difference. The legend names it "Unincorporated — no municipality, not in this
 data," so land that is not measured cannot read as a measurement.
 
+**Permits vs. built is a difference in units, in the panel and table only.**
+Steffany asked to compare a decade of permits against the 2010→2020 change in the
+housing count. The plan proposed a ratio, permits ÷ net change. Checked against the
+data, the count *fell* in 780 of the 1,360 places with both counts, and in 148 of
+the 373 that qualify, so that ratio is negative or undefined for much of the state.
+Steffany chose the signed difference `(h1_2020 − h1_2010) − permits_2010_2019`, and
+chose to keep it out of the map colours: only 373 of 932 reporting places qualify,
+and an unexplained large negative (Aurora, −5,876) would read as a verdict. It is
+null unless the office reported 12 of 12 months in every year 2010–2019 and both
+counts exist; the shard carries the reason. `H1_001N` comes from 2020 DHC; the 2020
+PL file returns identical figures at every level, checked 2026-09-23. Illinois:
++129,714 in the count against 183,247 permitted, −53,533. The permit decade is
+calendar 2010–2019 because both counts are as of April 1 (`L.BUILT_YEARS`).
+
+**Permits are a floor; the census count is the measure of what exists.** Asked to
+double-check Cicero and Berwyn, the build proved correct and the Census record
+proved incomplete: Berwyn's record never shows the 52-unit reVerb Century Station
+(finished around 2010), and the permit survey never counts conversions
+(BLOCKERS.md #6). Steffany asked for the caveat at the top of the map, not only in
+about.html, so `#top-caveat` sits in the header. The detail panel always shows the
+two census counts when both exist, even where the permit subtraction is withheld,
+and flags a gap beyond 5% of the 2010 stock in either direction
+(`L.BUILT_FLAG_PCT`). The headline stays permit-based on purpose: it measures what a
+town *allowed* as new construction, which is the question the map exists for, and
+the census count cannot answer that annually or after 2020.
+
 **Colour.** AHIL orange `#E87722` and blue `#004B87` as the diverging pair, with
 a neutral grey midpoint pinned to `il_pct_growth`. The pair was checked against a
 colour-vision-deficiency simulation rather than assumed, as §6.6 requires: OKLab
@@ -297,6 +323,31 @@ and no AHPAA data of any kind.
     provenance line it appends to `data/SOURCES.md`, though `-clean` is
     deliberately not used. Earlier rows in that append-only log still say it; new
     rows do not.
+27. **Permits vs. what the 2020 Census counted.** §1.5 and §3 name no 2020 housing
+    count, and §3.2 forbids substituting one for the 2010 denominator. It is used
+    here for one separate, requested comparison and nothing else: `pct_growth` is
+    untouched, which data check 4 still gates. It adds a table column and a
+    detail-panel section, not a map metric. Data check **E** and site check **11**
+    gate it, both labelled as additions. The global source line stays as §6.6
+    words it, because every figure on the map is still 2010-based; the 2020 table
+    is in `meta.sources` and the about page.
+28. **Blank values sort last in the table in both directions.** A null used to
+    sort as −∞, which put every blank at the top of an ascending sort — a missing
+    value presented as the lowest rank. With the new column blank for 559 reporting
+    places, that stopped being a corner case.
+29. **Check 7 is stricter than §7.7, and `build.py` sweeps the shard directory.**
+    The cloud file provider left 1,163 byte-identical conflict copies
+    (`1700113 3.json`) beside the shards during a rebuild. They never reached git,
+    but `git add docs/data` would have shipped them. The cause was `build.py`
+    deleting the shard directory and recreating it; the provider kept producing
+    copies after the build had finished. Shards are now overwritten in place,
+    anything that is not a current shard is deleted after the write, and check 7
+    fails if one is there.
+30. **A caveat at the top of the map page**, which §6 does not describe, at
+    Steffany's request: permits are a floor, and the census count is the better
+    measure of what exists. It pushed the map below a phone-height viewport, so
+    site check 4 now scrolls the map into view before its click, as a reader
+    would. The click must still land on the target place.
 
 ---
 

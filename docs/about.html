@@ -23,9 +23,10 @@
   <a href="#notmeasure">2. What it is not</a>
   <a href="#coverage">3. Gaps are not zeros</a>
   <a href="#multifamily">4. What "no 5+ unit" means</a>
-  <a href="#open">5. Open items</a>
-  <a href="#checks">6. How it is checked</a>
-  <a href="#rebuild">7. Rebuilding it</a>
+  <a href="#built">5. Permits vs. the 2020 count</a>
+  <a href="#open">6. Open items</a>
+  <a href="#checks">7. How it is checked</a>
+  <a href="#rebuild">8. Rebuilding it</a>
 </nav>
 
 <section id="measure">
@@ -52,6 +53,9 @@
   <dl class="pairs">
     <dt>Not units built.</dt>
     <dd>BPS counts units <b>authorized by permit</b>. A permitted project that was never financed, never started or abandoned still counts here. This is the standard measure of how much housing a jurisdiction has allowed, which is the question in front of the legislature — but it is not a count of completed homes.</dd>
+
+    <dt>Not every home that was added.</dt>
+    <dd>The survey counts permits for <b>new buildings</b>. Converting a house into flats, adding a floor, or legalising a basement apartment never appears. Nor does a permit the office did not report: when an office skips months, the Census fills them in with its own estimate, and that estimate can miss a real building. <b>Berwyn is the worked example.</b> reVerb Century Station, a 52-unit building finished around 2010, appears nowhere in Berwyn's permit record, which was filed for only 3 months a year in 2004–2006. And the Berwyn Apartments' 2018 renovation into 28 apartments is a conversion the survey never counts. For how much housing <em>exists</em>, the census count is the better number — see section 5.</dd>
 
     <dt>Not net change in the housing stock.</dt>
     <dd>Demolitions are not subtracted. A municipality that permitted 500 units and demolished 400 appears here as 500. Read every number as <b>"how much was added,"</b> never as "how much the stock grew."</dd>
@@ -88,8 +92,21 @@
   <p class="fineprint">Every municipality's detail panel prints all four buckets, so the split is never hidden behind the flag.</p>
 </section>
 
+<section id="built">
+  <h2>5. Permits vs. what the 2020 Census counted</h2>
+  <p class="lede">A permit is a plan to build. The 2020 Census counted what was standing. Every municipality's detail panel, and a column in the table, compares the two for the decade between the counts.</p>
+  <p>The figure is the change in the housing count from April 1, 2010 to April 1, 2020, <b>minus</b> the units permitted in 2010–2019. It is shown in housing units, not as a ratio: in <b id="s-built-neg">—</b> of the municipalities where it can be computed, the housing count <em>fell</em> over the decade, and a ratio with a shrinking count in it stops meaning anything.</p>
+  <p>Illinois as a whole permitted <b id="s-built-permits">—</b> units in that decade while its housing count rose by <b id="s-built-net">—</b> — a difference of <b id="s-built-il">—</b>.</p>
+  <div class="callout">
+    <p><b>The two numbers do not have to match, and the gap is not a score.</b> Demolitions and conversions lower the count but never the permit total. Not every permitted unit gets built, and one permitted in late 2019 may not be standing by April 1, 2020. Annexation moves a municipality's boundary between the two counts. And each count has its own error. A large gap is a question to ask a municipality, not a finding about it.</p>
+  </div>
+  <p>It is shown only where the permit office reported <b>all twelve months of all ten years</b> — otherwise the permit side is partly the Census's own estimate for a non-reporting office. That leaves <b id="s-built-n">—</b> municipalities with the figure and <b id="s-built-short">—</b> reporting municipalities without it; their panels say which years fell short.</p>
+  <p><b>How far apart they get.</b> Among the <b id="s-built-n2">—</b> municipalities with a fully reported decade, the count rose by more than <span id="s-built-pct">5</span>% of the 2010 stock beyond what permits explain in <b id="s-built-rose">—</b>, and fell more than that short of them in <b id="s-built-fell">—</b>. Those municipalities get a flag in their panel. A count that rose far past the permits usually means conversions or unreported permits; one that fell short usually means demolitions or homes lost. Either way, for how much housing exists, the count is the one to trust. Permits remain the measure of what a town <em>allowed</em> as new construction, which is the question this map is built to answer.</p>
+  <p class="fineprint">The 2020 count is used for this comparison and nothing else. Percent growth, everywhere on the map, is still measured against the 2010 count.</p>
+</section>
+
 <section id="open">
-  <h2>5. Open items — what still needs a person</h2>
+  <h2>6. Open items — what still needs a person</h2>
   <p class="lede">These were recorded as they were hit, in <code>BLOCKERS.md</code> in the repository. Nothing below was filled in with a plausible-looking number.</p>
 
   <article class="item priority">
@@ -144,7 +161,7 @@
 </section>
 
 <section id="checks">
-  <h2>6. How the numbers are checked</h2>
+  <h2>7. How the numbers are checked</h2>
   <p>Because this is meant for testimony, the build refuses to declare itself finished unless a set of checks passes, and it prints the full report either way. They are not smoke tests — several of them re-read the raw Census files independently rather than trusting anything the build wrote.</p>
   <ul class="ticks">
     <li>Every Illinois place appears exactly once, and every one has a coverage status.</li>
@@ -152,13 +169,14 @@
     <li>Every percentage has a real 2010 denominator behind it; none is negative; anything above 200% is flagged for a human to look at.</li>
     <li>Statewide totals rebuilt from the per-municipality files reconcile with the raw Census rows, with every unit accounted for.</li>
     <li>The permit-file column positions are verified against the column headers Census ships inside the files <em>and</em> against Census's independently published state totals — because the 2000–2006 files use an older layout that the current documentation does not describe.</li>
+    <li>Every permits-vs-2020 figure is recomputed from the raw Census files, and none may exist for a municipality whose permit office missed a month in the decade.</li>
     <li>The page itself is driven in a real browser: it must load with zero console errors, render the map, show a numeric state average, open a municipality's detail panel with a percentage and an absolute count, and restore a shared link.</li>
   </ul>
   <p class="fineprint">A check was never loosened to make it pass. Where a check could not be satisfied as literally written — see the unincorporated-permits item above — the reason is documented and both the strict and the achievable figure are printed side by side.</p>
 </section>
 
 <section id="rebuild">
-  <h2>7. Rebuilding it</h2>
+  <h2>8. Rebuilding it</h2>
   <p>Every number on this site is reproducible from raw public sources by running one command. From a fresh copy of the repository:</p>
   <pre><code>uv sync
 uv run scripts/build.py
@@ -207,6 +225,20 @@ uv run scripts/check_data.py</code></pre>
     $('s-partial').textContent = int(m.n_partial_coverage);
     $('s-join').textContent = pct(m.join.join_rate_municipal_pct, 3);
     $('sourceline').textContent = m.source_line + ' · built ' + m.build_date;
+
+    const signed = n => (n === null || n === undefined) ? '—'
+      : (n > 0 ? '+' : n < 0 ? '\u2212' : '') + Math.abs(n).toLocaleString('en-US');
+    const B = m.built || {};
+    $('s-built-permits').textContent = int(B.il_permits);
+    $('s-built-net').textContent = int(B.il_net_change);
+    $('s-built-il').textContent = signed(B.il_gap);
+    $('s-built-n').textContent = int(B.n_places);
+    $('s-built-short').textContent = int(B.n_reporting_short);
+    $('s-built-neg').textContent = int(B.n_count_fell);
+    $('s-built-n2').textContent = int(B.n_places);
+    $('s-built-pct').textContent = B.flag_pct;
+    $('s-built-rose').textContent = int(B.n_flag_rose);
+    $('s-built-fell').textContent = int(B.n_flag_fell);
 
     const uninc = 100 - (m.join.join_rate_all_records_pct || 0);
     $('s-uninc').textContent = pct(uninc, 1);

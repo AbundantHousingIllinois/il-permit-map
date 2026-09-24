@@ -48,6 +48,14 @@ TIGER_VINTAGE = 2025       # cb_2025_17_place_500k
 
 YEARS = list(range(YMIN, YMAX + 1))
 METRIC_YEARS = list(range(METRIC_START, YMAX + 1))
+# Permits-vs-built compares permits against the change in housing units between
+# two decennial counts. Both counts are as of April 1 (2010 and 2020), so the
+# permit decade that sits between them is calendar 2010-2019.
+BUILT_YEARS = list(range(2010, 2020))
+# A permits-vs-count gap larger than this share of the 2010 stock is called out
+# in the detail panel. At 5%, 1.3% of fully reported places have a count that
+# rose that far beyond their permits and 16% one that fell that far short.
+BUILT_FLAG_PCT = 5.0
 
 # BPS field 6 sentinels meaning "this record is not a place".
 #   99990  the county's unincorporated area

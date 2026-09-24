@@ -60,6 +60,15 @@ silhouette, labelled *"Unincorporated — no municipality, not in this data."*
 It is territory, not a measurement: county-filed permits for it are out of scope
 (BLOCKERS.md #1). The silhouette also sets the map's opening view.
 
+**Permits vs. what the 2020 Census counted.** Each municipality's detail panel,
+and a table column, shows the change in its housing count from April 1, 2010 to
+April 1, 2020 minus the units it permitted in 2010–2019. It is shown in units,
+not as a ratio, because the count fell over the decade in many places. It is
+shown only where the permit office reported every month of all ten years, and
+it is a diagnostic, not a score: demolitions, unbuilt permits, construction lag,
+annexation and count error all separate the two. It is not a map colour, and
+the 2020 count is used for nothing else — percent growth stays on the 2010 count.
+
 The same rule applies year by year. A place whose permit office first reported in
 2013 has **no value**, not a zero, for 2010–2012: its chart shows a shaded gap
 over those years and its detail panel says which year its record starts from. The
@@ -93,7 +102,7 @@ the published documentation.
 ```sh
 uv sync
 uv run scripts/fetch_bps.py        # Building Permits Survey flat files
-uv run scripts/fetch_census.py     # 2010 SF1 H1, 2020 PL P1  (needs CENSUS_API_KEY)
+uv run scripts/fetch_census.py     # 2010 SF1 H1, 2020 PL P1, 2020 DHC H1  (needs CENSUS_API_KEY)
 uv run scripts/fetch_geo.py        # TIGER places, counties, state outline + mapshaper
 uv run scripts/build.py            # regenerates everything under docs/data/
 uv run scripts/check_data.py       # SPEC.md §7 data checks
@@ -118,8 +127,8 @@ written to disk, and the URLs recorded in `data/SOURCES.md` have no key on them.
 `scripts/check_data.py` is the definition of done for the data. It exits 0 only
 if all ten SPEC.md §7 conditions hold, and prints a readable report either way.
 It re-reads the TIGER archive and the raw BPS files itself rather than trusting
-anything the build wrote. It also runs three extra checks of its own, each
-labelled as an addition (plus **D**, below):
+anything the build wrote. It also runs five extra checks of its own, each
+labelled as an addition:
 
 - **A** verifies the BPS column positions against the shipped column headers and
   against the independently published state totals.
@@ -130,14 +139,22 @@ labelled as an addition (plus **D**, below):
   structure type and reconcile with the published state rows.
 - **D** verifies the state silhouette is a single Illinois polygon, that
   `meta.state_bbox` matches it, and that every place sits inside it.
+- **E** recomputes every permits-vs-2020 figure from the raw Census files, and
+  fails if any municipality has one without a fully reported 2010–2019.
+
+Check 7 is also held stricter than §7.7 reads: the shard directory may contain
+nothing but the current shards (the cloud file provider this copy lives under
+has left conflict copies there, and `build.py` now sweeps them).
 
 `scripts/check_site.py` serves `docs/` over HTTP and drives it with headless
-Chromium, installing the browser on first run if needed. Site checks 8, 9 and 10
-are additions too: 8 asserts the map's colour break follows the structure-type filter,
+Chromium, installing the browser on first run if needed. Site checks 8, 9, 10 and
+11 are additions too: 8 asserts the map's colour break follows the structure-type filter,
 9 asserts the chart separates the pre-2010 context from the metric window and marks
 the years a permit office did not report, and 10 asserts the state silhouette is
 drawn beneath the places, the state edge above the county lines, and the opening
-view contains the whole state.
+view contains the whole state, and 11 asserts the permits-vs-2020 section shows
+its parts where the decade was fully reported, says why where it was not, and
+that the table sorts blanks last.
 
 The page's one external dependency is the pinned MapLibre CDN build. `check_site.py`
 fetches those pinned URLs itself, caches them under `data/raw/vendor/`, and serves

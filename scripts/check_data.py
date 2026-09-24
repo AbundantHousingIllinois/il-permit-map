@@ -489,7 +489,18 @@ def c7():
             R.out(f"  {label}: {len(items)}")
             for i in items[:20]:
                 R.out(f"    {i}")
-    ok = not (missing or unparseable or no_series or bad_series)
+    # Stricter than §7.7 reads: nothing else may sit in the shard directory. The
+    # cloud file provider this copy lives under has left byte-identical conflict
+    # copies ("1700113 3.json") there, which `git add` would ship.
+    want = {f"{p['geoid']}.json" for p in props()}
+    # Dotfiles are skipped: Finder can recreate .DS_Store between build and check,
+    # and it is gitignored.
+    strays = sorted(p.name for p in L.DOCS_SHARDS.iterdir()
+                    if p.name not in want and not p.name.startswith("."))
+    R.out(f"  Files in the shard directory that are not a feature's shard: {len(strays)}")
+    for name in strays[:10]:
+        R.out(f"    {name}")
+    ok = not (missing or unparseable or no_series or bad_series or strays)
     if ok:
         R.out("  Every feature has a shard, every shard parses, every shard has a series array.")
     return ok
@@ -788,6 +799,114 @@ def cD():
     for g in outside[:10]:
         R.out(f"         {g}")
     return one and same and not outside
+
+
+@check("E", "Permits vs built: every figure recomputes from the raw files, and none "
+            "exists without a fully reported decade", gating=True)
+def cE():
+    R.out("  Not in SPEC.md §7. Added with the permits-vs-built comparison (CLAUDE.md")
+    R.out("  deviation 27): the 2020 housing count minus the 2010 count, minus the")
+    R.out(f"  units permitted {L.BUILT_YEARS[0]}-{L.BUILT_YEARS[-1]}. It must only exist where the permit")
+    R.out("  office reported all twelve months of all ten years, and it must never")
+    R.out("  touch pct_growth, whose denominator stays the 2010 count.")
+    R.out("")
+    h10 = {r["state"] + r["place"]: int(r["H001001"])
+           for r in L.read_census_json(L.RAW_CENSUS / "h1_2010_place_17.json")}
+    h20 = {r["state"] + r["place"]: int(r["H1_001N"])
+           for r in L.read_census_json(L.RAW_CENSUS / "h1_2020_place_17.json")}
+    by_geoid = {p["geoid"]: p for p in props()}
+    ok = True
+    wrong, leaked, missed, mismatch, badflag, badnet = [], [], [], [], [], []
+    n_with = 0
+    n_rose = n_fell = 0
+    for geoid, sh in shards().items():
+        if not isinstance(sh, dict):
+            continue
+        b = sh.get("built") or {}
+        gap = b.get("gap")
+        ser = {e["year"]: e for e in sh.get("series", [])}
+        months = sh.get("months_reported", {})
+        full = (sh.get("coverage") == "reporting" and all(
+            ser.get(y) and ser[y]["total"] is not None
+            and str(months.get(str(y), "")).strip() == "12"
+            for y in L.BUILT_YEARS))
+        computable = full and geoid in h10 and geoid in h20
+        # The count change is a census fact, present whenever both counts are.
+        want_net = (h20[geoid] - h10[geoid]) if geoid in h10 and geoid in h20 else None
+        if b.get("net_change") != want_net:
+            badnet.append(f"{geoid}: net_change {b.get('net_change')}, want {want_net}")
+        if gap is not None:
+            n_with += 1
+            if not full:
+                leaked.append(geoid)
+                continue
+            want = (h20[geoid] - h10[geoid]) - sum(ser[y]["total"] for y in L.BUILT_YEARS)
+            if gap != want:
+                wrong.append(f"{geoid}: shard {gap}, recomputed {want}")
+            share = want / h10[geoid] * 100
+            want_flag = ("rose" if share > L.BUILT_FLAG_PCT else
+                         "fell" if share < -L.BUILT_FLAG_PCT else None)
+            n_rose += want_flag == "rose"
+            n_fell += want_flag == "fell"
+            if b.get("flag") != want_flag:
+                badflag.append(f"{geoid}: flag {b.get('flag')!r}, want {want_flag!r}")
+        elif b.get("flag") is not None:
+            badflag.append(f"{geoid}: flag {b.get('flag')!r} with no figure")
+        elif computable:
+            missed.append(geoid)
+        if by_geoid.get(geoid, {}).get("built_gap") != gap:
+            mismatch.append(geoid)
+    R.out(f"  E.1  places with a figure: {n_with:,}   (meta says "
+          f"{meta()['built']['n_places']:,})")
+    R.out(f"       figure present without a fully reported decade : {len(leaked)}")
+    R.out(f"       figure that does not recompute from raw files    : {len(wrong)}")
+    R.out(f"       computable but missing                           : {len(missed)}")
+    R.out(f"       places.geojson built_gap disagrees with the shard : {len(mismatch)}")
+    R.out(f"       census count change missing or wrong             : {len(badnet)}")
+    R.out(f"       >{L.BUILT_FLAG_PCT:g}% flag missing or wrong                        : {len(badflag)}")
+    R.out(f"       flagged: count rose past permits {n_rose} (meta "
+          f"{meta()['built'].get('n_flag_rose')}), fell short {n_fell} (meta "
+          f"{meta()['built'].get('n_flag_fell')})")
+    for line in (leaked + wrong + missed + mismatch + badnet + badflag)[:10]:
+        R.out(f"         {line}")
+    ok = (not (leaked or wrong or missed or mismatch or badnet or badflag)
+          and n_with == meta()["built"]["n_places"]
+          and n_rose == meta()["built"].get("n_flag_rose")
+          and n_fell == meta()["built"].get("n_flag_fell"))
+
+    # Statewide reference, from the published state rows and the raw API files.
+    m = meta()["built"]
+    il_permits = us_permits = 0
+    for y in L.BUILT_YEARS:
+        st = L.read_state_year(y)
+        il_permits += st[L.STATE_NAME]["units_total"]
+        us_permits += st["United States"]["units_total"]
+    il10 = int(L.read_census_json(L.RAW_CENSUS / "h1_2010_state_17.json")[0]["H001001"])
+    il20 = int(L.read_census_json(L.RAW_CENSUS / "h1_2020_state_17.json")[0]["H1_001N"])
+    us10 = int(L.read_census_json(L.RAW_CENSUS / "h1_2010_us.json")[0]["H001001"])
+    us20 = int(L.read_census_json(L.RAW_CENSUS / "h1_2020_us.json")[0]["H1_001N"])
+    ref = {"il_gap": (il20 - il10) - il_permits, "us_gap": (us20 - us10) - us_permits,
+           "il_permits": il_permits, "us_permits": us_permits}
+    R.out("  E.2  Statewide and national reference, recomputed:")
+    for k, v in ref.items():
+        same = m.get(k) == v
+        R.out(f"         {k:<11} meta {m.get(k):>+12,}  recomputed {v:>+12,}  "
+              f"{'exact' if same else 'DIFFERS'}")
+        ok = ok and same
+
+    R.out("  E.3  Named cases:")
+    for geoid, label, expect in (
+        ("1751622", "Naperville", -733),     # 3,811 permitted, count +3,078
+        ("1714351", "Cicero", None),         # 0 months reported 2010-2014
+    ):
+        sh = shards().get(geoid)
+        got = sh.get("built", {}).get("gap") if isinstance(sh, dict) else "MISSING"
+        reason = sh.get("built", {}).get("reason") if isinstance(sh, dict) else None
+        good = got == expect and (expect is not None or reason == "months_not_full")
+        R.out(f"         {label:<11} gap={got!r} reason={reason!r}  "
+              f"{'ok' if good else 'UNEXPECTED'}")
+        ok = ok and good
+    return ok
 
 
 # --------------------------------------------------------------------------

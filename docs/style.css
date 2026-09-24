@@ -104,10 +104,23 @@ h1 {
 }
 
 .headerlink { margin: 6px 0 0; font-size: 12px; }
+.top-caveat {
+  margin: 10px 0 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-secondary);
+  background: var(--accent-bg);
+  border-left: 3px solid var(--ahil-orange);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  max-width: 72ch;
+}
+.top-caveat a { color: var(--ahil-blue); font-weight: 600; text-decoration: none; white-space: nowrap; }
 .headerlink a { color: var(--ahil-blue); font-weight: 600; text-decoration: none; }
 .headerlink a:hover { text-decoration: underline; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .headerlink a { color: #6fa8d8; }
+  :root:not([data-theme="light"]) .headerlink a,
+  :root:not([data-theme="light"]) .top-caveat a { color: #6fa8d8; }
 }
 
 /* ---------------------------------------------------------------- controls */
@@ -420,6 +433,11 @@ svg.chart { display: block; width: 100%; height: auto; overflow: visible; }
 .detail-table { margin-top: 12px; }
 .detail-table table { min-width: 0; font-size: 12px; }
 .detail-table caption { text-align: left; font-size: 11px; color: var(--ink-muted); padding-bottom: 4px; }
+
+.built table td:first-child { text-align: left; }
+.built .built-gap-row { border-top: 2px solid var(--rule-strong); }
+.built-read, .built-none { font-size: 12px; margin: 6px 0 0; }
+.built-note { font-size: 11px; color: var(--ink-muted); margin: 6px 0 0; line-height: 1.45; }
 
 .detail-source { font-size: 10px; color: var(--ink-muted); margin: 12px 0 0; }
 

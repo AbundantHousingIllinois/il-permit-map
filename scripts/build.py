@@ -196,6 +196,9 @@ def main() -> int:
     pop_path = need(L.RAW_CENSUS / "p1_2020_place_17.json", "fetch_census.py")
     il_h1_path = need(L.RAW_CENSUS / "h1_2010_state_17.json", "fetch_census.py")
     us_h1_path = need(L.RAW_CENSUS / "h1_2010_us.json", "fetch_census.py")
+    h1_20_path = need(L.RAW_CENSUS / "h1_2020_place_17.json", "fetch_census.py")
+    il_h1_20_path = need(L.RAW_CENSUS / "h1_2020_state_17.json", "fetch_census.py")
+    us_h1_20_path = need(L.RAW_CENSUS / "h1_2020_us.json", "fetch_census.py")
     need(L.TIGER_ZIP, "fetch_geo.py")
     need(SG.COUNTY_ZIP_FOR_BUILD, "fetch_geo.py")
     need(L.STATE_ZIP, "fetch_geo.py")
@@ -220,9 +223,18 @@ def main() -> int:
         pop[r["state"] + r["place"]] = int(r["P1_001N"])
     il_h1 = int(L.read_census_json(il_h1_path)[0]["H001001"])
     us_h1 = int(L.read_census_json(us_h1_path)[0]["H001001"])
+    # 2020 housing units: the permits-vs-built comparison only. Never a
+    # denominator -- pct_growth stays on the 2010 complete count (SPEC.md §3.2).
+    h1_20 = {}
+    for r in L.read_census_json(h1_20_path):
+        h1_20[r["state"] + r["place"]] = int(r["H1_001N"])
+    il_h1_20 = int(L.read_census_json(il_h1_20_path)[0]["H1_001N"])
+    us_h1_20 = int(L.read_census_json(us_h1_20_path)[0]["H1_001N"])
     print(f"  2010 H1 by place : {len(h1):,} places")
     print(f"  2020 P1 by place : {len(pop):,} places")
     print(f"  2010 H1 Illinois : {il_h1:,}    United States: {us_h1:,}")
+    print(f"  2020 H1 by place : {len(h1_20):,} places")
+    print(f"  2020 H1 Illinois : {il_h1_20:,}    United States: {us_h1_20:,}")
 
     with L.CROSSWALK_CSV.open(newline="", encoding="utf-8") as fh:
         xwalk = list(csv.DictReader(fh))
@@ -311,6 +323,30 @@ def main() -> int:
             us_by_type[k] += st["United States"][k]
     il_pct_growth = pct(il_units, il_h1)
     us_pct_growth = pct(us_units, us_h1)
+
+    # Permits vs built, statewide: the same published state rows, over the
+    # decade between the two April 1 counts.
+    il_permits_decade = us_permits_decade = 0
+    for year in L.BUILT_YEARS:
+        st = L.read_state_year(year)
+        il_permits_decade += st[L.STATE_NAME]["units_total"]
+        us_permits_decade += st["United States"]["units_total"]
+    built_ref = {
+        "years": [L.BUILT_YEARS[0], L.BUILT_YEARS[-1]],
+        "il_h1_2020": il_h1_20,
+        "us_h1_2020": us_h1_20,
+        "il_permits": il_permits_decade,
+        "us_permits": us_permits_decade,
+        "il_net_change": il_h1_20 - il_h1,
+        "us_net_change": us_h1_20 - us_h1,
+        "il_gap": (il_h1_20 - il_h1) - il_permits_decade,
+        "us_gap": (us_h1_20 - us_h1) - us_permits_decade,
+    }
+    print(f"  Permits vs built {L.BUILT_YEARS[0]}-{L.BUILT_YEARS[-1]}: Illinois "
+          f"permitted {il_permits_decade:,}, housing stock changed by "
+          f"{built_ref['il_net_change']:+,} -> gap {built_ref['il_gap']:+,}")
+    print(f"    United States permitted {us_permits_decade:,}, stock changed by "
+          f"{built_ref['us_net_change']:+,} -> gap {built_ref['us_gap']:+,}")
     il_pct_by_type = {k: pct(il_by_type[k], il_h1) for k in L.STRUCTURE_TYPES}
     us_pct_by_type = {k: pct(us_by_type[k], us_h1) for k in L.STRUCTURE_TYPES}
     il_place_sum = sum(r["units_total"] for r in records
@@ -337,8 +373,11 @@ def main() -> int:
     geom = json.loads(L.SIMPLIFIED_GEOJSON.read_text(encoding="utf-8"))
     tiger = {t["geoid"]: t for t in L.tiger_places()}
 
-    if L.DOCS_SHARDS.exists():
-        shutil.rmtree(L.DOCS_SHARDS)
+    # Shards are overwritten in place, never deleted and recreated. Under the
+    # cloud file provider this copy lives on, rmtree followed by a rewrite of the
+    # same names made the provider leave conflict copies ("1700113 3.json") behind,
+    # some of them seconds after the build had finished. Stale shards are removed
+    # after the write instead.
     L.DOCS_SHARDS.mkdir(parents=True, exist_ok=True)
 
     features = []
@@ -413,6 +452,41 @@ def main() -> int:
             for y in L.YEARS
         ] if years_reported else []
 
+        # Permits vs built: the change in housing units between the April 1, 2010
+        # and 2020 counts, minus the units permitted in between. Only computed when
+        # the permit office reported all twelve months of every one of those ten
+        # years -- otherwise the permit side is partly Census imputation, and the
+        # difference would inherit exactly the Cicero problem (BLOCKERS.md #5).
+        h1_2020 = h1_20.get(geoid)
+        built_full = reporting and all(
+            y in yr and months_by_year.get(y) == 12 for y in L.BUILT_YEARS)
+        if not reporting:
+            built_reason = "no_permit_office"
+        elif not built_full:
+            built_reason = "months_not_full"
+        elif h1_2010 is None:
+            built_reason = "no_2010_count"
+        elif h1_2020 is None:
+            built_reason = "no_2020_count"
+        else:
+            built_reason = None
+        # The change in the count is a census fact whenever both counts exist,
+        # whatever the permit office filed, so it is shown even when the
+        # subtraction is withheld.
+        net_change = (h1_2020 - h1_2010
+                      if h1_2010 is not None and h1_2020 is not None else None)
+        if built_reason is None:
+            permits_decade = sum(sum(yr[y].values()) for y in L.BUILT_YEARS)
+            built_gap = net_change - permits_decade
+            built_gap_pct = round(built_gap / h1_2010 * 100, 2)
+            built_flag = ("rose" if built_gap_pct > L.BUILT_FLAG_PCT else
+                          "fell" if built_gap_pct < -L.BUILT_FLAG_PCT else None)
+        else:
+            permits_decade = built_gap = built_gap_pct = built_flag = None
+        built_short_years = (
+            [y for y in L.BUILT_YEARS if not (y in yr and months_by_year.get(y) == 12)]
+            if reporting else [])
+
         if reporting:
             by_type = {k: sum(yr[y][k] for y in metric_years_reported)
                        for k in L.STRUCTURE_TYPES}
@@ -475,6 +549,8 @@ def main() -> int:
                 "first_metric_year": (metric_years_reported[0]
                                       if metric_years_reported else None),
                 "n_metric_years": len(metric_years_reported),
+                "built_gap": built_gap,
+                "built_flag": built_flag,
                 "ahpaa_status": status,
                 "lon": float(pg["lon"]) if pg.get("lon") else None,
                 "lat": float(pg["lat"]) if pg.get("lat") else None,
@@ -519,6 +595,16 @@ def main() -> int:
                     " Every year in the window is on this footing, so this place "
                     "is not counted in the zero-multifamily total."))
             ),
+            "h1_2020": h1_2020,
+            "built": {
+                "permits": permits_decade,
+                "net_change": net_change,
+                "gap": built_gap,
+                "gap_pct": built_gap_pct,
+                "flag": built_flag,
+                "reason": built_reason,
+                "short_years": built_short_years,
+            },
             "ahpaa_status": status,
             "series": ser,
             "years_reported": years_reported,
@@ -554,6 +640,16 @@ def main() -> int:
 
     with ThreadPoolExecutor(max_workers=32) as pool:
         list(pool.map(_write, shard_payload))
+    # Anything in the shard directory that is not a current feature's shard goes:
+    # a place that left TIGER, or a conflict copy the file provider left behind.
+    # The page never requests either, but `git add` would ship them.
+    want = {f"{g}.json" for g, _ in shard_payload}
+    strays = [p for p in L.DOCS_SHARDS.iterdir() if p.name not in want]
+    for p in strays:
+        p.unlink()
+    if strays:
+        print(f"  removed {len(strays):,} stray files from {L.rel(L.DOCS_SHARDS)} "
+              "(cloud-sync conflict copies)")
 
     out = {
         "type": "FeatureCollection",
@@ -650,6 +746,9 @@ def main() -> int:
         "total housing units, Illinois places / Illinois / United States",
         "U.S. Census Bureau, 2020 Decennial Census PL, table P1 (P1_001N), "
         "total population, Illinois places",
+        "U.S. Census Bureau, 2020 Decennial Census DHC, table H1 (H1_001N), "
+        "total housing units, Illinois places / Illinois / United States "
+        "(permits-vs-built comparison only)",
         f"U.S. Census Bureau, TIGER cartographic boundary files, "
         f"cb_{L.TIGER_VINTAGE}_{L.STATE_FIPS}_place_500k, "
         f"cb_{L.TIGER_VINTAGE}_us_county_500k and "
@@ -680,6 +779,26 @@ def main() -> int:
         "n_zero_mf": n_zero_mf,
         "n_zero_mf3p": n_zero_mf3p,
         "n_partial_coverage": len(partial),
+        "built": {
+            **built_ref,
+            "n_places": sum(1 for ft in features
+                            if ft["properties"]["built_gap"] is not None),
+            "flag_pct": L.BUILT_FLAG_PCT,
+            "n_flag_rose": sum(1 for ft in features
+                               if ft["properties"]["built_flag"] == "rose"),
+            "n_flag_fell": sum(1 for ft in features
+                               if ft["properties"]["built_flag"] == "fell"),
+            "n_count_fell": sum(
+                1 for ft in features
+                if ft["properties"]["built_gap"] is not None
+                and ft["properties"]["h1_2010"] is not None
+                and h1_20.get(ft["properties"]["geoid"], 0)
+                < ft["properties"]["h1_2010"]),
+            "n_reporting_short": sum(
+                1 for ft in features
+                if ft["properties"]["coverage"] == "reporting"
+                and ft["properties"]["built_gap"] is None),
+        },
         "months_counts": dict(months_counts),
         "ahpaa": {
             "enabled": ahpaa_enabled,

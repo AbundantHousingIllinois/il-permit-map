@@ -225,3 +225,45 @@ recovers it. The honest form is the one now on the page: the figure is a floor,
 and the years it rests on are named. A municipality-level FOIA of the permit
 office is the only thing that would settle a specific case, and that is a person's
 job, not the build's.
+
+## 6. The permit record can miss real housing even where the office reports every month
+
+**Status: documented on the page, not resolvable from this data.**
+
+**What was found (2026-09-23).** Asked to double-check Cicero and Berwyn, whose
+permit totals looked too small. The build reads the Census files correctly: the
+Illinois rows (`151600`, `064900`) are the only ones for either town, and the
+raw files also carry a Cicero, Indiana and a Cicero, Wisconsin that the build
+correctly ignores. The numbers are what the Census published. They are not what
+was built:
+
+- **Berwyn, a building the record never shows.** reVerb Century Station, 3200 S.
+  Oak Park Ave, is a 52-unit building listed as built in 2010. Berwyn's BPS record
+  shows no year from 2004 to 2009 with more than 12 units in 5+ unit buildings.
+  The likeliest explanation is that it was permitted while Berwyn reported 3 of 12
+  months (2004–2006) and the Census's imputation for those years did not carry
+  it. The build year comes from listings, not from a permit record.
+- **Conversions are out of scope for BPS by design.** The survey counts permits
+  for new buildings. The Berwyn Apartments (3137 Oak Park Ave), renovated in 2018
+  into 28 apartments with a fourth floor added, would never appear.
+- **Cicero.** Its housing count rose by 1,507 between the 2010 and 2020 censuses
+  (24,329 → 25,836) against one recorded permit in 2010–2019, in a decade where
+  its office reported no months in 2010–2014 and one in 2015–2016.
+
+**How common.** Among the 931 reporting places with both census counts, the
+count rose by more than 5% of the 2010 stock beyond recorded permits in 33 (3.5%),
+and fell more than 5% short of them in 222 (24%). Among the 373 with every month
+of 2010–2019 reported, the figures are 5 (1.3%) and 61 (16%).
+
+**What was done.** A caveat at the top of the map says permits are a floor and
+the census count is the better measure of what exists. The detail panel always
+shows the two census counts when both exist, and flags a gap above 5% of the 2010
+stock in either direction (`L.BUILT_FLAG_PCT`). `docs/about.html` §2 names the
+conversion gap with Berwyn as the example.
+
+**What was not done.** The percent-growth headline is still permit-based: it
+answers "how much new housing did this town allow", which is the question the map
+exists for, and the census count cannot answer it annually or after 2020. Changing
+the headline to count-based growth is a metric decision for Steffany and Austin.
+A records request to a town's building department is the only way to settle a
+specific case.

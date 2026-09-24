@@ -397,6 +397,11 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 "([lon, lat]) => { window.map.jumpTo({center: [lon, lat], zoom: 11}); }",
                 [target["lon"], target["lat"]],
             )
+            # A reader scrolls the map into view before tapping it. Without this the
+            # click can land below a phone-height viewport once the header grows
+            # (the top-of-page caveat pushed Chicago to y=931 of 900).
+            page.evaluate("() => document.getElementById('map')"
+                          ".scrollIntoView({block: 'center'})")
             page.wait_for_timeout(1500)
             box = page.evaluate(
                 "(() => { const c = document.querySelector('.maplibregl-canvas');"
@@ -599,6 +604,83 @@ def run_checks(sync_playwright, base, built, target, console_errors):
         R.run(10, "Unincorporated land is filled beneath the places, and the "
                   "opening view is the state's own extent", s10)
 
+        # ---------------- 11 (added, disclosed) ----------------
+        def s11():
+            R.out("  Not in SPEC.md §7. Added with the permits-vs-built comparison")
+            R.out("  (CLAUDE.md deviation 27). A place with a fully reported decade")
+            R.out("  shows the figure and its parts; a place without one says why")
+            R.out("  instead of showing a number; and the table's new column puts")
+            R.out("  blanks last, never at the top of a ranking.")
+            meta = built["meta"]
+            ok = True
+
+            def open_built(geoid):
+                page.evaluate("(g) => window.app.selectPlace(g)", geoid)
+                page.wait_for_function(
+                    "(g) => window.app.detail().geoid === g"
+                    " && document.querySelector('#detail #built')", arg=geoid,
+                    timeout=15_000)
+                return page.evaluate("""() => {
+                    const b = document.querySelector('#detail #built');
+                    const g = b.querySelector('.built-gap');
+                    const il = b.querySelector('#built-il-gap');
+                    const none = b.querySelector('.built-none');
+                    return { gap: g ? g.innerText : null, il: il ? il.innerText : null,
+                             none: none ? none.innerText : null,
+                             text: b.innerText };
+                }""")
+
+            nap = open_built("1751622")          # Naperville
+            R.out(f"    Naperville: gap {nap['gap']!r}, Illinois {nap['il']!r}")
+            il_want = ("\u2212" if meta["built"]["il_gap"] < 0 else "+") \
+                + f"{abs(meta['built']['il_gap']):,}"
+            good = nap["gap"] == "\u2212733" and nap["il"] == il_want \
+                and "not a verdict" in nap["text"]
+            R.out(f"      figure, Illinois reference and caveat present: {good}")
+            ok = ok and good
+
+            cic = open_built("1714351")          # Cicero
+            R.out(f"    Cicero: {(cic['none'] or '')[:110]!r}")
+            good = (cic["gap"] is None and bool(cic["none"]) and "2010" in cic["none"]
+                    and "25,836" in cic["text"])
+            R.out(f"      no figure, the reason names the years, and the census counts "
+                  f"are still shown: {good}")
+            ok = ok and good
+            page.evaluate("() => window.app.closeDetail()")
+            page.wait_for_timeout(300)
+
+            top = page.evaluate("() => { const t = document.getElementById('top-caveat');"
+                                " return t ? t.innerText : ''; }")
+            good = "floor" in top and "census" in top.lower()
+            R.out(f"    top-of-page caveat present: {good}")
+            ok = ok and good
+
+            for d in ("asc", "desc"):
+                page.evaluate("(d) => { location.hash = "
+                              "`#metric=pct_growth&type=all&pop=5000&sort=built_gap:${d}`; }", d)
+                page.wait_for_timeout(500)
+                col = page.evaluate("""() => {
+                    const heads = [...document.querySelectorAll('#table-head-row th')]
+                        .map(t => t.textContent);
+                    const i = heads.findIndex(h => /2020 count vs permits/.test(h));
+                    const cells = [...document.querySelectorAll('#table-body tr')]
+                        .map(tr => tr.children[i] ? tr.children[i].innerText : '');
+                    return { i, first: cells[0], last: cells[cells.length - 1],
+                             n: cells.length, blank: cells.filter(c => c === '\u2014').length };
+                }""")
+                good = (col["i"] >= 0 and col["first"] not in ("\u2014", "")
+                        and (col["blank"] == 0 or col["last"] == "\u2014"))
+                R.out(f"    sort {d:<4}: column {col['i']}, first {col['first']!r}, "
+                      f"last {col['last']!r}, {col['blank']} blank of {col['n']}  "
+                      f"{'ok' if good else 'BLANKS NOT LAST'}")
+                ok = ok and good
+            page.evaluate("() => { location.hash = "
+                          "'#metric=pct_growth&type=all&pop=5000'; }")
+            page.wait_for_timeout(350)
+            return ok
+        R.run(11, "Permits vs built shows its parts where the decade was fully "
+                  "reported, and says why where it was not", s11)
+
         # ---------------- B ----------------
         def sB():
             R.out("  Not in SPEC.md §7. about.html was added at the user's request,")
@@ -627,6 +709,10 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 " zero3p: document.getElementById('s-zero3p').innerText,"
                 " mfull: document.getElementById('s-months-full').innerText,"
                 " mnone: document.getElementById('s-months-none').innerText,"
+                " builtIl: document.getElementById('s-built-il').innerText,"
+                " builtN: document.getElementById('s-built-n').innerText,"
+                " builtRose: document.getElementById('s-built-rose').innerText,"
+                " builtFell: document.getElementById('s-built-fell').innerText,"
                 " sources: document.querySelectorAll('#sources-list li').length,"
                 " back: !!document.querySelector('a[href=\"index.html\"]')"
                 "}))()"
@@ -643,6 +729,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                   f"{got['zero5p']!r} / {got['zero3p']!r}")
             R.out(f"  Full-month / no-month places       : "
                   f"{got['mfull']!r} / {got['mnone']!r}")
+            R.out(f"  Permits vs 2020, IL / n  : {got['builtIl']!r} / {got['builtN']!r}")
             R.out(f"  Source list entries       : {got['sources']}")
             R.out(f"  Links back to the map     : {got['back']}")
             meta = built["meta"]
@@ -665,6 +752,12 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                     == str(meta["months_counts"].get("full", 0))
                     and got["mnone"].replace(",", "")
                     == str(meta["months_counts"].get("none", 0)),
+                "permits-vs-2020 figures match meta.json":
+                    got["builtIl"].replace(",", "").replace("\u2212", "-").lstrip("+")
+                    == str(meta["built"]["il_gap"])
+                    and got["builtN"].replace(",", "") == str(meta["built"]["n_places"])
+                    and got["builtRose"].replace(",", "") == str(meta["built"]["n_flag_rose"])
+                    and got["builtFell"].replace(",", "") == str(meta["built"]["n_flag_fell"]),
                 "sources listed": got["sources"] > 0,
                 "links back to the map": bool(got["back"]),
             }

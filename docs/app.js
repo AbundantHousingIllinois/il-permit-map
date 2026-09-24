@@ -80,6 +80,21 @@ let layersReady = false;    // the fill layers are added in the map's load handl
 /* ---------------------------------------------------------------- helpers */
 
 const fmtInt = n => (n === null || n === undefined) ? '—' : n.toLocaleString('en-US');
+/* Signed, with a true minus sign: a difference has a direction, and "-733" set in
+ * a hyphen reads as a dash. */
+const fmtSigned = n => (n === null || n === undefined) ? '—'
+  : (n > 0 ? '+' : n < 0 ? '\u2212' : '') + Math.abs(n).toLocaleString('en-US');
+/* [2010, 2011, 2012, 2015] -> "2010–2012 and 2015". Mirrors build.py's year_ranges. */
+function yearRanges(years) {
+  const runs = [];
+  for (const y of years) {
+    const last = runs[runs.length - 1];
+    if (last && y === last[1] + 1) last[1] = y; else runs.push([y, y]);
+  }
+  const parts = runs.map(([a, b]) => a === b ? String(a) : `${a}–${b}`);
+  return parts.length <= 1 ? (parts[0] || '')
+    : parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+}
 const fmtPct = (n, d) => (n === null || n === undefined)
   ? '—' : n.toLocaleString('en-US', { minimumFractionDigits: d === undefined ? 1 : d, maximumFractionDigits: d === undefined ? 1 : d }) + '%';
 
@@ -360,6 +375,9 @@ const COLUMNS = [
   { key: 'pct_growth', label: '% growth since 2010', type: 'num', fmt: v => fmtPct(v) },
   { key: 'units_total_2010', label: 'Total units', type: 'num', fmt: fmtInt },
   { key: 'mf5p_total', label: '5+ unit units', type: 'num', fmt: fmtInt },
+  /* Housing-count change 2010→2020 minus units permitted 2010–2019. Blank for
+   * any place whose office did not report every month of that decade. */
+  { key: 'built_gap', label: '2020 count vs permits', type: 'num', fmt: fmtSigned },
   { key: 'pop2020', label: 'Population', type: 'num', fmt: fmtInt }
 ];
 
@@ -395,8 +413,11 @@ function renderTable() {
   rows.sort((a, b) => {
     let x = a[key], y = b[key];
     if (col.type === 'num') {
-      x = (x === null || x === undefined) ? -Infinity : x;
-      y = (y === null || y === undefined) ? -Infinity : y;
+      /* A missing value sorts last in either direction. Sorting it as -Infinity
+       * put every blank at the top of an ascending sort, which reads as "lowest"
+       * -- a missing value presented as a ranking. */
+      const xm = x === null || x === undefined, ym = y === null || y === undefined;
+      if (xm || ym) return xm && ym ? 0 : xm ? 1 : -1;
       return dir === 'asc' ? x - y : y - x;
     }
     x = (x || '').toString(); y = (y || '').toString();
@@ -744,11 +765,77 @@ async function renderDetail(geoid) {
       </table>
     </div>
 
+    ${builtSection(shard)}
+
     <p class="detail-source">${META.source_line}. Built ${META.build_date}.
       BPS counts units <em>authorized by permit</em>, not units completed, and does not
       subtract demolitions.${shard.ahpaa_status ? ' AHPAA status: ' + shard.ahpaa_status + '.' : ''}</p>`;
 
   wireChartHover(chart.geom);
+}
+
+/* Permits vs. what the 2020 Census counted. A diagnostic, not a scorecard: the
+ * two sides measure different things, and the caveats ship with the number. */
+function builtSection(shard) {
+  const B = META.built;
+  const b = shard.built || {};
+  const [y0, y1] = B.years;
+  const ref = `Illinois as a whole: the housing count rose by ${fmtInt(B.il_net_change)} `
+    + `while ${fmtInt(B.il_permits)} units were permitted, a difference of `
+    + `<b id="built-il-gap">${fmtSigned(B.il_gap)}</b>.`;
+  const caveat = `These do not have to match. Demolitions and conversions lower the count but `
+    + `not the permit total; not every permitted unit gets built, and one permitted late in `
+    + `${y1} may not be standing on April 1, ${y1 + 1}; annexation moves boundaries between `
+    + `the two counts; and each count has its own error. A large gap is a question to ask, `
+    + `not a verdict.`;
+  /* The two census counts are facts whenever both exist, whatever the permit
+   * office filed, so they are shown even when the subtraction is withheld. */
+  const countRows = (b.net_change === null || b.net_change === undefined) ? '' : `
+          <tr><td>Housing units counted, April 1, ${y0}</td><td class="num">${fmtInt(shard.h1_2010)}</td></tr>
+          <tr><td>Housing units counted, April 1, ${y1 + 1}</td><td class="num">${fmtInt(shard.h1_2020)}</td></tr>
+          <tr><td>Change in the count</td><td class="num">${fmtSigned(b.net_change)}</td></tr>`;
+  let inner;
+  if (b.gap === null || b.gap === undefined) {
+    const why = {
+      months_not_full: `This municipality's permit office did not report all twelve months to `
+        + `the Census in ${yearRanges(b.short_years || [])}, so the permit side would be partly `
+        + `the Census's own estimate.`,
+      no_2010_count: `No 2010 housing count is published for this place.`,
+      no_2020_count: `No 2020 housing count is published for this place.`
+    }[b.reason] || 'Not available for this place.';
+    inner = (countRows ? `<table><tbody>${countRows}</tbody></table>` : '')
+      + `<p class="built-none"><strong>No permit comparison.</strong> ${why}</p>`;
+  } else {
+    const dir = b.gap < 0 ? 'less than' : b.gap > 0 ? 'more than' : 'exactly';
+    inner = `<table>
+        <tbody>${countRows}
+          <tr><td>Units permitted ${y0}–${y1}</td><td class="num">${fmtInt(b.permits)}</td></tr>
+          <tr class="built-gap-row"><td><strong>Change minus permits</strong></td>
+            <td class="num"><strong class="built-gap">${fmtSigned(b.gap)}</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="built-read">The count changed by ${dir === 'exactly' ? 'exactly' : fmtInt(Math.abs(b.gap)) + ' units ' + dir}
+        the number of units permitted.</p>`;
+    const share = `${fmtPct(Math.abs(b.gap_pct), 1)} of the ${y0} housing stock`;
+    if (b.flag === 'rose') {
+      inner += `<div class="flag"><strong>The count grew far more than permits explain</strong> — by
+        ${share}. No permit in the Census record accounts for that housing. The usual causes:
+        conversions, additions and subdivided buildings, which the permit survey never counts;
+        annexed land that already had homes on it; or permits the office did not report. For how
+        much housing exists here, trust the count.</div>`;
+    } else if (b.flag === 'fell') {
+      inner += `<div class="flag"><strong>The count grew far less than permits suggest</strong> — by
+        ${share}. Usually demolitions, or homes lost or left empty, which permits never subtract.
+        For how much housing exists here, trust the count.</div>`;
+    }
+  }
+  return `<div class="built detail-table" id="built">
+      <p class="chart-title">Permits vs. what the ${y1 + 1} Census counted</p>
+      ${inner}
+      <p class="built-note">${ref} ${caveat}${
+        b.gap === null || b.gap === undefined ? ''
+          : ` Housing counts: ${y0} Decennial Census SF1 H1 and ${y1 + 1} Decennial Census DHC H1.`}</p>
+    </div>`;
 }
 
 function selectPlace(geoid) {
