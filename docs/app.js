@@ -639,7 +639,6 @@ async function renderDetail(geoid) {
     ${censusLine(shard)}
 
     <div class="compare">${compare}</div>
-    ${districtsLine(shard)}
 
     ${shard.months_note ? `<div class="coverage-note">${shard.months_note}</div>` : ''}
 
@@ -674,6 +673,8 @@ async function renderDetail(geoid) {
     </div>
 
     ${builtSection(shard)}
+
+    ${districtsLine(shard)}
 
     <p class="detail-source">${META.source_line}. Built ${META.build_date}.
       BPS counts units <em>authorized by permit</em>, not units completed, and does not

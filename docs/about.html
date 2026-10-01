@@ -30,8 +30,9 @@
   <a href="#built">5. Permits vs. the 2020 count</a>
   <a href="#districts">6. By legislative district</a>
   <a href="#open">7. Open items</a>
-  <a href="#checks">8. How it is checked</a>
-  <a href="#rebuild">9. Rebuilding it</a>
+  <a href="#decisions">8. Design decisions</a>
+  <a href="#checks">9. How it is checked</a>
+  <a href="#rebuild">10. Rebuilding it</a>
 </nav>
 
 <section id="measure">
@@ -69,7 +70,7 @@
     <dd>Nothing here says whether the housing was affordable, who it was for, or whether it met demand. Rent and cost data were deliberately left out of this version.</dd>
 
     <dt>Not a statement about unincorporated territory.</dt>
-    <dd>See the open items below — county-filed permits are excluded, so this is a map of <b>municipalities</b>, not of all Illinois land.</dd>
+    <dd>See the design decisions below — county-filed permits are excluded, so this is a map of <b>municipalities</b>, not of all Illinois land.</dd>
   </dl>
 </section>
 
@@ -78,7 +79,7 @@
   <p>This is the single most important thing to understand before quoting the map.</p>
   <p>Not every Illinois place has a permit office reporting to the Census. <b id="s-reporting">—</b> of the state's <b id="s-places">—</b> places do; <b id="s-gap">—</b> do not.</p>
   <p>A municipality with no permit office reporting <b>is not a municipality that built nothing.</b> It is one the Census has no administrative record for. Those places are drawn with a grey hatch — never with a low-value colour — are excluded from the table, from rankings and from every statewide total, and show an explanation instead of metrics when opened.</p>
-  <p>The flat, unpatterned land between municipalities is something else again: <b>unincorporated Illinois</b>, which belongs to no municipality at all. It is filled in so the state reads as one piece of territory rather than as scattered towns on a blank page, but it carries no value — permits filed there are county permits, covered under <a href="#open">“County-filed permits are not on the map”</a> below. The legend shows all three: a colour is a measurement, the hatch is a municipality with no permit office, and the flat, unpatterned fill is land with no municipality.</p>
+  <p>The flat, unpatterned land between municipalities is something else again: <b>unincorporated Illinois</b>, which belongs to no municipality at all. It is filled in so the state reads as one piece of territory rather than as scattered towns on a blank page, but it carries no value — permits filed there are county permits, covered under <a href="#decisions">“County-filed permits are not on the map”</a> below. The legend shows all three: a colour is a measurement, the hatch is a municipality with no permit office, and the flat, unpatterned fill is land with no municipality.</p>
   <div class="callout">
     <p><b>The same rule applies year by year.</b> A municipality whose permit office first reported in 2013 has <em>no value</em> — not zero — for 2010 through 2012. Its chart shows a shaded gap over those years, and its detail panel says which year its record begins. <b id="s-partial">—</b> reporting municipalities do not have a record for every year in the window.</p>
   </div>
@@ -144,6 +145,11 @@
     </div>
     <p>Then re-run the build. The filter switches itself on, the table grows an AHPAA column, and the as-of date appears under the control. A <code>geoid</code> that does not match a real place is reported by the data check rather than silently dropped. Municipalities absent from the file stay <b>null</b> — unknown — and are never shown as "exempt."</p>
   </article>
+</section>
+
+<section id="decisions">
+  <h2>8. Design decisions</h2>
+  <p class="lede">Settled choices, not waiting on anyone. Each is a place where the sources left a gap and the build had to pick a rule; they are recorded here so a reader can see what was picked and why.</p>
 
   <article class="item">
     <h3>County-filed permits are not on the map</h3>
@@ -176,7 +182,7 @@
 </section>
 
 <section id="checks">
-  <h2>8. How the numbers are checked</h2>
+  <h2>9. How the numbers are checked</h2>
   <p>Because this is meant for testimony, the build refuses to declare itself finished unless a set of checks passes, and it prints the full report either way. They are not smoke tests — several of them re-read the raw Census files independently rather than trusting anything the build wrote.</p>
   <ul class="ticks">
     <li>Every Illinois place appears exactly once, and every one has a coverage status.</li>
@@ -192,7 +198,7 @@
 </section>
 
 <section id="rebuild">
-  <h2>9. Rebuilding it</h2>
+  <h2>10. Rebuilding it</h2>
   <p>Every number on this site is reproducible from raw public sources by running one command. From a fresh copy of the repository:</p>
   <pre><code>uv sync
 uv run scripts/build.py
