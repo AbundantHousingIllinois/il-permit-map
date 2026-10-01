@@ -285,7 +285,10 @@ const COLUMNS = [
 
 function columns() {
   const cols = COLUMNS.slice();
-  if (META.ahpaa.enabled) cols.push({ key: 'ahpaa_status', label: 'AHPAA status', type: 'text' });
+  if (META.ahpaa.enabled) {
+    cols.push({ key: 'ahpaa_status', label: `AHPAA status (${META.ahpaa.as_of})`, type: 'text' });
+    cols.push({ key: 'affordable_share', label: `Affordable share (${META.ahpaa.as_of})`, type: 'num', fmt: fmtShare });
+  }
   return cols;
 }
 
@@ -491,7 +494,8 @@ function wireControls() {
   if (META.ahpaa.enabled) {
     ahpaaInput.onchange = e => { state.ahpaa = e.target.checked; refresh(); };
     hint.textContent = META.ahpaa.as_of
-      ? `AHPAA list as of ${META.ahpaa.as_of} (${fmtInt(META.ahpaa.rows)} municipalities).`
+      ? `IHDA's ${META.ahpaa.as_of} AHPAA report: ${fmtInt(META.ahpaa.n_non_exempt)} of `
+        + `${fmtInt(META.ahpaa.rows)} municipalities non-exempt.`
       : `AHPAA list loaded (${fmtInt(META.ahpaa.rows)} municipalities).`;
   } else {
     ahpaaInput.disabled = true;

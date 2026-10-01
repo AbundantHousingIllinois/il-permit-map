@@ -247,11 +247,28 @@ copy sits under a cloud file provider where a single small-file open costs about
 280 ms; 1,461 sequential reads take roughly seven minutes and about fifteen
 seconds threaded. Every shard is still opened and parsed individually.
 
+**AHPAA is IHDA's 2023 report, transcribed, not typed.** Impact for Equity supplied
+IHDA's 2023 AHPAA report as `data/manual/2023-AHPAA-Local-Government-Data.xlsx`.
+On 2026-10-01 all 1,298 rows of its "Statewide Affordability Listing" tab were
+compared with IHDA's published PDF (population, year-round units, affordable
+units, share) and the 44 non-exempt with IHDA's non-exempt list: all matched, so
+`source_url` is that PDF. `scripts/import_ahpaa.py` writes `ahpaa.csv` from the
+spreadsheet; the CSV is still what the build reads. It joins by **exact** name or
+"name type", never `normalize_name`, which drops a trailing "City" and would put
+Mason City's figures on Mason. Alvin and Sandoval* are hand-mapped; Alorton,
+Cahokia, Centreville (now Cahokia Heights), Clear Lake and Time have no 2025
+place and are asserted as the only misses, so a new file fails loudly. A place
+with no IHDA row is null and says so — never "exempt". IHDA's population is not
+shown (Timberlane: 1,323 ACS vs 906 Census). `as_of_date` is the bare year
+"2023", because that is all Steffany gave and the PDF's upload folder is not a
+determination date.
+
 ## Things deliberately not done
 
 Everything in SPEC.md §10, plus: no municipal-succession mapping for the three
 municipalities whose FIPS place codes no longer exist in TIGER (BLOCKERS.md #3),
-and no AHPAA data of any kind.
+and no AHPAA status for a place IHDA did not score (see *AHPAA is IHDA's 2023
+report*).
 
 ---
 
@@ -370,9 +387,9 @@ already under **Decisions**, the entry names that decision instead of repeating 
 SPEC.md §1.6 says "no features beyond §6," and §6 describes only the map page.
 Steffany asked for an explainer page after the build was finished (deviation 24).
 It restates the metric definition, the three things the numbers are *not*, the
-coverage rule, and every `BLOCKERS.md` item written for a reader, with the empty
-AHPAA list first, marked "needs you", including the column spec for
-`data/manual/ahpaa.csv`.
+coverage rule, and every `BLOCKERS.md` item written for a reader. Section 7,
+once "Open items" with the empty AHPAA list, now explains the AHPAA data; with
+nothing left open the page is "Method and caveats".
 
 Every figure on it is fetched from `docs/data/meta.json`, so there is no second
 copy of any number in the HTML. Site check **B** loads it, requires zero console
@@ -384,3 +401,12 @@ months-reported rule. Section 8, *Design decisions*, holds four former open
 items (county-filed permits, the three municipalities with no boundary, the
 21-unit state-total gap, derived county labels): each is settled, so listing it
 beside the AHPAA gap overstated what is outstanding. `BLOCKERS.md` is unchanged.
+
+35. **AHPAA data loaded, with the affordable housing share.** SPEC §3.5 says the
+    list is hand-maintained and fixes `ahpaa.csv`'s headers. The CSV is now
+    written by `scripts/import_ahpaa.py` from the supplied IHDA spreadsheet — a
+    transcription verified against IHDA's PDF, not a fetch and not model
+    knowledge — and gains `affordable_share`, `affordable_units` and
+    `year_round_units` (Austin asked for the share). `openpyxl` is a dependency.
+    The share appears in both tables and every panel, beside a blue "AHPAA
+    non-exempt" tag in the panel. Data check **G** and site check **13** gate it.

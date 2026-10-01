@@ -94,7 +94,17 @@ DOCS_DATA = DOCS / "data"
 DOCS_SHARDS = DOCS_DATA / "places"
 SOURCES_MD = ROOT / "data" / "SOURCES.md"
 AHPAA_CSV = MANUAL / "ahpaa.csv"
-AHPAA_HEADERS = ["geoid", "municipality", "status", "source_url", "as_of_date", "notes"]
+AHPAA_HEADERS = ["geoid", "municipality", "status", "source_url", "as_of_date", "notes",
+                 "affordable_share", "affordable_units", "year_round_units"]
+# IHDA's 2023 AHPAA report as a spreadsheet, supplied by Impact for Equity. Its
+# second tab is transcribed into AHPAA_CSV by scripts/import_ahpaa.py. Every row
+# was checked against IHDA's published PDF (AHPAA_SOURCE_URL) on 2026-10-01.
+AHPAA_XLSX = MANUAL / "2023-AHPAA-Local-Government-Data.xlsx"
+AHPAA_SOURCE_URL = ("https://www.ihda.org/wp-content/uploads/2023/12/"
+                    "2023-AHPAA-Statewide-Affordability-List.pdf")
+AHPAA_AS_OF = "2023"
+# AHPAA exempts a local government whose affordable share is at least 10%.
+AHPAA_SHARE_THRESHOLD = 0.10
 
 TIGER_ZIP = RAW_GEO / f"cb_{TIGER_VINTAGE}_{STATE_FIPS}_place_500k.zip"
 SIMPLIFIED_GEOJSON = PROCESSED / "places_simplified.geojson"

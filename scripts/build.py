@@ -264,6 +264,11 @@ def main() -> int:
     ahpaa_rows, ahpaa_headers = L.read_ahpaa()
     ahpaa = {r["geoid"].strip(): (r["status"] or "").strip()
              for r in ahpaa_rows if (r.get("geoid") or "").strip()}
+    # IHDA's affordable housing share, a fraction. Blank stays null, never 0.
+    ahpaa_share = {r["geoid"].strip(): float(r["affordable_share"])
+                   for r in ahpaa_rows
+                   if (r.get("geoid") or "").strip()
+                   and (r.get("affordable_share") or "").strip()}
     ahpaa_enabled = bool(ahpaa)
     ahpaa_as_of = sorted({(r.get("as_of_date") or "").strip()
                           for r in ahpaa_rows if (r.get("as_of_date") or "").strip()})
@@ -539,6 +544,7 @@ def main() -> int:
             units_total_2000 = None
 
         status = ahpaa.get(geoid) if ahpaa_enabled else None
+        affordable_share = ahpaa_share.get(geoid) if ahpaa_enabled else None
 
         features.append({
             "type": "Feature",
@@ -567,6 +573,7 @@ def main() -> int:
                 "built_gap": built_gap,
                 "built_flag": built_flag,
                 "ahpaa_status": status,
+                "affordable_share": affordable_share,
                 "lon": float(pg["lon"]) if pg.get("lon") else None,
                 "lat": float(pg["lat"]) if pg.get("lat") else None,
                 **{f"u_{k}": by_type[k] for k in L.STRUCTURE_TYPES},
@@ -621,6 +628,7 @@ def main() -> int:
                 "short_years": built_short_years,
             },
             "ahpaa_status": status,
+            "affordable_share": affordable_share,
             "series": ser,
             "years_reported": years_reported,
             "first_year_reported": years_reported[0] if years_reported else None,
@@ -718,6 +726,8 @@ def main() -> int:
                     "units_total_2010": p["units_total_2010"],
                     "mf5p_total": p["mf5p_total"], "zero_mf": p["zero_mf"],
                     "built_gap": p["built_gap"],
+                    "ahpaa_status": p["ahpaa_status"],
+                    "affordable_share": p["affordable_share"],
                     "net_change": (h1_20[g] - p["h1_2010"]
                                    if p["h1_2010"] is not None and g in h1_20 else None),
                 })
@@ -864,9 +874,10 @@ def main() -> int:
         "House districts (legislator view)",
         "Open States, current Illinois legislators "
         "(data.openstates.org/people/current/il.csv; legislator view)",
-        "Illinois Housing Development Authority AHPAA determination list "
-        "(data/manual/ahpaa.csv, hand-maintained; "
-        f"{len(ahpaa_rows)} rows loaded)",
+        "Illinois Housing Development Authority, Affordable Housing Planning and "
+        f"Appeal Act {L.AHPAA_AS_OF} Statewide Report on Local Government "
+        "Affordability (ACS 2017-2021), spreadsheet supplied by Impact for Equity "
+        f"(data/manual/ahpaa.csv; {len(ahpaa_rows)} municipalities)",
     ]
     meta = {
         "build_date": datetime.date.today().isoformat(),
@@ -915,6 +926,10 @@ def main() -> int:
             "enabled": ahpaa_enabled,
             "rows": len(ahpaa_rows),
             "as_of": ahpaa_as_of[-1] if ahpaa_as_of else None,
+            "n_non_exempt": sum(1 for v in ahpaa.values()
+                                if v.lower() == "non-exempt"),
+            "share_threshold": L.AHPAA_SHARE_THRESHOLD,
+            "source_url": L.AHPAA_SOURCE_URL if ahpaa_enabled else None,
             "disabled_reason": (
                 None if ahpaa_enabled else
                 "The AHPAA non-exempt list is a periodic determination by the "

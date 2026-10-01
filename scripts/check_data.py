@@ -576,6 +576,76 @@ def c10():
     return headers == L.AHPAA_HEADERS
 
 
+@check("G", "AHPAA rows trace to the supplied IHDA file, keep places apart, and reach the site")
+def cG():
+    R.out("  Not in SPEC.md §7. Added with the IHDA 2023 AHPAA data (CLAUDE.md")
+    R.out("  deviation 35). Every row of ahpaa.csv must equal its row in the supplied")
+    R.out("  spreadsheet, sit on the Census place of the same name, and reach the map,")
+    R.out("  the shards and the district file unchanged. A place IHDA did not score")
+    R.out("  stays null -- never 'Exempt'.")
+    import import_ahpaa as IA
+
+    rows, _ = L.read_ahpaa()
+    if not rows:
+        R.out("  ahpaa.csv has no rows; nothing to trace.")
+        return True
+    ok = True
+    xl, _ = IA.read_xlsx()
+    xl_by = {r["place"].rstrip("*"): r for r in xl}
+    by_geoid = {p["geoid"]: p for p in props()}
+    hand = {g for g, _ in IA.HAND_MAP.values()}
+    bad_src, bad_name = [], []
+    for r in rows:
+        x = xl_by.get(r["municipality"])
+        if (x is None or x["status"] != r["status"]
+                or abs(x["share"] - float(r["affordable_share"])) > 1e-6):
+            bad_src.append(r["municipality"])
+        p = by_geoid.get(r["geoid"], {})
+        names = {(p.get("name") or "").lower(), (p.get("namelsad") or "").lower()}
+        if r["geoid"] not in hand and r["municipality"].lower() not in names:
+            bad_name.append((r["municipality"], r["geoid"], p.get("namelsad")))
+    R.out(f"  rows differing from the spreadsheet: {len(bad_src)} {bad_src[:5]}")
+    R.out(f"  rows on a place of another name    : {len(bad_name)} {bad_name[:5]}")
+    ok = ok and not bad_src and not bad_name
+
+    unattached = sorted(set(xl_by) - {r["municipality"] for r in rows})
+    R.out(f"  spreadsheet rows not loaded: {unattached}")
+    ok = ok and set(unattached) == IA.UNATTACHED
+
+    ne = [r for r in rows if r["status"] == "Non-Exempt"]
+    over = [r["municipality"] for r in ne
+            if float(r["affordable_share"]) >= L.AHPAA_SHARE_THRESHOLD]
+    R.out(f"  non-exempt: {len(ne)}; any at or above the 10% threshold: {over}")
+    ok = ok and len(ne) == 44 and not over
+
+    want = {r["geoid"]: (r["status"], float(r["affordable_share"])) for r in rows}
+    sh = shards()
+    drift = []
+    for g, p in by_geoid.items():
+        exp = want.get(g, (None, None))
+        s = sh.get(g)
+        got_s = (s.get("ahpaa_status"), s.get("affordable_share")) if isinstance(s, dict) else None
+        if (p.get("ahpaa_status"), p.get("affordable_share")) != exp or got_s != exp:
+            drift.append(g)
+    R.out(f"  places whose map or shard value differs from ahpaa.csv: {len(drift)} {drift[:5]}")
+    ok = ok and not drift
+    n_null = sum(1 for p in by_geoid.values() if p.get("ahpaa_status") is None)
+    R.out(f"  places with no IHDA row, left null: {n_null}")
+
+    dist = json.loads((L.DOCS_DATA / "districts.json").read_text(encoding="utf-8"))
+    dd = [pl["geoid"] for ch in dist["chambers"].values() for d in ch["districts"]
+          for pl in d["places"]
+          if (pl.get("ahpaa_status"), pl.get("affordable_share")) != want.get(pl["geoid"], (None, None))]
+    R.out(f"  district-file rows that differ: {len(dd)}")
+    ok = ok and not dd
+
+    m = meta()
+    R.out(f"  meta.ahpaa: enabled {m['ahpaa']['enabled']}, as of {m['ahpaa']['as_of']!r}, "
+          f"non-exempt {m['ahpaa'].get('n_non_exempt')}")
+    ok = ok and m["ahpaa"]["enabled"] and m["ahpaa"].get("n_non_exempt") == 44
+    return ok
+
+
 # --------------------------------------------------------------------------
 # Extra, disclosed: reporting-coverage and per-type scale integrity
 # --------------------------------------------------------------------------

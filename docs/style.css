@@ -357,6 +357,19 @@ td.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
   margin-left: 5px;
 }
 
+/* AHPAA: the non-exempt tag is the one coloured mark; exempt reads as plain text. */
+.detail-ahpaa { font-size: 13px; margin: 14px 0 0; line-height: 1.5; }
+.detail-ahpaa .ahpaa-share { font-weight: 700; font-variant-numeric: tabular-nums; }
+.ahpaa-tag {
+  display: inline-block; font-size: 11px; font-weight: 700; line-height: 1;
+  padding: 3px 6px; border-radius: 3px; margin: 0 4px;
+  background: var(--ahil-blue); color: #fff;
+}
+.ahpaa-exempt { margin: 0 4px; color: var(--ink-secondary); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ahpaa-tag { background: #6fa8d8; color: #0d1b2a; }
+}
+
 /* ---------------------------------------------------------------- detail */
 
 #detail {

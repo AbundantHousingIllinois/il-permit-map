@@ -789,6 +789,76 @@ def run_checks(sync_playwright, base, built, target, console_errors):
         R.run(12, "The legislator view restores a district from its link, switches "
                   "chambers and finds a legislator; places link to their districts", s12)
 
+        # ---------------- 13 (added, disclosed) ----------------
+        def s13():
+            R.out("  Not in SPEC.md §7. Added with the IHDA 2023 AHPAA data (CLAUDE.md")
+            R.out("  deviation 35). The non-exempt switch must work and show only")
+            R.out("  non-exempt places, both tables must carry status and share, a")
+            R.out("  non-exempt panel must say so, and a place IHDA did not score must")
+            R.out("  say that rather than 'exempt'.")
+            meta = built["meta"]
+            checks = {"meta.ahpaa enabled": bool(meta["ahpaa"]["enabled"])}
+            page.evaluate("() => { location.hash = '#metric=pct_growth&type=all&pop=0&ahpaa=1'; }")
+            page.wait_for_timeout(600)
+            st = page.evaluate("""() => ({
+                disabled: document.getElementById('toggle-ahpaa').disabled,
+                on: window.app.state().ahpaa,
+                geoids: window.app.highlightedGeoids(),
+                heads: [...document.querySelectorAll('#table-head-row th')].map(t => t.textContent)
+            })""")
+            non = {f["properties"]["geoid"] for f in built["geojson"]["features"]
+                   if (f["properties"].get("ahpaa_status") or "").lower() == "non-exempt"}
+            R.out(f"    #ahpaa=1: switch on {st['on']}, {len(st['geoids'])} highlighted of "
+                  f"{len(non)} non-exempt; table columns {st['heads'][-2:]}")
+            checks["the switch is enabled and restored from the link"] = (
+                not st["disabled"] and st["on"])
+            checks["only non-exempt places are highlighted"] = (
+                0 < len(st["geoids"]) <= len(non) and set(st["geoids"]) <= non)
+            checks["the table carries AHPAA status and affordable share"] = (
+                any(h.startswith("AHPAA status") for h in st["heads"])
+                and any(h.startswith("Affordable share") for h in st["heads"]))
+            page.evaluate("() => { location.hash = '#metric=pct_growth&type=all&pop=5000'; }")
+            page.wait_for_timeout(400)
+
+            def panel(geoid):
+                page.evaluate("(g) => window.app.selectPlace(g)", geoid)
+                page.wait_for_function(
+                    "(g) => window.app.detail().geoid === g"
+                    " && document.querySelector('#detail .detail-ahpaa')", arg=geoid,
+                    timeout=15_000)
+                return page.evaluate("() => document.querySelector('#detail .detail-ahpaa').innerText")
+            wil = panel("1782075")            # Wilmette, non-exempt
+            cah = panel("1710373")            # Cahokia Heights, formed after IHDA's years
+            page.evaluate("() => window.app.closeDetail()")
+            R.out(f"    Wilmette: {wil[:90]!r}")
+            R.out(f"    Cahokia Heights: {cah[:90]!r}")
+            checks["a non-exempt panel shows its share and the tag"] = (
+                "non-exempt" in wil.lower() and "%" in wil)
+            checks["a place IHDA did not score says so, not 'exempt'"] = (
+                "not in" in cah and "exempt" not in cah.lower())
+
+            p5 = context.new_page()
+            p5.goto(f"{base}/districts.html#senate-9", wait_until="load")
+            p5.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            d = p5.evaluate("""() => {
+                const heads = [...document.querySelectorAll('.district-table th')].map(t => t.textContent);
+                const i = heads.findIndex(h => h.startsWith('AHPAA status'));
+                const cells = i < 0 ? [] : [...document.querySelectorAll('#district-rows tr')]
+                    .map(tr => tr.children[i].innerText);
+                return { heads, cells };
+            }""")
+            p5.close()
+            R.out(f"    Senate 9 table: AHPAA statuses {sorted(set(d['cells']))}")
+            checks["the district table carries status and share"] = (
+                any(h.startswith("Affordable share") for h in d["heads"])
+                and "Non-Exempt" in d["cells"])
+            for k, val in checks.items():
+                R.out(f"    {'ok  ' if val else 'FAIL'} {k}")
+            return all(checks.values())
+        R.run(13, "AHPAA: the non-exempt switch, the status and share columns, and "
+                  "an unscored place shown as unscored", s13)
+
         # ---------------- B ----------------
         def sB():
             R.out("  Not in SPEC.md §7. about.html was added at the user's request,")
@@ -813,6 +883,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 " gap: document.getElementById('s-gap').innerText,"
                 " join: document.getElementById('s-join').innerText,"
                 " ahpaa: document.getElementById('s-ahpaa').innerText,"
+                " ahpaaNe: document.getElementById('s-ahpaa-ne').innerText,"
                 " zero5p: document.getElementById('s-zero2').innerText,"
                 " zero3p: document.getElementById('s-zero3p').innerText,"
                 " mfull: document.getElementById('s-months-full').innerText,"
@@ -851,6 +922,8 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                     got["reporting"] not in ("—", "") and got["gap"] not in ("—", ""),
                 "join rate filled in": got["join"] not in ("—", ""),
                 "AHPAA state described": bool(got["ahpaa"].strip()),
+                "AHPAA non-exempt count matches meta.json":
+                    got["ahpaaNe"].replace(",", "") == str(meta["ahpaa"].get("n_non_exempt", "—")),
                 "no-5+-unit count matches meta.json":
                     got["zero5p"].replace(",", "") == str(meta["n_zero_mf"]),
                 "nothing-above-a-duplex count matches meta.json":

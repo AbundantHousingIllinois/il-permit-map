@@ -93,6 +93,9 @@ function yearRanges(years) {
 const fmtPct = (n, d) => (n === null || n === undefined)
   ? '—' : n.toLocaleString('en-US', { minimumFractionDigits: d === undefined ? 1 : d, maximumFractionDigits: d === undefined ? 1 : d }) + '%';
 
+/* A fraction (IHDA's affordable housing share) as a percentage. */
+const fmtShare = s => (s === null || s === undefined) ? '—' : fmtPct(s * 100, 1);
+
 /* ---------------------------------------------------------------- hatch */
 
 /* A 45-degree hatch, drawn in a canvas so no image file and no external

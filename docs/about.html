@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Method, caveats and open items — Illinois Housing Permits</title>
+<title>Method and caveats — Illinois Housing Permits</title>
 <meta name="description" content="How the Illinois housing permits map is built, what its numbers do and do not mean, and what still needs a human before it is used in testimony.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
@@ -15,7 +15,7 @@
 
 <header>
   <p class="eyebrow"><a href="index.html">&larr; Back to the map</a></p>
-  <h1>Method, caveats and open items</h1>
+  <h1>Method and caveats</h1>
   <p class="subtitle">What this map measures, what it cannot tell you, and what still needs a person before it goes in front of a committee.</p>
   <p class="sourceline" id="sourceline">U.S. Census Building Permits Survey; 2010 Decennial Census</p>
 </header>
@@ -29,7 +29,7 @@
   <a href="#multifamily">4. What "no 5+ unit" means</a>
   <a href="#built">5. Permits vs. the 2020 count</a>
   <a href="#districts">6. By legislative district</a>
-  <a href="#open">7. Open items</a>
+  <a href="#ahpaa">7. AHPAA status</a>
   <a href="#decisions">8. Design decisions</a>
   <a href="#checks">9. How it is checked</a>
   <a href="#rebuild">10. Rebuilding it</a>
@@ -121,30 +121,31 @@
   <p><b>Where the names come from.</b> District boundaries are the Census's current cartographic files, drawn for the map in force since the 2022 election. Members and their contact details come from Open States' list of current Illinois legislators, a public file refreshed as members change; the page shows the date it was retrieved. A member listed wrongly is corrected by hand in <code>data/manual/legislator_overrides.csv</code>, never filled in from memory.</p>
 </section>
 
-<section id="open">
-  <h2>7. Open items — what still needs a person</h2>
-  <p class="lede">These were recorded as they were hit, in <code>BLOCKERS.md</code> in the repository. Nothing below was filled in with a plausible-looking number.</p>
+<section id="ahpaa">
+  <h2>7. AHPAA status and affordable housing share</h2>
+  <p class="lede">The Affordable Housing Planning and Appeal Act asks the Illinois Housing Development Authority (IHDA) to score every local government on how much of its housing is affordable. <span id="s-ahpaa">—</span></p>
 
-  <article class="item priority">
-    <h3><span class="badge">Needs you</span> The AHPAA list is empty</h3>
-    <p><b>What is missing.</b> The Affordable Housing Planning and Appeals Act non-exempt list is a periodic determination by the Illinois Housing Development Authority. There is no API and no machine-readable feed for it, so it cannot be fetched at build time — and it must never be produced from a language model's recollection. A wrong compliance status attached to a named municipality in legislative testimony is a serious error, so the file ships with headers and <b>zero rows</b>.</p>
-    <p><b>What that means right now.</b> Every municipality's AHPAA status is null, the AHPAA filter on the map is disabled with a tooltip explaining why, and the AHPAA column is absent from the table. <span id="s-ahpaa">This is the current state.</span></p>
-    <p><b>What to do.</b> Fill in <code>data/manual/ahpaa.csv</code> from the current IHDA determination list, one row per municipality:</p>
-    <div class="table-scroll">
-      <table class="spec-table">
-        <thead><tr><th>Column</th><th>What goes in it</th></tr></thead>
-        <tbody>
-          <tr><td><code>geoid</code></td><td>7-character Census place GEOID — <code>17</code> plus the 5-digit FIPS place code. Wilmette is <code>1782075</code>. The join uses this, not the name.</td></tr>
-          <tr><td><code>municipality</code></td><td>Name as IHDA publishes it, so a human can verify the row.</td></tr>
-          <tr><td><code>status</code></td><td>The determination, verbatim — e.g. <code>non-exempt</code>.</td></tr>
-          <tr><td><code>source_url</code></td><td>The IHDA document the row was read from.</td></tr>
-          <tr><td><code>as_of_date</code></td><td>Date of the determination (<code>YYYY-MM-DD</code>) — not the date it was typed. The site displays this.</td></tr>
-          <tr><td><code>notes</code></td><td>Anything a reader needs in order to trust the row.</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p>Then re-run the build. The filter switches itself on, the table grows an AHPAA column, and the as-of date appears under the control. A <code>geoid</code> that does not match a real place is reported by the data check rather than silently dropped. Municipalities absent from the file stay <b>null</b> — unknown — and are never shown as "exempt."</p>
+  <dl class="pairs">
+    <dt>Affordable housing share</dt>
+    <dd>IHDA's count of year-round homes a household could afford — to buy at 80% of the regional median income, or to rent at 60% — divided by all year-round homes. It is IHDA's figure, shown as published, and it comes from Census survey estimates for 2017–2021, not from the permit data on the rest of this site.</dd>
+    <dt>Non-exempt</dt>
+    <dd>A municipality under <b id="s-ahpaa-threshold">10%</b> is non-exempt, subject to exceptions the Act sets. On the map, the "AHPAA non-exempt only" switch shows just those <b id="s-ahpaa-ne">—</b>; the table and every municipality's panel show the status and the share.</dd>
+  </dl>
+
+  <article class="item">
+    <h3>Where the list comes from</h3>
+    <p>IHDA's <a href="https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf">2023 Statewide Report on Local Government Affordability</a>, the current report. Impact for Equity supplied it as a spreadsheet, and every row was checked against IHDA's published PDF — population, homes, affordable homes and share — and the non-exempt rows against IHDA's separate non-exempt list. All matched. Nothing in it was typed in or filled from memory.</p>
+    <p>Each IHDA row is attached to the Census municipality with exactly the same name, never a near match: the looser matching used elsewhere drops words like "City", which would have put Mason City's figures on Mason.</p>
   </article>
+
+  <article class="item">
+    <h3>What it does not cover</h3>
+    <p><b>A place with no IHDA row shows no status, never "exempt."</b> That is every Census-designated place, which is not a municipality, and Cahokia Heights, formed in 2021 from Cahokia, Alorton and Centreville after the years IHDA used. IHDA scored those three separately, and their rows cannot be attached to a town that did not exist yet. Clear Lake and Time are on IHDA's list but not in the Census's 2025 boundaries. All five were exempt.</p>
+    <p><b>Sandoval's share is incomplete.</b> IHDA notes that property taxes, which it normally counts against what a homeowner can afford, were not available for Sandoval, so its calculation leaves them out.</p>
+    <p><b>IHDA's population is not shown.</b> It is a survey estimate and can differ from the 2020 Census count used everywhere else here — Timberlane is 1,323 in IHDA's report and 906 in the Census.</p>
+  </article>
+
+  <p class="fineprint">To load the next report, replace the spreadsheet in <code>data/manual/</code> and run <code>uv run scripts/import_ahpaa.py</code>, then rebuild. The import stops, rather than guessing, if a name no longer matches a Census municipality.</p>
 </section>
 
 <section id="decisions">
@@ -266,9 +267,11 @@ uv run scripts/check_data.py</code></pre>
     $('s-uninc').textContent = pct(uninc, 1);
 
     $('s-ahpaa').textContent = m.ahpaa.enabled
-      ? `Loaded: ${int(m.ahpaa.rows)} municipalities`
-        + (m.ahpaa.as_of ? `, as of ${m.ahpaa.as_of}.` : '.')
-      : 'The file currently has no rows, so the filter is off.';
+      ? `This site carries IHDA's ${m.ahpaa.as_of} report for ${int(m.ahpaa.rows)} municipalities, `
+        + `${int(m.ahpaa.n_non_exempt)} of them non-exempt.`
+      : 'The AHPAA file currently has no rows, so no municipality has a status here.';
+    $('s-ahpaa-ne').textContent = m.ahpaa.enabled ? int(m.ahpaa.n_non_exempt) : '—';
+    if (m.ahpaa.share_threshold) $('s-ahpaa-threshold').textContent = pct(m.ahpaa.share_threshold * 100, 0);
 
     const ul = $('sources-list');
     for (const s of (m.sources || [])) {

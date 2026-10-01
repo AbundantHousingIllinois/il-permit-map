@@ -291,7 +291,9 @@ function renderPanel() {
       <td class="num">${measured ? fmtInt(p.units_total_2010) : '—'}</td>
       <td class="num">${measured ? fmtInt(p.mf5p_total) : '—'}</td>
       <td class="num">${fmtSigned(p.net_change)}</td>
-      <td class="num">${fmtSigned(p.built_gap)}</td>
+      <td class="num">${fmtSigned(p.built_gap)}</td>${META.ahpaa.enabled ? `
+      <td>${p.ahpaa_status ? esc(p.ahpaa_status) : '—'}</td>
+      <td class="num">${fmtShare(p.affordable_share)}</td>` : ''}
     </tr>`;
   }).join('');
 
@@ -329,7 +331,9 @@ function renderPanel() {
           <th scope="col">Municipality</th><th scope="col">Share of its land in district</th>
           <th scope="col">% growth since ${META.metric_start}</th><th scope="col">Units since ${META.metric_start}</th>
           <th scope="col">5+ unit units</th><th scope="col">Census count change 2010–20</th>
-          <th scope="col">2020 count vs permits</th>
+          <th scope="col">2020 count vs permits</th>${META.ahpaa.enabled ? `
+          <th scope="col">AHPAA status (${esc(META.ahpaa.as_of)})</th>
+          <th scope="col">Affordable share (${esc(META.ahpaa.as_of)})</th>` : ''}
         </tr></thead>
         <tbody id="district-rows">${rows}</tbody>
       </table>

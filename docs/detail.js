@@ -249,6 +249,7 @@ async function renderPlaceDetail(geoid, title) {
   if (shard.coverage !== 'reporting') {
     body.innerHTML = `<div class="coverage-note"><strong>No permit-office data for this place.</strong>
       <p style="margin:6px 0 0">${shard.coverage_note}</p></div>
+      ${ahpaaLine(shard)}
       ${districtsLine(shard)}
       <p class="detail-source">${META.source_line}. Built ${META.build_date}.</p>`;
     return;
@@ -321,11 +322,13 @@ async function renderPlaceDetail(geoid, title) {
 
     ${builtSection(shard)}
 
+    ${ahpaaLine(shard)}
+
     ${districtsLine(shard)}
 
     <p class="detail-source">${META.source_line}. Built ${META.build_date}.
       BPS counts units <em>authorized by permit</em>, not units completed, and does not
-      subtract demolitions.${shard.ahpaa_status ? ' AHPAA status: ' + shard.ahpaa_status + '.' : ''}</p>`;
+      subtract demolitions.</p>`;
 
   wireChartHover(chart.geom);
 }
@@ -338,6 +341,24 @@ function censusLine(shard) {
   return `<p class="census-line"><b>Census housing count:</b> ${fmtInt(shard.h1_2010)} (2010) →
     ${fmtInt(shard.h1_2020)} (2020), <b class="census-net">${fmtSigned(net)}</b> units.
     <span class="muted">A change in homes standing, not homes built — see below.</span></p>`;
+}
+
+/* IHDA's AHPAA determination and affordable housing share. A place IHDA did not
+ * score says so; it is never shown as exempt. */
+function ahpaaLine(shard) {
+  const A = META.ahpaa;
+  if (!A || !A.enabled) return '';
+  const src = `IHDA ${esc(A.as_of)} AHPAA report, from Census ACS 2017–2021 estimates.`;
+  if (!shard.ahpaa_status) {
+    return `<p class="detail-ahpaa"><b>Affordable housing share:</b> <span class="muted">not in
+      IHDA's ${esc(A.as_of)} AHPAA report for this place.</span></p>`;
+  }
+  const non = shard.ahpaa_status.toLowerCase() === 'non-exempt';
+  return `<p class="detail-ahpaa"><b>Affordable housing share:</b>
+    <span class="ahpaa-share">${fmtShare(shard.affordable_share)}</span>
+    ${non ? '<span class="ahpaa-tag">AHPAA non-exempt</span>' : '<span class="ahpaa-exempt">AHPAA exempt</span>'}
+    <span class="muted">${src} Under ${fmtPct(A.share_threshold * 100, 0)} is the Act's
+    non-exempt threshold.</span></p>`;
 }
 
 /* Which legislators represent this place, each linking to the district view.

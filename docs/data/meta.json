@@ -1,5 +1,5 @@
 {
-  "build_date": "2026-09-30",
+  "build_date": "2026-10-01",
   "ymax": 2025,
   "ymin": 2000,
   "metric_start": 2010,
@@ -120,10 +120,13 @@
     "none": 5
   },
   "ahpaa": {
-    "enabled": false,
-    "rows": 0,
-    "as_of": null,
-    "disabled_reason": "The AHPAA non-exempt list is a periodic determination by the Illinois Housing Development Authority with no machine-readable feed, so it is hand-entered into data/manual/ahpaa.csv. That file is currently empty, so no municipality has an AHPAA status here. Showing one would mean inventing it."
+    "enabled": true,
+    "rows": 1293,
+    "as_of": "2023",
+    "n_non_exempt": 44,
+    "share_threshold": 0.1,
+    "source_url": "https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf",
+    "disabled_reason": null
   },
   "join": {
     "municipal_units_2010_ymax": 272726,
@@ -142,6 +145,6 @@
     "U.S. Census Bureau, TIGER cartographic boundary files, cb_2025_17_place_500k, cb_2025_us_county_500k and cb_2025_us_state_500k",
     "U.S. Census Bureau, TIGER cartographic boundary files, cb_2025_17_sldu_500k and _sldl_500k, State Senate and House districts (legislator view)",
     "Open States, current Illinois legislators (data.openstates.org/people/current/il.csv; legislator view)",
-    "Illinois Housing Development Authority AHPAA determination list (data/manual/ahpaa.csv, hand-maintained; 0 rows loaded)"
+    "Illinois Housing Development Authority, Affordable Housing Planning and Appeal Act 2023 Statewide Report on Local Government Affordability (ACS 2017-2021), spreadsheet supplied by Impact for Equity (data/manual/ahpaa.csv; 1293 municipalities)"
   ]
 }
