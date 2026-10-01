@@ -80,38 +80,73 @@ can open it in QGIS or ArcGIS rather than scraping the page.
 - **Decide first:** which formats, and whether the files are built by `build.py`
   (offline, so via `pyogrio`/`fiona` or a pure-Python writer) or only on release.
 
-## 4. A printable one-page sheet per municipality
+## 4. A printable one-page sheet per legislative district
 
-*Steffany, 2026-10-01, inspired by Electrify Chicago's "Print Flyer"
-(https://electrifychicago.net/building/willis-tower-rivion-llc/) and a post by
-@chiwho.bike (https://bsky.app/profile/chiwho.bike/post/3mvopkkqlf22s).*
+*Steffany, 2026-10-01. The idea of a print button comes from Electrify Chicago's
+"Print Flyer" (https://electrifychicago.net/building/willis-tower-rivion-llc/)
+and a post by @chiwho.bike (https://bsky.app/profile/chiwho.bike/post/3mvopkkqlf22s),
+but the sheet is our own, not a copy of theirs.*
 
-A "Print" button in each municipality's panel that produces one clean US Letter
-page to hand to a council member or leave behind in a legislator meeting.
-Electrify Chicago's building page does this: the grade, the key numbers, the
-charts and the year-by-year table, with the site's navigation gone.
+A "Print" button on each Senate and House district in the legislator view that
+produces one clean US Letter page to leave behind in a meeting with that member.
 
-A sheet would hold:
+**What the sheet holds:**
 
-- Name, county, 2020 population, the AHIL logo and the build date.
-- The headline: percent of the 2010 stock permitted since 2010, against Illinois
-  and the U.S., in words as well as numbers.
-- Units by structure type, and the multifamily flag.
-- The per-year chart (drawn for print: no hover, years labelled).
-- The census counts 2010 → 2020, AHPAA status and affordable share, and the
-  town's Senate and House members.
-- The caveat that permits are a floor, and a short sources line with a link
-  (or QR code) back to the live page for that town.
+1. **The district's headline stats:** the member, the estimated units permitted
+   since 2010, the change in the census housing count 2010→2020, and how many of
+   its towns have permitted no 5+ unit building or are AHPAA non-exempt. All of
+   these are already in the district panel.
+2. **The municipality the member's district office is in.** It is the place the
+   member knows best and where the meeting usually happens. Open States carries a
+   `district_address` for 173 of 177 members (snapshot of 2026-09). The town comes
+   from geocoding that address to a Census place, not from the city name in the
+   address, which is often a mailing city ("Chicago" for an office outside it).
+   It may fall outside the district; if so, show it and say so.
+3. **A featured municipality: the "best option" for the district.** Chosen by a
+   weighted combination of
+   - how much of the town's land is inside the district (the share the build
+     already computes, `L.DISTRICT_SHARE_MIN` and up), and
+   - how many people live there: the town's 2020 population, or the people of
+     the town who live inside the district.
 
-Notes:
+   A town that is mostly inside the district and holds a lot of its people is the
+   one the member is most clearly answerable for. If the office town and the
+   featured town are the same, show it once.
 
-- The district view already prints cleanly for a meeting (README), so the
-  pattern is a `@media print` stylesheet plus a print layout, not a PDF library.
-  The browser's "Save as PDF" then gives the PDF.
-- Every figure must come from the same shard and `meta.json` the panel reads, so
-  the sheet can never disagree with the map.
-- A QR code needs a small library or an inline generator; it must not add a
-  runtime request beyond the pinned MapLibre bundle (CLAUDE.md, *No webfont*).
+For each of those towns, a short block: percent of the 2010 stock permitted
+against Illinois, units by structure type, the multifamily flag, and AHPAA status
+and share.
+
+**Decide first:**
+
+- **The weighting.** For example `score = land_share × population_inside`.
+  That is close to "the people of this district who live in this town" and favours
+  big towns. A version that adds the two parts with weights (`a × land_share +
+  b × population_share`) lets a small town that sits wholly inside compete.
+  Try both on a few districts (one in Chicago, one suburban, one downstate) and
+  pick the one whose answers look right to Austin.
+- **Population inside the district.** Land share × town population is the cheap
+  version and is what the district estimate already assumes. Census blocks would
+  be exact but are a new data source.
+- **Geocoding the office.** The Census geocoder is keyless and returns the place
+  directly, but it is a network call, so it belongs in `fetch_districts.py` and
+  must be cached, never in `build.py`. The four members with no address get no
+  office town, and the sheet says so.
+- **Chicago.** It is in 19 Senate districts and would win "best option" in most of
+  them. Should the sheet feature a Chicago community area or ward instead, or a
+  suburb, or accept Chicago?
+
+**How it would work:**
+
+- A `@media print` stylesheet and a print layout, not a PDF library. The
+  browser's "Save as PDF" gives the PDF. The district view already prints
+  cleanly (README), so this extends that.
+- Every figure comes from `districts.json`, the shards and `meta.json`, which the
+  page already reads, so the sheet can never disagree with the map. The office
+  town and the featured town are computed in the build and carried in
+  `districts.json`, with the score, so the choice can be checked.
+- A small district map on the sheet, with the two towns marked. A link or QR
+  code back to the live district page; a QR generator must be inline, adding no
+  runtime request beyond the pinned MapLibre bundle.
+- The caveat that permits are a floor, the build date and a sources line.
 - Use the `ahil-brand` guidelines for the layout.
-- **Decide first:** one page per town only, or also one per legislative district
-  (the district panel already has most of what that sheet would need)?
