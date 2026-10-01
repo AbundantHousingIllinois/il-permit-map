@@ -125,6 +125,10 @@
     "as_of": "2023",
     "n_non_exempt": 44,
     "share_threshold": 0.1,
+    "exempt_pop": 1000,
+    "under25_share": 0.25,
+    "under25_pop_min": 2000,
+    "n_under25": 83,
     "source_url": "https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf",
     "disabled_reason": null
   },

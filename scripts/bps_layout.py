@@ -67,12 +67,6 @@ NON_PLACE_FIPS = {"", "00000", "99990"}
 UNINCORPORATED_SENTINEL = "99990"
 
 STRUCTURE_TYPES = ("sf", "du", "mf34", "mf5p")
-STRUCTURE_LABELS = {
-    "sf": "Single-family",
-    "du": "Duplex (2 units)",
-    "mf34": "3-4 units",
-    "mf5p": "5+ units",
-}
 
 COVERAGE_VALUES = ("reporting", "no_permit_office", "unmatched")
 
@@ -105,6 +99,14 @@ AHPAA_SOURCE_URL = ("https://www.ihda.org/wp-content/uploads/2023/12/"
 AHPAA_AS_OF = "2023"
 # AHPAA exempts a local government whose affordable share is at least 10%.
 AHPAA_SHARE_THRESHOLD = 0.10
+# IHDA treats a municipality under 1,000 residents (by its ACS estimate) as exempt
+# whatever its share: Golf, Indian Creek, Mettawa and Trout Valley are under 10%.
+AHPAA_EXEMPT_POP = 1000
+# A second, stricter line Austin Busch asked for: under 25% affordable among places
+# of more than 2,000 people (2020 Census, as everywhere else on the page). This is a
+# proposed threshold, not the Act's; IHDA's ACS population gives the same 83 places.
+UNDER25_SHARE = 0.25
+UNDER25_POP_MIN = 2000
 
 TIGER_ZIP = RAW_GEO / f"cb_{TIGER_VINTAGE}_{STATE_FIPS}_place_500k.zip"
 SIMPLIFIED_GEOJSON = PROCESSED / "places_simplified.geojson"
@@ -131,8 +133,6 @@ LEGISLATORS_CSV = RAW / "legislators" / "il.csv"
 # is only as current as the latest fetch, so that date is kept beside the file.
 LEGISLATORS_RETRIEVED = RAW / "legislators" / "retrieved.txt"
 LEGISLATOR_OVERRIDES_CSV = MANUAL / "legislator_overrides.csv"
-LEGISLATOR_OVERRIDE_HEADERS = ["chamber", "district", "field", "value", "source_url",
-                               "as_of_date", "notes"]
 # A place is listed under a district when at least this share of its land area
 # falls inside it. Below 1% the overlaps are boundary slivers; the share itself is
 # carried so a partial member is never presented as a whole one.
@@ -430,11 +430,6 @@ def record_class(rec: dict) -> str:
     if _TOWNSHIP_NAME.search(name):
         return "township"
     return "other_non_place"
-
-
-NON_PLACE_CLASSES = (
-    "county_unincorporated", "county_wide", "township", "other_non_place",
-)
 
 
 # --------------------------------------------------------------------------

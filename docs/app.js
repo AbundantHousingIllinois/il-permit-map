@@ -5,7 +5,7 @@
  *
  * A missing value is never drawn as zero (SPEC.md §1.3, §5). Places whose
  * coverage is not `reporting` get a hatch pattern and are excluded from the
- * table, from rankings and from the zero-multifamily highlight.
+ * table, from rankings and from the multifamily highlights.
  */
 'use strict';
 
@@ -18,6 +18,7 @@ const state = {
   zeroMf: false,
   zeroMf3p: false,
   ahpaa: false,
+  under25: false,
   selected: null,
   sort: { key: 'pct_growth', dir: 'asc' }
 };
@@ -52,6 +53,7 @@ function passesFilters(p) {
     const s = (p.ahpaa_status || '').toLowerCase();
     if (!s.includes('non-exempt')) return false;
   }
+  if (state.under25 && p.under25 !== true) return false;
   return true;
 }
 
@@ -68,13 +70,6 @@ function midpoint() {
   const byType = META.il_pct_growth_by_type || {};
   const v = byType[state.type];
   return (v === null || v === undefined) ? META.il_pct_growth : v;
-}
-
-function usMidpoint() {
-  if (state.type === 'all') return META.us_pct_growth;
-  const byType = META.us_pct_growth_by_type || {};
-  const v = byType[state.type];
-  return (v === null || v === undefined) ? META.us_pct_growth : v;
 }
 
 function divergingStops() { return divergingStopsAt(midpoint()); }
@@ -354,7 +349,7 @@ function renderTable() {
       }
       tr.appendChild(td);
     }
-    tr.onclick = () => selectPlace(p.geoid);
+    tr.onclick = e => { if (!e.target.closest('a')) selectPlace(p.geoid); };
     tr.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPlace(p.geoid); } };
     body.appendChild(tr);
   }
@@ -362,7 +357,9 @@ function renderTable() {
   const total = rows.reduce((s, p) => s + (p.units_total_2010 || 0), 0);
   const nZero = rows.filter(p => p.zero_mf === true).length;
   document.getElementById('table-title').textContent =
-    state.zeroMf3p ? 'Municipalities that have permitted nothing above a duplex since 2010'
+    state.under25 && !state.zeroMf && !state.zeroMf3p
+      ? `Municipalities under ${fmtPct(META.ahpaa.under25_share * 100, 0)} affordable`
+    : state.zeroMf3p ? 'Municipalities that have permitted nothing above a duplex since 2010'
       : state.zeroMf ? 'Municipalities with no 5+ unit buildings since 2010' : 'Municipalities';
   document.getElementById('table-meta').textContent =
     `${fmtInt(rows.length)} municipalities shown · ${fmtInt(total)} units permitted `
@@ -407,6 +404,7 @@ function writeHash() {
   if (state.zeroMf) parts.push('zeromf=1');
   if (state.zeroMf3p) parts.push('zeromf3p=1');
   if (state.ahpaa) parts.push('ahpaa=1');
+  if (state.under25) parts.push('under25=1');
   parts.push('sort=' + state.sort.key + ':' + state.sort.dir);
   const h = '#' + parts.join('&');
   if (location.hash !== h) history.replaceState(null, '', h);
@@ -426,6 +424,7 @@ function readHash() {
   state.zeroMf = q.zeromf === '1';
   state.zeroMf3p = q.zeromf3p === '1';
   state.ahpaa = q.ahpaa === '1' && !!(META && META.ahpaa.enabled);
+  state.under25 = q.under25 === '1' && !!(META && META.ahpaa.enabled);
   if (q.sort) {
     const [k, d] = q.sort.split(':');
     if (k) state.sort = { key: k, dir: d === 'desc' ? 'desc' : 'asc' };
@@ -445,6 +444,7 @@ function syncControls() {
   document.getElementById('toggle-zero-mf').checked = state.zeroMf;
   document.getElementById('toggle-zero-mf3p').checked = state.zeroMf3p;
   document.getElementById('toggle-ahpaa').checked = state.ahpaa;
+  document.getElementById('toggle-under25').checked = state.under25;
 }
 
 function refresh() {
@@ -518,16 +518,28 @@ function wireControls() {
    * says why. It is never populated from anything but data/manual/ahpaa.csv. */
   const ahpaaInput = document.getElementById('toggle-ahpaa');
   const ahpaaLabel = document.getElementById('label-ahpaa');
+  const u25Input = document.getElementById('toggle-under25');
+  const u25Label = document.getElementById('label-under25');
   const hint = document.getElementById('ahpaa-hint');
   if (META.ahpaa.enabled) {
+    const A = META.ahpaa;
     ahpaaInput.onchange = e => { state.ahpaa = e.target.checked; refresh(); };
-    hint.textContent = META.ahpaa.as_of
-      ? `IHDA's ${META.ahpaa.as_of} AHPAA report: ${fmtInt(META.ahpaa.n_non_exempt)} of `
-        + `${fmtInt(META.ahpaa.rows)} municipalities non-exempt.`
-      : `AHPAA list loaded (${fmtInt(META.ahpaa.rows)} municipalities).`;
+    u25Input.onchange = e => { state.under25 = e.target.checked; refresh(); };
+    ahpaaLabel.title = `Under ${fmtPct(A.share_threshold * 100, 0)} of homes affordable in `
+      + `IHDA's ${A.as_of} report: the Act's non-exempt line.`;
+    u25Label.title = `Under ${fmtPct(A.under25_share * 100, 0)} of homes affordable, among `
+      + `municipalities of more than ${fmtInt(A.under25_pop_min)} people (2020 Census). `
+      + `A proposed, stricter line — not the Act's current one.`;
+    /* The link comes first: the hint is cut to one line on a phone. */
+    hint.innerHTML = `<a href="about.html#ahpaa">What is AHPAA?</a> IHDA's ${esc(A.as_of)} report: `
+      + `${fmtInt(A.n_non_exempt)} of ${fmtInt(A.rows)} municipalities non-exempt; `
+      + `${fmtInt(A.n_under25)} over ${fmtInt(A.under25_pop_min)} people are under `
+      + `${fmtPct(A.under25_share * 100, 0)} affordable.`;
   } else {
     ahpaaInput.disabled = true;
+    u25Input.disabled = true;
     ahpaaLabel.setAttribute('aria-disabled', 'true');
+    u25Label.setAttribute('aria-disabled', 'true');
     ahpaaLabel.title = META.ahpaa.disabled_reason;
     /* The full reason lives in the tooltip and the footer. The inline hint stays
      * one line so the map is not pushed off a phone screen. */
@@ -592,7 +604,7 @@ const app = {
   state: () => ({
     metric: state.metric, structure: state.type, popMin: state.popMin,
     zeroMf: state.zeroMf, zeroMf3p: state.zeroMf3p,
-    ahpaa: state.ahpaa, selected: state.selected
+    ahpaa: state.ahpaa, under25: state.under25, selected: state.selected
   }),
   featureCount: () => FEATURES.length,
   highlightedCount: () => activeGeoids.length,

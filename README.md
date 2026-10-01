@@ -22,17 +22,17 @@ means "keeping up with the state." The U.S. figure over the same period is 15.0%
 
 Alongside it: absolute unit counts (back to 2000 in the "Total units" view), a
 breakdown by structure type (single-family, duplex, 3–4 unit, 5+ unit), a
-per-year stacked chart on each municipality, and a **zero multifamily** highlight
-for municipalities that have permitted no building of five or more units since
-2010.
+per-year stacked chart on each municipality, two multifamily highlights ("No 5+
+unit buildings" and the stricter "Nothing above a duplex"), and IHDA's AHPAA
+status and affordable housing share for each municipality, with switches for the
+44 non-exempt and for those under 25% affordable with more than 2,000 people.
 
 The site has three pages: the map (`docs/index.html`); the **legislator view**
 (`docs/districts.html`), one map with a State Senate / State House toggle where
 choosing a district shows its member's contact details, every municipality it
 overlaps with the share of its land inside, and an estimated district total; and
-**[Method, caveats and open items](docs/about.html)** (`docs/about.html`), which
-explains what the numbers mean and lists what still needs a person — the empty
-AHPAA list first. Its figures are read from the build's own `meta.json`, so it
+**[Method and caveats](docs/about.html)** (`docs/about.html`), which explains
+what the numbers mean, what they are not, and the design decisions behind them. Its figures are read from the build's own `meta.json`, so it
 cannot go stale. Each district has its own link (`districts.html#senate-28`), and
 the page prints cleanly for a meeting.
 
@@ -79,13 +79,15 @@ over those years and its detail panel says which year its record starts from. Th
 live counts above are printed by the build and are in `docs/data/meta.json`; they
 move when the data is refreshed.
 
-**The AHPAA list is hand-maintained.** The Affordable Housing Planning and
-Appeals Act non-exempt list is a periodic determination by the Illinois Housing
-Development Authority with no API and no machine-readable feed. It lives in
-`data/manual/ahpaa.csv`, which ships with headers and **zero rows**. While it is
-empty, every municipality's AHPAA status is null and the site disables the AHPAA
-filter with a tooltip saying why. No status is ever generated. When the file is
-populated it carries an `as_of_date` per row, which the site displays.
+**AHPAA status is IHDA's 2023 report, as published.** The Affordable Housing
+Planning and Appeal Act list is a periodic determination by the Illinois Housing
+Development Authority with no API. Its 2023 report, supplied as a spreadsheet and
+checked row by row against IHDA's PDF, is in `data/manual/`;
+`scripts/import_ahpaa.py` writes `data/manual/ahpaa.csv` from it, and the build
+reads the CSV. A municipality IHDA did not score shows no status, never "exempt",
+and no status is ever changed: Timberlane stays non-exempt as IHDA listed it, with
+a note that the 2020 Census puts it under the 1,000-resident exemption. The
+"Under 25% affordable" switch is a proposed, stricter line, not the Act's.
 
 **County-unincorporated permits are not on the map.** About 8% of Illinois
 permits 2010–2025 are filed by county permit offices for unincorporated
@@ -132,7 +134,7 @@ written to disk, and the URLs recorded in `data/SOURCES.md` have no key on them.
 `scripts/check_data.py` is the definition of done for the data. It exits 0 only
 if all ten SPEC.md §7 conditions hold, and prints a readable report either way.
 It re-reads the TIGER archive and the raw BPS files itself rather than trusting
-anything the build wrote. It also runs six extra checks of its own, each
+anything the build wrote. It also runs seven extra checks of its own, each
 labelled as an addition:
 
 - **A** verifies the BPS column positions against the shipped column headers and
@@ -151,14 +153,18 @@ labelled as an addition:
   least one municipality, recomputes each district's estimate, and holds the named
   cases (Senate 28 is Laura Murphy and includes Park Ridge, Des Plaines and
   Schaumburg; Arlington Heights is in one Senate and two House districts).
+- **G** traces every AHPAA row to the supplied IHDA spreadsheet and onto the
+  Census place of the same name, checks it reaches the map, the shards and the
+  district file unchanged, and recomputes the under-25% set from IHDA's own
+  population.
 
 Check 7 is also held stricter than §7.7 reads: the shard directory may contain
 nothing but the current shards (the cloud file provider this copy lives under
 has left conflict copies there, and `build.py` now sweeps them).
 
 `scripts/check_site.py` serves `docs/` over HTTP and drives it with headless
-Chromium, installing the browser on first run if needed. Site checks 8 to 12 are
-additions too: 8 asserts the map's colour break follows the structure-type filter,
+Chromium, installing the browser on first run if needed. Site checks 8 to 14 and B
+are additions too: 8 asserts the map's colour break follows the structure-type filter,
 9 asserts the chart separates the pre-2010 context from the metric window and marks
 the years a permit office did not report, and 10 asserts the state silhouette is
 drawn beneath the places, the state edge above the county lines, and the opening
@@ -166,7 +172,11 @@ view contains the whole state, and 11 asserts the permits-vs-2020 section shows
 its parts where the decade was fully reported, says why where it was not, and
 that the table sorts blanks last, and 12 drives the legislator view: a district
 link restores its member and towns, the chamber toggle swaps the outlines, a
-search by name finds the district, and a place's panel links to its districts.
+search by name finds the district, and a place's panel links to its districts; 13
+drives both AHPAA switches, the status tag and share column in both tables, the
+links to the explainer, and an unscored place; 14 drives the municipality search
+and the multifamily column; and B loads `about.html` and holds every figure on it
+to `meta.json`.
 
 The page's one external dependency is the pinned MapLibre CDN build. `check_site.py`
 fetches those pinned URLs itself, caches them under `data/raw/vendor/`, and serves
@@ -207,13 +217,15 @@ the pinned MapLibre CDN is the only external request the page makes.
 SPEC.md                    the build specification
 CLAUDE.md                  working notes, conventions, decisions
 BLOCKERS.md                everything unresolved, written as encountered
+ROADMAP.md                 requested features not yet built
 data/
   raw/                     downloaded sources, cached (committed; all < 50 MB)
   processed/               crosswalk.csv, unmatched.csv, tidy permits, geometry
-  manual/ahpaa.csv         hand-maintained, headers only
-  manual/legislator_overrides.csv   hand corrections to the legislator snapshot
+  manual/                  IHDA's 2023 AHPAA spreadsheet, ahpaa.csv written from it
+                           by scripts/import_ahpaa.py, legislator_overrides.csv
   SOURCES.md               every URL, date retrieved, file produced
-scripts/                   fetch_*, crosswalk, districts, build, check_data, check_site
+scripts/                   fetch_*, crosswalk, districts, import_ahpaa, simplify_geo,
+                           build, check_data, check_site
 docs/                      GitHub Pages root (index.html, districts.html, about.html;
                            shared.js holds the palette and formats both maps use)
 ```
@@ -230,7 +242,7 @@ docs/                      GitHub Pages root (index.html, districts.html, about.
 | Boundaries | TIGER cartographic boundary files, `cb_2025_17_place_500k`, `cb_2025_us_county_500k`, `cb_2025_us_state_500k` |
 | Legislative districts | TIGER cartographic boundary files, `cb_2025_17_sldu_500k`, `cb_2025_17_sldl_500k` (LSY 2024) |
 | Legislators | Open States, `data.openstates.org/people/current/il.csv`, snapshot in `data/raw/legislators/` |
-| AHPAA status | Illinois Housing Development Authority determination list, hand-entered |
+| AHPAA status, affordable share | Illinois Housing Development Authority, 2023 Statewide Report on Local Government Affordability, transcribed by `scripts/import_ahpaa.py` |
 
 Every URL, with the date it was retrieved and the file it produced, is in
 [`data/SOURCES.md`](data/SOURCES.md).

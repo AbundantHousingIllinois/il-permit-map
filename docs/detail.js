@@ -348,17 +348,22 @@ function censusLine(shard) {
 function ahpaaLine(shard) {
   const A = META.ahpaa;
   if (!A || !A.enabled) return '';
-  const src = `IHDA ${esc(A.as_of)} AHPAA report, from Census ACS 2017–2021 estimates.`;
+  const what = `<a href="about.html#ahpaa">AHPAA</a>`;
+  const src = `IHDA ${esc(A.as_of)} ${what} report, from Census ACS 2017–2021 estimates.`;
   if (!shard.ahpaa_status) {
     return `<p class="detail-ahpaa"><b>Affordable housing share:</b> <span class="muted">not in
-      IHDA's ${esc(A.as_of)} AHPAA report for this place.</span></p>`;
+      IHDA's ${esc(A.as_of)} ${what} report for this place.</span></p>`;
   }
   const non = shard.ahpaa_status.toLowerCase() === 'non-exempt';
+  const u25 = shard.under25 === true
+    ? ` Also under ${fmtPct(A.under25_share * 100, 0)}, the proposed stricter line for places
+      of more than ${fmtInt(A.under25_pop_min)} people.` : '';
+  const note = shard.ahpaa_note ? ` <span class="ahpaa-note">${esc(shard.ahpaa_note)}</span>` : '';
   return `<p class="detail-ahpaa"><b>Affordable housing share:</b>
     <span class="ahpaa-share">${fmtShare(shard.affordable_share)}</span>
     ${non ? '<span class="ahpaa-tag">AHPAA non-exempt</span>' : '<span class="ahpaa-exempt">AHPAA exempt</span>'}
     <span class="muted">${src} Under ${fmtPct(A.share_threshold * 100, 0)} is the Act's
-    non-exempt threshold.</span></p>`;
+    non-exempt threshold.${u25}</span>${note}</p>`;
 }
 
 /* Which legislators represent this place, each linking to the district view.

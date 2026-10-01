@@ -1157,7 +1157,7 @@ geoid,municipality,status,source_url,as_of_date,notes,affordable_share,affordabl
 1775185,Thornton,Exempt,https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf,2023,,0.867176,852.43,983
 1775263,Tilden,Exempt,https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf,2023,,0.823056,293.83,357
 1775276,Tilton,Exempt,https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf,2023,,0.851986,1024.09,1202
-1775360,Timberlane,Non-Exempt,https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf,2023,,0.012987,5.00,385
+1775360,Timberlane,Non-Exempt,https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf,2023,"IHDA's population is the ACS 2017-2021 estimate, 1,323. The 2020 Census counts 906, under the 1,000 residents below which IHDA treats a municipality as exempt.",0.012987,5.00,385
 1775484,Tinley Park,Exempt,https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf,2023,,0.408692,9023.91,22080
 1775549,Tiskilwa,Exempt,https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf,2023,,0.847793,253.49,299
 1775601,Toledo,Exempt,https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf,2023,,0.950620,450.59,474

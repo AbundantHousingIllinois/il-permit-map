@@ -2,6 +2,7 @@
 
 Conventions and decisions for this repository. `SPEC.md` is the requirement;
 this file is how it was met and why. `BLOCKERS.md` is what is still unresolved.
+`ROADMAP.md` is what has been asked for and not built yet.
 
 ## Conventions
 
@@ -64,7 +65,8 @@ shared borders stay shared and no slivers open between neighbours. `-clean` is
 deliberately not used: it deleted one whole place (1730835), which would break
 the 1:1 correspondence with TIGER that check 1 requires. Retention was raised
 from the spec's suggested 5% to 12% because 5% produced only 0.51 MB against a
-3 MB budget; the committed `places.geojson` is 1.09 MB.
+3 MB budget; at that retention `places.geojson` was 1.09 MB (1.32 MB now, with the
+properties added since).
 
 **`scripts/simplify_geo.py` is the offline fallback.** SPEC.md §8 requires
 `build.py` to run with no network, and a checkout that has `data/raw/` but not
@@ -262,9 +264,26 @@ Mason City's figures on Mason. Alvin and Sandoval* are hand-mapped; Alorton,
 Cahokia, Centreville (now Cahokia Heights), Clear Lake and Time have no 2025
 place and are asserted as the only misses, so a new file fails loudly. A place
 with no IHDA row is null and says so — never "exempt". IHDA's population is not
-shown (Timberlane: 1,323 ACS vs 906 Census). `as_of_date` is the bare year
+shown (see *Timberlane*). `as_of_date` is the bare year
 "2023", because that is all Steffany gave and the PDF's upload folder is not a
 determination date.
+
+**Timberlane stays as IHDA published it.** Austin pointed out it is under 1,000
+people, which exempts it. That is true on the 2020 Census (906), but IHDA used its
+ACS estimate (1,323) and listed it non-exempt; IHDA applies the same 1,000 line to
+Golf, Indian Creek, Mettawa and Trout Valley, all exempt below 10%. Steffany chose
+to keep IHDA's determination and say so: `import_ahpaa.NOTES` writes the
+explanation into `ahpaa.csv`'s `notes`, the build carries every note to the shard
+as `ahpaa_note`, and the panel prints it. The importer never changes a status.
+
+**"Under 25% affordable" is a second, proposed line, not the Act's.** Austin asked
+for a filter on under 25% affordable among places of more than 2,000 people.
+`under25` uses the 2020 Census population, as the rest of the page does; IHDA's
+own population picks the same 83 places, which check G asserts. It is null only
+where it cannot be told (no share, or a share under 25% with no population); a
+share at or above 25% is `false` even without a population (Gulfport). The switch
+does not name a bill, because none was supplied. The AHPAA hint and every panel's
+"AHPAA" link to `about.html#ahpaa`.
 
 ## Things deliberately not done
 
@@ -277,7 +296,7 @@ report*).
 
 ## Every deviation from SPEC.md, with its reason
 
-Numbers are stable; code and `docs/PHASES.md` cite them. Where the reasoning is
+Numbers are stable; code cites them. Where the reasoning is
 already under **Decisions**, the entry names that decision instead of repeating it.
 
 1. **§7 check 3 gates on the municipal universe, not all BPS units.** Read
@@ -421,3 +440,8 @@ beside the AHPAA gap overstated what is outstanding. `BLOCKERS.md` is unchanged.
     municipality" search over every place, whatever the filters, which opens the
     panel and flies to it. "Population" says (2020), and the panel's all-types
     total names its years. Site checks 13 and **14** gate these.
+37. **Austin's AHPAA follow-ups.** An "Under 25% affordable" switch (`under25`,
+    hash `under25=1`), Timberlane's population note, and links from the AHPAA hint
+    and panel to the explainer. See *Timberlane stays as IHDA published it* and
+    *"Under 25% affordable" is a second, proposed line*. Data check G and site
+    check 13 gate them.

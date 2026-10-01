@@ -807,7 +807,9 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 geoids: window.app.highlightedGeoids(),
                 heads: [...document.querySelectorAll('#table-head-row th')].map(t => t.textContent),
                 rows: document.querySelectorAll('#table-body tr').length,
-                tagged: document.querySelectorAll('#table-body tr .ahpaa-tag').length
+                tagged: document.querySelectorAll('#table-body tr .ahpaa-tag').length,
+                tagLinks: [...document.querySelectorAll('#table-body tr .ahpaa-tag')]
+                    .filter(a => a.getAttribute('href') === 'about.html#ahpaa').length
             })""")
             non = {f["properties"]["geoid"] for f in built["geojson"]["features"]
                    if (f["properties"].get("ahpaa_status") or "").lower() == "non-exempt"}
@@ -821,6 +823,23 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             checks["the table tags every non-exempt row and carries the share"] = (
                 st["rows"] > 0 and st["tagged"] == st["rows"]
                 and any(h.startswith("Affordable share") for h in st["heads"]))
+            checks["every table tag links to the explainer"] = st["tagLinks"] == st["tagged"]
+            # Under 25% affordable, over 2,000 people (CLAUDE.md deviation 37).
+            page.evaluate("() => { location.hash = '#metric=pct_growth&type=all&pop=0&under25=1'; }")
+            page.wait_for_timeout(600)
+            u = page.evaluate("""() => ({
+                on: window.app.state().under25,
+                geoids: window.app.highlightedGeoids(),
+                hintLink: (document.querySelector('#ahpaa-hint a') || {}).getAttribute
+                    ? document.querySelector('#ahpaa-hint a').getAttribute('href') : null
+            })""")
+            u25 = {f["properties"]["geoid"] for f in built["geojson"]["features"]
+                   if f["properties"].get("under25") is True}
+            R.out(f"    #under25=1: switch on {u['on']}, {len(u['geoids'])} highlighted of "
+                  f"{len(u25)} (meta {meta['ahpaa'].get('n_under25')}); hint links to {u['hintLink']!r}")
+            checks["the under-25% switch is restored from the link and highlights only those places"] = (
+                u["on"] and 0 < len(u["geoids"]) <= len(u25) and set(u["geoids"]) <= u25)
+            checks["the AHPAA hint links to the explainer"] = u["hintLink"] == "about.html#ahpaa"
             page.evaluate("() => { location.hash = '#metric=pct_growth&type=all&pop=5000'; }")
             page.wait_for_timeout(400)
 
@@ -833,11 +852,18 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 return page.evaluate("() => document.querySelector('#detail .detail-ahpaa').innerText")
             wil = panel("1782075")            # Wilmette, non-exempt
             cah = panel("1710373")            # Cahokia Heights, formed after IHDA's years
+            tim = panel("1775360")            # Timberlane, non-exempt with a population note
+            link = page.evaluate(
+                "() => (document.querySelector('#detail .detail-ahpaa a') || {}).href || ''")
             page.evaluate("() => window.app.closeDetail()")
             R.out(f"    Wilmette: {wil[:90]!r}")
             R.out(f"    Cahokia Heights: {cah[:90]!r}")
             checks["a non-exempt panel shows its share and the tag"] = (
                 "non-exempt" in wil.lower() and "%" in wil)
+            R.out(f"    Timberlane: {tim[:140]!r}")
+            checks["Timberlane stays non-exempt and explains the 906 Census count"] = (
+                "non-exempt" in tim.lower() and "906" in tim)
+            checks["the panel links AHPAA to the explainer"] = link.endswith("about.html#ahpaa")
             checks["a place IHDA did not score says so, not 'exempt'"] = (
                 "not in" in cah and "exempt" not in cah.lower())
 
@@ -877,8 +903,8 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             for k, val in checks.items():
                 R.out(f"    {'ok  ' if val else 'FAIL'} {k}")
             return all(checks.values())
-        R.run(13, "AHPAA: the non-exempt switch, the status and share columns, and "
-                  "an unscored place shown as unscored", s13)
+        R.run(13, "AHPAA: the non-exempt and under-25% switches, the status and share "
+                  "columns, links to the explainer, and an unscored place shown as unscored", s13)
 
         # ---------------- 14 (added, disclosed) ----------------
         def s14():
@@ -941,6 +967,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 " join: document.getElementById('s-join').innerText,"
                 " ahpaa: document.getElementById('s-ahpaa').innerText,"
                 " ahpaaNe: document.getElementById('s-ahpaa-ne').innerText,"
+                " ahpaaU25: document.getElementById('s-ahpaa-u25').innerText,"
                 " zero5p: document.getElementById('s-zero2').innerText,"
                 " zero3p: document.getElementById('s-zero3p').innerText,"
                 " mfull: document.getElementById('s-months-full').innerText,"
@@ -981,6 +1008,8 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 "AHPAA state described": bool(got["ahpaa"].strip()),
                 "AHPAA non-exempt count matches meta.json":
                     got["ahpaaNe"].replace(",", "") == str(meta["ahpaa"].get("n_non_exempt", "—")),
+                "under-25% count matches meta.json":
+                    got["ahpaaU25"].replace(",", "") == str(meta["ahpaa"].get("n_under25", "—")),
                 "no-5+-unit count matches meta.json":
                     got["zero5p"].replace(",", "") == str(meta["n_zero_mf"]),
                 "nothing-above-a-duplex count matches meta.json":

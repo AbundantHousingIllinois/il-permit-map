@@ -643,6 +643,30 @@ def cG():
     R.out(f"  meta.ahpaa: enabled {m['ahpaa']['enabled']}, as of {m['ahpaa']['as_of']!r}, "
           f"non-exempt {m['ahpaa'].get('n_non_exempt')}")
     ok = ok and m["ahpaa"]["enabled"] and m["ahpaa"].get("n_non_exempt") == 44
+
+    # Under 25% affordable, over 2,000 people. The build uses the 2020 Census
+    # count; recomputing from IHDA's own population must pick the same places.
+    from_ihda = {r["geoid"] for r in rows
+                 if float(r["affordable_share"]) < L.UNDER25_SHARE
+                 and xl_by[r["municipality"]]["population"] > L.UNDER25_POP_MIN}
+    on_map = {g for g, p in by_geoid.items() if p.get("under25") is True}
+    in_shard = {g for g, s in sh.items() if isinstance(s, dict) and s.get("under25") is True}
+    R.out(f"  under 25% and over {L.UNDER25_POP_MIN:,} people: map {len(on_map)}, shards "
+          f"{len(in_shard)}, from IHDA's population {len(from_ihda)}, meta "
+          f"{m['ahpaa'].get('n_under25')}")
+    ok = ok and on_map == in_shard == from_ihda and m["ahpaa"].get("n_under25") == len(on_map)
+    def undecidable(p):
+        sh_ = p.get("affordable_share")
+        return sh_ is None or (sh_ < L.UNDER25_SHARE and p.get("pop2020") is None)
+    u_null = [g for g, p in by_geoid.items()
+              if (p.get("under25") is None) != undecidable(p)]
+    R.out(f"  under25 null exactly where it cannot be told: {len(u_null)} wrong")
+    ok = ok and not u_null
+
+    # Timberlane stays as IHDA published it, with the population note beside it.
+    tl = sh.get("1775360") or {}
+    R.out(f"  Timberlane: {tl.get('ahpaa_status')!r}, note {bool(tl.get('ahpaa_note'))}")
+    ok = ok and tl.get("ahpaa_status") == "Non-Exempt" and "906" in (tl.get("ahpaa_note") or "")
     return ok
 
 

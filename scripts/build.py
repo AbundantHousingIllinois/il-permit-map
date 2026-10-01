@@ -18,8 +18,10 @@ Hard rules this file exists to honour:
     metrics.  It is never given a zero (SPEC.md §1.3, §5).
   * A place with no 2010 H1 count gets a NULL ``pct_growth``.  Nothing is
     interpolated (SPEC.md §1.1).
-  * ``ahpaa_status`` comes only from data/manual/ahpaa.csv.  With zero rows it is
-    NULL everywhere and the site disables the filter (SPEC.md §1.2, §3.5).
+  * ``ahpaa_status`` comes only from data/manual/ahpaa.csv, which
+    scripts/import_ahpaa.py writes from IHDA's report.  A place with no row is
+    NULL, never "Exempt"; were the file empty, the site would disable both AHPAA
+    switches (SPEC.md §1.2, §3.5).
 """
 
 from __future__ import annotations
@@ -269,6 +271,10 @@ def main() -> int:
                    for r in ahpaa_rows
                    if (r.get("geoid") or "").strip()
                    and (r.get("affordable_share") or "").strip()}
+    # IHDA's notes on a row (Sandoval's missing taxes, Timberlane's population).
+    ahpaa_note = {r["geoid"].strip(): r["notes"].strip()
+                  for r in ahpaa_rows
+                  if (r.get("geoid") or "").strip() and (r.get("notes") or "").strip()}
     ahpaa_enabled = bool(ahpaa)
     ahpaa_as_of = sorted({(r.get("as_of_date") or "").strip()
                           for r in ahpaa_rows if (r.get("as_of_date") or "").strip()})
@@ -545,6 +551,15 @@ def main() -> int:
 
         status = ahpaa.get(geoid) if ahpaa_enabled else None
         affordable_share = ahpaa_share.get(geoid) if ahpaa_enabled else None
+        # Under 25% affordable with more than 2,000 people. Null when it cannot be
+        # told: no share, or a share under 25% with no population (Gulfport has a
+        # share of 51% and no 2020 count, so it is plainly False).
+        if affordable_share is None:
+            under25 = None
+        elif affordable_share >= L.UNDER25_SHARE:
+            under25 = False
+        else:
+            under25 = None if pop2020 is None else pop2020 > L.UNDER25_POP_MIN
 
         features.append({
             "type": "Feature",
@@ -574,6 +589,7 @@ def main() -> int:
                 "built_flag": built_flag,
                 "ahpaa_status": status,
                 "affordable_share": affordable_share,
+                "under25": under25,
                 "lon": float(pg["lon"]) if pg.get("lon") else None,
                 "lat": float(pg["lat"]) if pg.get("lat") else None,
                 **{f"u_{k}": by_type[k] for k in L.STRUCTURE_TYPES},
@@ -629,6 +645,8 @@ def main() -> int:
             },
             "ahpaa_status": status,
             "affordable_share": affordable_share,
+            "under25": under25,
+            "ahpaa_note": ahpaa_note.get(geoid) if ahpaa_enabled else None,
             "series": ser,
             "years_reported": years_reported,
             "first_year_reported": years_reported[0] if years_reported else None,
@@ -930,12 +948,17 @@ def main() -> int:
             "n_non_exempt": sum(1 for v in ahpaa.values()
                                 if v.lower() == "non-exempt"),
             "share_threshold": L.AHPAA_SHARE_THRESHOLD,
+            "exempt_pop": L.AHPAA_EXEMPT_POP,
+            "under25_share": L.UNDER25_SHARE,
+            "under25_pop_min": L.UNDER25_POP_MIN,
+            "n_under25": sum(1 for ft in features
+                             if ft["properties"]["under25"] is True),
             "source_url": L.AHPAA_SOURCE_URL if ahpaa_enabled else None,
             "disabled_reason": (
                 None if ahpaa_enabled else
                 "The AHPAA non-exempt list is a periodic determination by the "
                 "Illinois Housing Development Authority with no machine-readable "
-                "feed, so it is hand-entered into data/manual/ahpaa.csv. That file "
+                "feed, so it is loaded into data/manual/ahpaa.csv by hand. That file "
                 "is currently empty, so no municipality has an AHPAA status here. "
                 "Showing one would mean inventing it."
             ),

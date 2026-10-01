@@ -158,7 +158,10 @@ h1 {
 .top-caveat a { color: var(--ahil-blue); font-weight: 600; text-decoration: none; white-space: nowrap; }
 .headerlink a { color: var(--ahil-blue); font-weight: 600; text-decoration: none; }
 .headerlink a:hover { text-decoration: underline; }
+.hint a, .detail-ahpaa a { color: var(--ahil-blue); font-weight: 600; }
 @media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hint a,
+  :root:not([data-theme="light"]) .detail-ahpaa a,
   :root:not([data-theme="light"]) .headerlink a,
   :root:not([data-theme="light"]) .top-caveat a { color: #6fa8d8; }
 }
@@ -353,8 +356,9 @@ td.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
 .ahpaa-tag {
   display: inline-block; font-size: 11px; font-weight: 700; line-height: 1;
   padding: 3px 6px; border-radius: 3px; margin: 0 4px;
-  background: var(--ahil-blue); color: #fff;
+  background: var(--ahil-blue); color: #fff; text-decoration: none;
 }
+.detail-ahpaa .ahpaa-note { display: block; margin-top: 4px; }
 .ahpaa-exempt { margin: 0 4px; color: var(--ink-secondary); }
 td .ahpaa-tag { margin: 0 0 0 6px; font-size: 10px; padding: 2px 5px; white-space: nowrap; }
 td.mf-flag { font-size: 12px; color: var(--ink-secondary); white-space: nowrap; }
@@ -676,21 +680,6 @@ dl.pairs dd { margin: 4px 0 0; }
   background: var(--surface-raised);
 }
 .item h3 { margin-top: 0; }
-.item.priority { border-color: var(--ahil-orange); border-width: 2px; }
-
-.badge {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  background: var(--ahil-orange);
-  color: #fff;
-  padding: 2px 7px;
-  border-radius: 3px;
-  margin-right: 7px;
-  vertical-align: 2px;
-}
 
 .resolution {
   font-size: 12px;
@@ -699,11 +688,6 @@ dl.pairs dd { margin: 4px 0 0; }
   padding-top: 8px;
   margin-bottom: 0 !important;
 }
-
-table.spec-table { min-width: 460px; font-size: 12.5px; }
-table.spec-table th, table.spec-table td { text-align: left; white-space: normal; vertical-align: top; }
-table.spec-table th { position: static; }
-table.spec-table td:first-child { min-width: 110px; }
 
 ul.ticks, ul.sources { margin: 0 0 10px; padding-left: 20px; }
 ul.ticks li, ul.sources li { margin-bottom: 6px; }

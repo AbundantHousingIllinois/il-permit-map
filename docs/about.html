@@ -16,7 +16,7 @@
 <header>
   <p class="eyebrow"><a href="index.html">&larr; Back to the map</a></p>
   <h1>Method and caveats</h1>
-  <p class="subtitle">What this map measures, what it cannot tell you, and what still needs a person before it goes in front of a committee.</p>
+  <p class="subtitle">What this map measures, what it cannot tell you, and the choices behind both.</p>
   <p class="sourceline" id="sourceline">U.S. Census Building Permits Survey; 2010 Decennial Census</p>
 </header>
 
@@ -129,7 +129,9 @@
     <dt>Affordable housing share</dt>
     <dd>IHDA's count of year-round homes a household could afford — to buy at 80% of the regional median income, or to rent at 60% — divided by all year-round homes. It is IHDA's figure, shown as published, and it comes from Census survey estimates for 2017–2021, not from the permit data on the rest of this site.</dd>
     <dt>Non-exempt</dt>
-    <dd>A municipality under <b id="s-ahpaa-threshold">10%</b> is non-exempt, subject to exceptions the Act sets. On the map, the "AHPAA non-exempt only" switch shows just those <b id="s-ahpaa-ne">—</b>; the table and every municipality's panel show the status and the share.</dd>
+    <dd>A municipality under <b id="s-ahpaa-threshold">10%</b> is non-exempt, subject to exceptions the Act sets. The main one: IHDA treats a municipality of fewer than <b id="s-ahpaa-exempt-pop">1,000</b> residents as exempt whatever its share, so a few very small villages are exempt below the line. On the map, the "AHPAA non-exempt only" switch shows just those <b id="s-ahpaa-ne">—</b>; the table and every municipality's panel show the status and the share.</dd>
+    <dt>Under 25% affordable</dt>
+    <dd>A stricter line that has been proposed but is not the Act's: under <b id="s-u25-share">25%</b> affordable, among municipalities of more than <b id="s-u25-pop">2,000</b> people. The "Under 25% affordable" switch shows those <b id="s-ahpaa-u25">—</b>. Population here is the 2020 Census count used everywhere else on the site; IHDA's own population estimates pick out exactly the same towns.</dd>
   </dl>
 
   <article class="item">
@@ -142,7 +144,7 @@
     <h3>What it does not cover</h3>
     <p><b>A place with no IHDA row shows no status, never "exempt."</b> That is every Census-designated place, which is not a municipality, and Cahokia Heights, formed in 2021 from Cahokia, Alorton and Centreville after the years IHDA used. IHDA scored those three separately, and their rows cannot be attached to a town that did not exist yet. Clear Lake and Time are on IHDA's list but not in the Census's 2025 boundaries. All five were exempt.</p>
     <p><b>Sandoval's share is incomplete.</b> IHDA notes that property taxes, which it normally counts against what a homeowner can afford, were not available for Sandoval, so its calculation leaves them out.</p>
-    <p><b>IHDA's population is not shown.</b> It is a survey estimate and can differ from the 2020 Census count used everywhere else here — Timberlane is 1,323 in IHDA's report and 906 in the Census.</p>
+    <p><b>IHDA's population is not shown.</b> It is a survey estimate and can differ from the 2020 Census count used everywhere else here. It matters once: <b>Timberlane</b> is 1,323 in IHDA's report and 906 in the Census. IHDA lists it as non-exempt, and so does this site, because that is IHDA's determination; on the Census count it would fall under the small-village exemption. Its panel says so.</p>
   </article>
 
   <p class="fineprint">To load the next report, replace the spreadsheet in <code>data/manual/</code> and run <code>uv run scripts/import_ahpaa.py</code>, then rebuild. The import stops, rather than guessing, if a name no longer matches a Census municipality.</p>
@@ -271,6 +273,10 @@ uv run scripts/check_data.py</code></pre>
         + `${int(m.ahpaa.n_non_exempt)} of them non-exempt.`
       : 'The AHPAA file currently has no rows, so no municipality has a status here.';
     $('s-ahpaa-ne').textContent = m.ahpaa.enabled ? int(m.ahpaa.n_non_exempt) : '—';
+    $('s-ahpaa-u25').textContent = m.ahpaa.enabled ? int(m.ahpaa.n_under25) : '—';
+    if (m.ahpaa.exempt_pop) $('s-ahpaa-exempt-pop').textContent = int(m.ahpaa.exempt_pop);
+    if (m.ahpaa.under25_share) $('s-u25-share').textContent = pct(m.ahpaa.under25_share * 100, 0);
+    if (m.ahpaa.under25_pop_min) $('s-u25-pop').textContent = int(m.ahpaa.under25_pop_min);
     if (m.ahpaa.share_threshold) $('s-ahpaa-threshold').textContent = pct(m.ahpaa.share_threshold * 100, 0);
 
     const ul = $('sources-list');

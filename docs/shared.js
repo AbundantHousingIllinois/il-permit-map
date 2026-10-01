@@ -110,10 +110,11 @@ function mfRank(p) {
   return p.zero_mf3p === true ? 2 : p.zero_mf === true ? 1 : p.zero_mf === false ? 0 : null;
 }
 
-/* The one coloured tag in a table: IHDA's AHPAA non-exempt determination. */
+/* The one coloured tag in a table: IHDA's AHPAA non-exempt determination. It links
+ * to the explainer, so a reader who does not know the Act can find out. */
 function ahpaaTag(p) {
   return (p.ahpaa_status || '').toLowerCase() === 'non-exempt'
-    ? '<span class="ahpaa-tag" title="Non-exempt under the Affordable Housing Planning and Appeal Act (IHDA 2023)">AHPAA non-exempt</span>'
+    ? '<a class="ahpaa-tag" href="about.html#ahpaa" title="Non-exempt under the Affordable Housing Planning and Appeal Act (IHDA 2023). What is AHPAA?">AHPAA non-exempt</a>'
     : '';
 }
 

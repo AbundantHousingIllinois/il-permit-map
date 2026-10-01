@@ -48,6 +48,12 @@ HAND_MAP = {
 # into Cahokia Heights in 2021 (after IHDA's ACS 2017-2021 window); Clear Lake and
 # Time are not in the 2025 place file. All five are exempt.
 UNATTACHED = {"Alorton", "Cahokia", "Centreville", "Clear Lake", "Time"}
+# Notes on a row IHDA published as it stands. The status is never changed here.
+NOTES = {
+    "Timberlane": ("IHDA's population is the ACS 2017-2021 estimate, 1,323. The "
+                   f"2020 Census counts 906, under the {L.AHPAA_EXEMPT_POP:,} residents "
+                   "below which IHDA treats a municipality as exempt."),
+}
 
 
 def read_sheet(ws) -> list[dict]:
@@ -97,7 +103,7 @@ def match(rows: list[dict]) -> tuple[list[tuple[dict, str, str]], list[str]]:
             continue
         hits = {p["GEOID"] for p in by.get(r["place"].lower(), [])}
         if len(hits) == 1:
-            matched.append((r, hits.pop(), ""))
+            matched.append((r, hits.pop(), NOTES.get(r["place"], "")))
         elif not hits:
             unattached.append(r["place"])
         else:
@@ -122,6 +128,7 @@ def main() -> int:
 
     matched, unattached = match(rows)
     assert set(unattached) == UNATTACHED, f"unexpected unattached rows: {unattached}"
+    assert set(NOTES) <= {r["place"] for r, _, _ in matched}, "a note names no row"
     geoids = [g for _, g, _ in matched]
     assert len(geoids) == len(set(geoids)), "two IHDA rows on one place"
 

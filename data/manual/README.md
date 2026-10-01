@@ -39,9 +39,15 @@ name no longer matches a Census municipality exactly.
 ### What the build does with it
 
 - **Zero rows** → `ahpaa_status` and `affordable_share` are `null` everywhere and
-  the site disables the AHPAA filter with a tooltip explaining why.
+  the site disables both AHPAA switches with a tooltip explaining why.
 - **Rows present** → each `geoid` gets its status and share; places absent from
-  the file stay `null` (unknown), which is never rendered as "exempt".
+  the file stay `null` (unknown), which is never rendered as "exempt". `notes`
+  is printed in the municipality's panel. `under25` (under 25% affordable, more
+  than 2,000 people by the 2020 Census) is derived from the share.
+
+The importer never changes IHDA's status. Where a row needs explaining — Timberlane
+is non-exempt on IHDA's ACS population of 1,323 but counted 906 in 2020 — the
+explanation goes in `notes` via `NOTES` in `scripts/import_ahpaa.py`.
 
 A `geoid` that does not exist in the built data, or a row that differs from the
 spreadsheet, is reported by `scripts/check_data.py` (checks 10 and G).
