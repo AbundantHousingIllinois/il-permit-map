@@ -159,10 +159,18 @@ function buildMap(places, stateOutline) {
         layout: { visibility: ch === view.chamber ? 'visible' : 'none' },
         paint: { 'fill-color': '#000', 'fill-opacity': 0.01 }
       });
+      /* The district edge has to read as a different kind of line from a
+       * municipal border, which follows the same streets: a pale casing under a
+       * heavier dark stroke. */
+      map.addLayer({
+        id: `${ch}-casing`, type: 'line', source: ch,
+        layout: { visibility: ch === view.chamber ? 'visible' : 'none', 'line-join': 'round' },
+        paint: { 'line-color': cssVar('--surface'), 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2.5, 11, 5], 'line-opacity': 0.8 }
+      });
       map.addLayer({
         id: `${ch}-line`, type: 'line', source: ch,
-        layout: { visibility: ch === view.chamber ? 'visible' : 'none' },
-        paint: { 'line-color': cssVar('--ink-secondary'), 'line-width': 1.1, 'line-opacity': 0.85 }
+        layout: { visibility: ch === view.chamber ? 'visible' : 'none', 'line-join': 'round' },
+        paint: { 'line-color': cssVar('--ink'), 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 1, 11, 2.2] }
       });
       map.addLayer({
         id: `${ch}-selected`, type: 'line', source: ch,
@@ -213,7 +221,7 @@ function applyView(fly) {
   if (!layersReady) return;
   for (const ch of ['senate', 'house']) {
     const vis = ch === view.chamber ? 'visible' : 'none';
-    for (const suffix of ['hit', 'line', 'selected', 'labels']) map.setLayoutProperty(`${ch}-${suffix}`, 'visibility', vis);
+    for (const suffix of ['hit', 'casing', 'line', 'selected', 'labels']) map.setLayoutProperty(`${ch}-${suffix}`, 'visibility', vis);
     /* The chosen district's number turns orange and always shows. */
     const sel = ch === view.chamber && view.district ? view.district : -1;
     map.setLayoutProperty(`${ch}-labels`, 'icon-image', ['case',
@@ -445,7 +453,8 @@ window.districtsApp = districtsApp;
       map.setPaintProperty('state-fill', 'fill-color', cssVar('--map-land'));
       map.setPaintProperty('places-line', 'line-color', cssVar('--rule-strong'));
       for (const ch of ['senate', 'house']) {
-        map.setPaintProperty(`${ch}-line`, 'line-color', cssVar('--ink-secondary'));
+        map.setPaintProperty(`${ch}-casing`, 'line-color', cssVar('--surface'));
+        map.setPaintProperty(`${ch}-line`, 'line-color', cssVar('--ink'));
       }
       if (map.hasImage('hatch')) map.updateImage('hatch', hatchImage());
       addLabelImages(true);

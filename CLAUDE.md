@@ -425,3 +425,21 @@ figures a reader is most likely to quote.
 The page gained a section 4, *What "no 5+ unit" means, and what it does not*, using
 Glen Ellyn as the worked example, and a third callout in section 3 for the
 months-reported rule.
+
+Four former open items — county-filed permits, the three municipalities with no
+boundary, the 21-unit state-total discrepancy, and the derived county labels —
+moved to a section 8,
+*Design decisions*, at Steffany's request: each is settled, so listing it beside
+the AHPAA gap overstated what is still outstanding. `BLOCKERS.md` is unchanged.
+32. **District outlines are not simplified.** Reviewers found the legislator view
+    unclear and asked for "the shapefiles". At 10% retention a Chicago Senate
+    district was five or six straight lines cutting across streets and municipal
+    borders. `fetch_districts.py` now converts `cb_2025_17_sldu_500k` /
+    `_sldl_500k` to GeoJSON with only §3.4's coordinate rounding (Senate 0.53 MB,
+    House 0.73 MB, both loaded by `districts.html`), and the offline fallback in
+    `build.py` does the same through `simplify_geo.convert`. The full TIGER/Line
+    `tl_` files were rejected: several times larger, and their districts run out
+    into Lake Michigan. With real edges the district line followed the same streets
+    as town borders, so it is now drawn heavier, in `--ink`, over a pale casing.
+    No figure moved: membership and label points were already computed from the
+    unsimplified shapefiles, and `districts.json` is byte-identical.

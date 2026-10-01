@@ -35,9 +35,35 @@ import bps_layout as L
 import fetch_geo as FG
 
 OPENSTATES_URL = "https://data.openstates.org/people/current/il.csv"
-# Drawn as outlines; finer than the county layer because the page zooms into
-# Chicago, where a House district can be a few square miles.
-DISTRICT_RETENTION = "10%"
+# Not simplified. The page zooms into Chicago, where a House district is a few
+# square miles, and at 10% retention a district edge became a handful of straight
+# lines that crossed streets and municipal borders at random -- reviewers read the
+# map as unclear. The full 1:500k file is 0.5 MB (Senate) + 0.7 MB (House), so the
+# outline the page draws is the Census cartographic boundary itself.
+
+
+def convert_districts() -> None:
+    """Write each chamber's shapefile to GeoJSON for the page. Separate from the
+    download so the outlines can be regenerated without re-taking the Open States
+    snapshot."""
+    print("\nConverting the district layers to GeoJSON (full 1:500k detail):")
+    for chamber, c in L.CHAMBERS.items():
+        dest = L.district_geojson(chamber)
+        FG.mapshaper([
+            str(L.district_zip(chamber)),
+            "-filter-fields", f"GEOID,NAME,{c['field']}",
+            "-o", f"precision={FG.COORD_PRECISION}", "format=geojson", "force",
+            str(dest),
+        ])
+        n = len(json.loads(dest.read_text(encoding="utf-8"))["features"])
+        print(f"  {n} {c['label']} districts in {L.rel(dest)} "
+              f"({dest.stat().st_size:,} bytes)")
+        L.record_source(
+            f"npx {FG.MAPSHAPER} -filter-fields -o precision={FG.COORD_PRECISION}",
+            L.rel(dest),
+            f"Conversion step, not a download. {c['label']} districts, not "
+            f"simplified; coordinates quantized to {FG.COORD_PRECISION}.",
+        )
 
 
 def main() -> int:
@@ -78,26 +104,7 @@ def main() -> int:
         print("  The snapshot does not have exactly one member per district. A vacancy "
               "or a data error: correct it in data/manual/legislator_overrides.csv.")
 
-    print("\nSimplifying the district layers (outlines only):")
-    for chamber, c in L.CHAMBERS.items():
-        dest = L.district_geojson(chamber)
-        FG.mapshaper([
-            str(L.district_zip(chamber)),
-            "-filter-fields", f"GEOID,NAME,{c['field']}",
-            "-simplify", DISTRICT_RETENTION, "keep-shapes",
-            "-o", f"precision={FG.COORD_PRECISION}", "format=geojson", "force",
-            str(dest),
-        ])
-        n = len(json.loads(dest.read_text(encoding="utf-8"))["features"])
-        print(f"  {n} {c['label']} districts in {L.rel(dest)} "
-              f"({dest.stat().st_size:,} bytes)")
-        L.record_source(
-            f"npx {FG.MAPSHAPER} -simplify {DISTRICT_RETENTION} keep-shapes "
-            f"-o precision={FG.COORD_PRECISION}",
-            L.rel(dest),
-            f"Simplification step, not a download. {c['label']} districts, retention "
-            f"{DISTRICT_RETENTION}.",
-        )
+    convert_districts()
     print(f"\nProvenance appended to {L.rel(L.SOURCES_MD)}")
     return 0
 

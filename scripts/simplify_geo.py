@@ -87,6 +87,19 @@ def simplify(fc: dict, epsilon: float) -> dict:
     return out
 
 
+def convert(zip_path: Path, dest: Path, state_fips: str | None = None) -> int:
+    """Write ``zip_path`` to ``dest`` as GeoJSON with no simplification, only the
+    coordinate rounding SPEC.md §3.4 asks for. Returns the size in bytes."""
+    fc = read_shapefile_zip(zip_path, state_fips=state_fips)
+    for f in fc["features"]:
+        f["geometry"]["coordinates"] = _round_coords(
+            f["geometry"]["coordinates"], COORD_DECIMALS)
+    text = json.dumps(fc, separators=(",", ":"))
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(text, encoding="utf-8")
+    return len(text.encode("utf-8"))
+
+
 def simplify_to(zip_path: Path, dest: Path, budget_bytes: int,
                 state_fips: str | None = None, verbose: bool = True) -> float:
     """Simplify ``zip_path`` into ``dest``, keeping every feature.

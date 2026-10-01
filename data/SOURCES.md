@@ -81,3 +81,5 @@ it produced (SPEC.md §1.7). Appended automatically by the fetch scripts.
 | npx mapshaper@0.6.109 -simplify 3% keep-shapes -o precision=0.00001 | 2026-09-23 | data/processed/sldl_simplified.geojson | Simplification step, not a download. State House districts, retention 3%. |
 | npx mapshaper@0.6.109 -simplify 10% keep-shapes -o precision=0.00001 | 2026-09-23 | data/processed/sldu_simplified.geojson | Simplification step, not a download. State Senate districts, retention 10%. |
 | npx mapshaper@0.6.109 -simplify 10% keep-shapes -o precision=0.00001 | 2026-09-23 | data/processed/sldl_simplified.geojson | Simplification step, not a download. State House districts, retention 10%. |
+| npx mapshaper@0.6.109 -filter-fields -o precision=0.00001 | 2026-09-30 | data/processed/sldu_simplified.geojson | Conversion step, not a download. State Senate districts, not simplified; coordinates quantized to 0.00001. |
+| npx mapshaper@0.6.109 -filter-fields -o precision=0.00001 | 2026-09-30 | data/processed/sldl_simplified.geojson | Conversion step, not a download. State House districts, not simplified; coordinates quantized to 0.00001. |

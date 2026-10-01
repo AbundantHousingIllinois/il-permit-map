@@ -71,9 +71,9 @@ def ensure_geometry() -> None:
     for chamber, c in L.CHAMBERS.items():
         dest = L.district_geojson(chamber)
         if not dest.exists():
-            print(f"  {L.rel(dest)} absent -- simplifying offline")
-            eps = SGM.simplify_to(L.district_zip(chamber), dest, 400_000)
-            print(f"  {c['label']} districts simplified at toposimplify {eps}")
+            print(f"  {L.rel(dest)} absent -- converting offline (not simplified)")
+            size = SGM.convert(L.district_zip(chamber), dest)
+            print(f"  {c['label']} districts written, {size:,} bytes")
 
 
 def geometry_bbox(fc: dict) -> list[list[float]]:
