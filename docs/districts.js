@@ -9,7 +9,7 @@
  */
 'use strict';
 
-const view = { chamber: 'senate', district: null, place: null };
+const view = { chamber: 'senate', district: null, place: null, sort: null };
 
 let META = null;
 let DIST = null;            // districts.json
@@ -264,6 +264,38 @@ function roughly(n) {
   return (Math.round(n / step) * step).toLocaleString('en-US');
 }
 
+/* The district table's columns: what each shows and what it sorts by. A value
+ * that is not measured sorts as null, so it falls to the bottom. */
+function districtColumns() {
+  const rep = p => p.coverage === 'reporting';
+  const cols = [
+    { key: 'name', label: 'Municipality', value: p => p.name,
+      cell: p => `<td><a href="index.html#place=${p.geoid}">${esc(p.name)}</a>${ahpaaTag(p)}</td>` },
+    { key: 'share', label: 'Share of its land in district', value: p => p.share,
+      cell: p => `<td class="num">${sharePct(p.share)}</td>` },
+    { key: 'pct_growth', label: `% growth since ${META.metric_start}`,
+      value: p => rep(p) ? p.pct_growth : null,
+      cell: p => `<td class="num">${rep(p) ? fmtPct(p.pct_growth) : '<span class="muted">no permit office</span>'}</td>` },
+    { key: 'units', label: `Units since ${META.metric_start}`,
+      value: p => rep(p) ? p.units_total_2010 : null,
+      cell: p => `<td class="num">${rep(p) ? fmtInt(p.units_total_2010) : '—'}</td>` },
+    { key: 'mf5p', label: '5+ unit units', value: p => rep(p) ? p.mf5p_total : null,
+      cell: p => `<td class="num">${rep(p) ? fmtInt(p.mf5p_total) : '—'}</td>` },
+    { key: 'mf_flag', label: `Multifamily since ${META.metric_start}`, value: mfRank,
+      cell: p => `<td class="mf-flag">${mfLabel(p)}</td>` },
+    { key: 'net', label: 'Census count change 2010–20', value: p => p.net_change,
+      cell: p => `<td class="num">${fmtSigned(p.net_change)}</td>` },
+    { key: 'gap', label: '2020 count vs permits', value: p => p.built_gap,
+      cell: p => `<td class="num">${fmtSigned(p.built_gap)}</td>` }
+  ];
+  if (META.ahpaa.enabled) {
+    cols.push({ key: 'afford', label: `Affordable share (${esc(META.ahpaa.as_of)})`,
+      value: p => p.affordable_share,
+      cell: p => `<td class="num">${fmtShare(p.affordable_share)}</td>` });
+  }
+  return cols;
+}
+
 function renderPanel() {
   const empty = document.getElementById('district-empty');
   const body = document.getElementById('district-body');
@@ -281,21 +313,31 @@ function renderPanel() {
         ${m.url && /^https:\/\//.test(m.url) ? ` · <a href="${esc(m.url)}" rel="noopener">ilga.gov page</a>` : ''}</p>
        ${m.office ? `<p class="member-office">District office: ${esc(m.office)}</p>` : ''}`;
 
-  const places = row.places;
-  const rows = places.map(p => {
-    const measured = p.coverage === 'reporting';
-    return `<tr data-geoid="${esc(p.geoid)}"${p.geoid === view.place ? ' aria-selected="true"' : ''}>
-      <td><a href="index.html#place=${p.geoid}">${esc(p.name)}</a>${p.zero_mf === true ? '<span class="zero-mf-tag">no 5+</span>' : ''}</td>
-      <td class="num">${sharePct(p.share)}</td>
-      <td class="num">${measured ? fmtPct(p.pct_growth) : '<span class="muted">no permit office</span>'}</td>
-      <td class="num">${measured ? fmtInt(p.units_total_2010) : '—'}</td>
-      <td class="num">${measured ? fmtInt(p.mf5p_total) : '—'}</td>
-      <td class="num">${fmtSigned(p.net_change)}</td>
-      <td class="num">${fmtSigned(p.built_gap)}</td>${META.ahpaa.enabled ? `
-      <td>${p.ahpaa_status ? esc(p.ahpaa_status) : '—'}</td>
-      <td class="num">${fmtShare(p.affordable_share)}</td>` : ''}
-    </tr>`;
+  const cols = districtColumns();
+  const sort = view.sort || { key: 'share', dir: 'desc' };
+  const col = cols.find(c => c.key === sort.key) || cols[1];
+  const places = row.places.slice();
+  if (view.sort) {
+    places.sort((a, b) => {
+      const x = col.value(a), y = col.value(b);
+      /* A blank sorts last in either direction, never as the lowest rank. */
+      const xm = x === null || x === undefined, ym = y === null || y === undefined;
+      if (xm || ym) return xm && ym ? 0 : xm ? 1 : -1;
+      const c = typeof x === 'string' ? x.localeCompare(y) : x - y;
+      return sort.dir === 'asc' ? c : -c;
+    });
+  }
+  const rows = places.map(p => `<tr data-geoid="${esc(p.geoid)}"${p.geoid === view.place ? ' aria-selected="true"' : ''}>
+      ${cols.map(c => c.cell(p)).join('')}
+    </tr>`).join('');
+  const head = cols.map(c => {
+    const on = c.key === sort.key;
+    return `<th scope="col"${on ? ` aria-sort="${sort.dir === 'asc' ? 'ascending' : 'descending'}"` : ''}>`
+      + `<button type="button" class="th-sort" data-sort="${c.key}">${c.label}</button></th>`;
   }).join('');
+  const order = view.sort
+    ? `sorted by ${col.label.toLowerCase()}, ${sort.dir === 'asc' ? 'lowest' : 'highest'} first; blanks last`
+    : 'largest share first';
 
   body.innerHTML = `
     <div class="member-card">
@@ -325,16 +367,9 @@ function renderPanel() {
 
     <div class="table-scroll">
       <table class="district-table">
-        <caption>Municipalities overlapping ${esc(districtLabel(ch, d))}, largest share first. A municipality
-          split between districts appears under each of them.</caption>
-        <thead><tr>
-          <th scope="col">Municipality</th><th scope="col">Share of its land in district</th>
-          <th scope="col">% growth since ${META.metric_start}</th><th scope="col">Units since ${META.metric_start}</th>
-          <th scope="col">5+ unit units</th><th scope="col">Census count change 2010–20</th>
-          <th scope="col">2020 count vs permits</th>${META.ahpaa.enabled ? `
-          <th scope="col">AHPAA status (${esc(META.ahpaa.as_of)})</th>
-          <th scope="col">Affordable share (${esc(META.ahpaa.as_of)})</th>` : ''}
-        </tr></thead>
+        <caption>Municipalities overlapping ${esc(districtLabel(ch, d))}, ${order}. Select a column
+          heading to sort. A municipality split between districts appears under each of them.</caption>
+        <thead><tr>${head}</tr></thead>
         <tbody id="district-rows">${rows}</tbody>
       </table>
     </div>`;
@@ -456,6 +491,15 @@ function wireControls() {
     readHash(); syncControls(); applyView(true); renderPanel(); syncPlace();
   });
   document.getElementById('district-body').addEventListener('click', e => {
+    const th = e.target.closest('.th-sort');
+    if (th) {
+      const k = th.dataset.sort;
+      const cur = view.sort || { key: 'share', dir: 'desc' };
+      view.sort = cur.key === k ? { key: k, dir: cur.dir === 'asc' ? 'desc' : 'asc' }
+        : { key: k, dir: k === 'name' ? 'asc' : 'desc' };
+      renderPanel();
+      return;
+    }
     const a = e.target.closest('#district-rows td:first-child a');
     if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();

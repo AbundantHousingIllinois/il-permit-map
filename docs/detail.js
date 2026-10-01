@@ -310,7 +310,7 @@ async function renderPlaceDetail(geoid, title) {
         <thead><tr><th scope="col" style="text-align:left">Structure type</th><th scope="col">Units</th><th scope="col">% of 2010 stock</th></tr></thead>
         <tbody>${byTypeRows}
           <tr style="border-top:2px solid var(--rule-strong)">
-            <td style="text-align:left"><strong>All types</strong></td>
+            <td style="text-align:left"><strong>All types, ${shard.first_metric_year || META.metric_start}–${META.ymax}</strong></td>
             <td class="num"><strong>${fmtInt(shard.units_total_2010)}</strong></td>
             <td class="num"><strong>${fmtPct(shard.pct_growth, 2)}</strong></td>
           </tr>

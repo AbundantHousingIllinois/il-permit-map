@@ -37,6 +37,13 @@
 </header>
 
 <section class="controls" aria-label="Map controls">
+  <div class="control-group place-search">
+    <label class="label" for="place-search">Find a municipality</label>
+    <input type="search" id="place-search" list="place-options" autocomplete="off"
+           placeholder="e.g. Naperville, or Wilmette">
+    <datalist id="place-options"></datalist>
+  </div>
+
   <div class="control-group">
     <span class="label" id="lbl-metric">Metric</span>
     <div class="segmented" role="group" aria-labelledby="lbl-metric">

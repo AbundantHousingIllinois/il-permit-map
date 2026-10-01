@@ -14,6 +14,7 @@ from __future__ import annotations
 import functools
 import http.server
 import json
+import re
 import socket
 import socketserver
 import subprocess
@@ -804,7 +805,9 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 disabled: document.getElementById('toggle-ahpaa').disabled,
                 on: window.app.state().ahpaa,
                 geoids: window.app.highlightedGeoids(),
-                heads: [...document.querySelectorAll('#table-head-row th')].map(t => t.textContent)
+                heads: [...document.querySelectorAll('#table-head-row th')].map(t => t.textContent),
+                rows: document.querySelectorAll('#table-body tr').length,
+                tagged: document.querySelectorAll('#table-body tr .ahpaa-tag').length
             })""")
             non = {f["properties"]["geoid"] for f in built["geojson"]["features"]
                    if (f["properties"].get("ahpaa_status") or "").lower() == "non-exempt"}
@@ -814,8 +817,9 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 not st["disabled"] and st["on"])
             checks["only non-exempt places are highlighted"] = (
                 0 < len(st["geoids"]) <= len(non) and set(st["geoids"]) <= non)
-            checks["the table carries AHPAA status and affordable share"] = (
-                any(h.startswith("AHPAA status") for h in st["heads"])
+            R.out(f"    table rows {st['rows']}, with the non-exempt tag {st['tagged']}")
+            checks["the table tags every non-exempt row and carries the share"] = (
+                st["rows"] > 0 and st["tagged"] == st["rows"]
                 and any(h.startswith("Affordable share") for h in st["heads"]))
             page.evaluate("() => { location.hash = '#metric=pct_growth&type=all&pop=5000'; }")
             page.wait_for_timeout(400)
@@ -841,23 +845,76 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             p5.goto(f"{base}/districts.html#senate-9", wait_until="load")
             p5.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
                                  timeout=READY_TIMEOUT_MS)
-            d = p5.evaluate("""() => {
-                const heads = [...document.querySelectorAll('.district-table th')].map(t => t.textContent);
-                const i = heads.findIndex(h => h.startsWith('AHPAA status'));
-                const cells = i < 0 ? [] : [...document.querySelectorAll('#district-rows tr')]
-                    .map(tr => tr.children[i].innerText);
-                return { heads, cells };
-            }""")
-            p5.close()
-            R.out(f"    Senate 9 table: AHPAA statuses {sorted(set(d['cells']))}")
-            checks["the district table carries status and share"] = (
+            d = p5.evaluate("""() => ({
+                heads: [...document.querySelectorAll('.district-table th')].map(t => t.textContent),
+                tagged: [...document.querySelectorAll('#district-rows tr')]
+                    .filter(tr => tr.querySelector('.ahpaa-tag'))
+                    .map(tr => tr.querySelector('td a').textContent)
+            })""")
+            R.out(f"    Senate 9 table, tagged non-exempt: {sorted(d['tagged'])}")
+            checks["the district table tags non-exempt towns and carries the share"] = (
                 any(h.startswith("Affordable share") for h in d["heads"])
-                and "Non-Exempt" in d["cells"])
+                and {"Wilmette", "Winnetka", "Kenilworth"} <= set(d["tagged"]))
+
+            # Sorting the district table: by % growth, highest first, blanks last.
+            p5.click(".th-sort[data-sort='pct_growth']")
+            p5.wait_for_timeout(200)
+            srt = p5.evaluate("""() => {
+                const heads = [...document.querySelectorAll('.district-table th')].map(t => t.textContent);
+                const i = heads.findIndex(h => h.startsWith('% growth'));
+                const v = [...document.querySelectorAll('#district-rows tr')].map(tr => {
+                    const t = tr.children[i].innerText; const n = parseFloat(t);
+                    return isNaN(n) ? null : n; });
+                return { v, aria: document.querySelector('.district-table th[aria-sort]').innerText };
+            }""")
+            nums = [x for x in srt["v"] if x is not None]
+            first_blank = next((k for k, x in enumerate(srt["v"]) if x is None), len(srt["v"]))
+            good = (nums == sorted(nums, reverse=True)
+                    and all(x is None for x in srt["v"][first_blank:]))
+            R.out(f"    sorted by % growth: {srt['v'][:5]}... marked {srt['aria']!r}: {good}")
+            checks["the district table sorts, blanks last"] = good
+            p5.close()
             for k, val in checks.items():
                 R.out(f"    {'ok  ' if val else 'FAIL'} {k}")
             return all(checks.values())
         R.run(13, "AHPAA: the non-exempt switch, the status and share columns, and "
                   "an unscored place shown as unscored", s13)
+
+        # ---------------- 14 (added, disclosed) ----------------
+        def s14():
+            R.out("  Not in SPEC.md §7. Added with Austin's table and search requests")
+            R.out("  (CLAUDE.md deviation 36): searching a name opens that place; the")
+            R.out("  multifamily flag is a plain column, not an orange tag; and the")
+            R.out("  totals and population say which years they cover.")
+            checks = {}
+            page.fill("#place-search", "Naperville")
+            page.press("#place-search", "Enter")
+            page.wait_for_function("() => window.app.detail().geoid === '1751622'"
+                                   " && document.querySelector('#detail .detail-table')",
+                                   timeout=15_000)
+            got = page.evaluate("""() => ({
+                name: window.app.detail().name,
+                total: [...document.querySelectorAll('#detail .detail-table strong')]
+                    .map(s => s.textContent).find(t => t.startsWith('All types')) || '',
+                heads: [...document.querySelectorAll('#table-head-row th')].map(t => t.textContent),
+                orange: document.querySelectorAll('.zero-mf-tag').length
+            })""")
+            page.evaluate("() => window.app.closeDetail()")
+            page.evaluate("() => { document.getElementById('place-search').value = ''; }")
+            R.out(f"    search 'Naperville' opens {got['name']!r}; total row {got['total']!r}")
+            R.out(f"    table columns: {got['heads']}")
+            checks["search by name opens the place"] = "Naperville" in got["name"]
+            checks["the all-types total names its years"] = bool(
+                re.match(r"All types, \d{4}–\d{4}$", got["total"]))
+            checks["population names its year"] = "Population (2020)" in got["heads"]
+            checks["the multifamily flag is a column, and no orange tag remains"] = (
+                any(h.startswith("Multifamily since") for h in got["heads"])
+                and got["orange"] == 0)
+            for k, val in checks.items():
+                R.out(f"    {'ok  ' if val else 'FAIL'} {k}")
+            return all(checks.values())
+        R.run(14, "Search finds a municipality; the multifamily flag is a plain column; "
+                  "totals and population carry their years", s14)
 
         # ---------------- B ----------------
         def sB():

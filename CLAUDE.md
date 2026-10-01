@@ -104,7 +104,10 @@ but houses". Glen Ellyn has permitted 4 units in 3–4 unit buildings and 0 in 5
 was in it. The switch is now **"No 5+ unit buildings"** (692 municipalities), with a
 second, stricter **"Nothing above a duplex"** on `mf34 + mf5p == 0` (635). Every
 detail panel prints all four buckets, and a place in the first switch with 3–4 unit
-permits says so in the flag itself.
+permits says so in the flag itself. In the tables the flag is a plain column,
+"Multifamily since 2010", showing the stricter claim that holds; Austin found the
+old orange "no 5+" tag beside each name drew too much attention. The one coloured
+tag in a table is now "AHPAA non-exempt".
 
 **The colour break follows the structure-type filter.** `midpoint()` returned
 `il_pct_growth` — the all-types 5.612% — whatever the filter said, so filtering to
@@ -410,3 +413,11 @@ beside the AHPAA gap overstated what is outstanding. `BLOCKERS.md` is unchanged.
     `year_round_units` (Austin asked for the share). `openpyxl` is a dependency.
     The share appears in both tables and every panel, beside a blue "AHPAA
     non-exempt" tag in the panel. Data check **G** and site check **13** gate it.
+36. **Austin's table and search requests.** The orange "no 5+" name tag became a
+    plain "Multifamily since 2010" column (see *"Zero multifamily" is two
+    claims*) and the AHPAA status column became a blue name tag, in both tables.
+    The district table sorts by any heading, blanks last (as in 28), resetting to
+    largest share first only on reload. The main page has a "Find a
+    municipality" search over every place, whatever the filters, which opens the
+    panel and flies to it. "Population" says (2020), and the panel's all-types
+    total names its years. Site checks 13 and **14** gate these.

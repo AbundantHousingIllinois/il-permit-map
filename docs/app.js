@@ -277,16 +277,19 @@ const COLUMNS = [
   { key: 'pct_growth', label: '% growth since 2010', type: 'num', fmt: v => fmtPct(v) },
   { key: 'units_total_2010', label: 'Total units', type: 'num', fmt: fmtInt },
   { key: 'mf5p_total', label: '5+ unit units', type: 'num', fmt: fmtInt },
+  /* Plain text, strictest claim first when sorted; replaces the orange name tag. */
+  { key: 'mf_flag', label: 'Multifamily since 2010', type: 'num', value: mfRank,
+    cell: mfLabel, cls: 'mf-flag' },
   /* Housing-count change 2010→2020 minus units permitted 2010–2019. Blank for
    * any place whose office did not report every month of that decade. */
   { key: 'built_gap', label: '2020 count vs permits', type: 'num', fmt: fmtSigned },
-  { key: 'pop2020', label: 'Population', type: 'num', fmt: fmtInt }
+  { key: 'pop2020', label: 'Population (2020)', type: 'num', fmt: fmtInt }
 ];
 
 function columns() {
   const cols = COLUMNS.slice();
+  /* AHPAA status is the coloured tag beside the name; the share is a column. */
   if (META.ahpaa.enabled) {
-    cols.push({ key: 'ahpaa_status', label: `AHPAA status (${META.ahpaa.as_of})`, type: 'text' });
     cols.push({ key: 'affordable_share', label: `Affordable share (${META.ahpaa.as_of})`, type: 'num', fmt: fmtShare });
   }
   return cols;
@@ -316,7 +319,7 @@ function renderTable() {
   const { key, dir } = state.sort;
   const col = cols.find(c => c.key === key) || cols[2];
   rows.sort((a, b) => {
-    let x = a[key], y = b[key];
+    let x = col.value ? col.value(a) : a[key], y = col.value ? col.value(b) : b[key];
     if (col.type === 'num') {
       /* A missing value sorts last in either direction. Sorting it as -Infinity
        * put every blank at the top of an ascending sort, which reads as "lowest"
@@ -337,18 +340,15 @@ function renderTable() {
     if (p.geoid === state.selected) tr.setAttribute('aria-selected', 'true');
     for (const c of cols) {
       const td = document.createElement('td');
-      if (c.type === 'num') {
+      if (c.cell) {
+        td.className = c.cls || '';
+        td.textContent = c.cell(p);
+      } else if (c.type === 'num') {
         td.className = 'num';
         td.textContent = c.fmt(p[c.key]);
       } else if (c.key === 'name') {
         td.textContent = p.name;
-        if (p.zero_mf === true) {
-          const tag = document.createElement('span');
-          tag.className = 'zero-mf-tag';
-          tag.textContent = 'no 5+';
-          tag.title = 'No units in buildings of 5+ permitted here since 2010';
-          td.appendChild(tag);
-        }
+        td.insertAdjacentHTML('beforeend', ahpaaTag(p));
       } else {
         td.textContent = p[c.key] || '—';
       }
@@ -362,7 +362,8 @@ function renderTable() {
   const total = rows.reduce((s, p) => s + (p.units_total_2010 || 0), 0);
   const nZero = rows.filter(p => p.zero_mf === true).length;
   document.getElementById('table-title').textContent =
-    state.zeroMf ? 'Municipalities with zero multifamily since 2010' : 'Municipalities';
+    state.zeroMf3p ? 'Municipalities that have permitted nothing above a duplex since 2010'
+      : state.zeroMf ? 'Municipalities with no 5+ unit buildings since 2010' : 'Municipalities';
   document.getElementById('table-meta').textContent =
     `${fmtInt(rows.length)} municipalities shown · ${fmtInt(total)} units permitted `
     + `${META.metric_start}–${META.ymax} · ${fmtInt(nZero)} of them have permitted no `
@@ -452,6 +453,33 @@ function refresh() {
   renderLegend();
   renderTable();
   writeHash();
+}
+
+/* Find a municipality by name: open its panel and bring it into view. Every
+ * place is searchable, whatever the filters, because the panel explains a
+ * place with no permit office rather than hiding it. */
+function wireSearch() {
+  const opts = FEATURES.map(p => ({ geoid: p.geoid,
+    text: `${p.namelsad || p.name}${p.county ? ', ' + p.county.replace(/ County$/, '') + ' County' : ''}` }))
+    .sort((a, b) => a.text.localeCompare(b.text));
+  document.getElementById('place-options').innerHTML =
+    opts.map(o => `<option value="${esc(o.text)}"></option>`).join('');
+  const input = document.getElementById('place-search');
+  const pick = () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) return;
+    const hit = opts.find(o => o.text.toLowerCase() === q)
+      || opts.find(o => o.text.toLowerCase().startsWith(q))
+      || opts.find(o => o.text.toLowerCase().includes(q));
+    if (!hit) return;
+    const p = BY_GEOID.get(hit.geoid);
+    if (map && p.lon !== null && p.lat !== null) {
+      map.flyTo({ center: [p.lon, p.lat], zoom: Math.max(map.getZoom(), 10), duration: 600 });
+    }
+    selectPlace(hit.geoid);
+  };
+  input.addEventListener('change', pick);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') pick(); });
 }
 
 function wireControls() {
@@ -602,6 +630,7 @@ window.app = app;
     renderFooter();
     wireControls();
     buildMap(places, counties, stateOutline);
+    wireSearch();
     syncControls();
     renderLegend();
     renderTable();

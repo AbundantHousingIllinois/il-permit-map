@@ -725,6 +725,7 @@ def main() -> int:
                     "pct_growth": p["pct_growth"],
                     "units_total_2010": p["units_total_2010"],
                     "mf5p_total": p["mf5p_total"], "zero_mf": p["zero_mf"],
+                    "zero_mf3p": p["zero_mf3p"],
                     "built_gap": p["built_gap"],
                     "ahpaa_status": p["ahpaa_status"],
                     "affordable_share": p["affordable_share"],
