@@ -257,6 +257,9 @@ and no AHPAA data of any kind.
 
 ## Every deviation from SPEC.md, with its reason
 
+Numbers are stable; code and `docs/PHASES.md` cite them. Where the reasoning is
+already under **Decisions**, the entry names that decision instead of repeating it.
+
 1. **§7 check 3 gates on the municipal universe, not all BPS units.** Read
    literally the check is unsatisfiable: 8.26% of Illinois BPS units 2010–2025
    are county-unincorporated, whole-county or township records that cannot have
@@ -269,177 +272,115 @@ and no AHPAA data of any kind.
    harder to satisfy than the loose reading, and it catches dropped years and
    double counting. The shards-only share is printed too.
 3. **One check added beyond §7: check A**, gating and labelled as an addition.
-   It verifies the BPS column positions against the shipped column headers and
-   against the published state totals. Added because the 2000–2006 layout is not
-   covered by the current record-layout PDF. Its per-year tolerance is 0.5% —
-   the same figure §7.6 uses — and 0.05% across the metric window.
-   `scripts/verify_layout_check.py` shows the tolerance still fails on any
-   one-column slip.
-4. **Geometry retention 12%, not the suggested "around 5%."** §3.4 says to start
-   at 5% and adjust; 5% produced 0.51 MB against a 3 MB budget and visibly
-   faceted small villages. Built `places.geojson` is 1.09 MB.
-5. **`scripts/simplify_geo.py` added** as the offline Python simplifier so
-   `build.py` satisfies §8 ("no network access required") from a checkout that
-   has `data/raw/` but no `data/processed/`. §2 explicitly allows a Python
-   equivalent to mapshaper.
+   See *Two BPS record layouts*. Per-year tolerance 0.5% (§7.6's figure), 0.05%
+   across the metric window; `scripts/verify_layout_check.py` shows it still
+   fails on any one-column slip.
+4. **Geometry retention 12%, not the suggested "around 5%."** See *Simplification
+   normally runs in `fetch_geo.py`*.
+5. **`scripts/simplify_geo.py` added** as the offline simplifier §8 needs; §2
+   allows a Python equivalent. See *`scripts/simplify_geo.py` is the offline
+   fallback*.
 6. **County names come from the 2010 SF1 API** (`for=county:*`), and places with
    no BPS record get their county from a point-in-polygon test against the TIGER
-   county layer. §3 lists no place-to-county lookup. Both are existing §3.2/§3.4
-   sources, and every shard records which method produced its label.
-   (BLOCKERS.md #4.)
+   county layer. §3 lists no place-to-county lookup. Every shard records which
+   method produced its label. (BLOCKERS.md #4.)
 7. **The county boundary file is the national `cb_2025_us_county_500k`**, filtered
-   to Illinois. §3.4 names only the place file; counties are not published
-   per-state at this vintage. Used for §6.1's county outlines.
-8. **No basemap tiles.** §6.1 permits this explicitly when no keyless option is
-   usable; recorded here because it is a choice, made to keep the page free of
-   any runtime third-party request.
-9. **No webfont.** AHIL's Poppins is used if the reader has it, with a system
-   fallback. A Google Fonts request would be a second external dependency SPEC.md
-   never authorised, and an unreachable one would trip site check 1.
+   to Illinois; counties are not published per-state at this vintage. Used for
+   §6.1's county outlines.
+8. **No basemap tiles.** See *No basemap tiles*.
+9. **No webfont.** See *No webfont*.
 10. **`unmatched.csv` has one row per BPS record id**, aggregated across years
-    with its unit totals, not one row per record-year. §3.1 asks for "every
-    unmatched BPS record ... with its unit totals"; per-id is the readable form.
-11. **The table lists only `reporting` places.** §6.3 does not say so, but §5
-    requires coverage gaps to be excluded from rankings, and a table that can be
-    sorted by percent growth is a ranking.
-12. **`coverage` is judged on the metric window.** A place whose permit office
-    last reported before 2010 is `no_permit_office` rather than `reporting` with
-    a 0% growth rate, and years with no BPS record are null in `series`, never 0
-    (§1.3). This moved `reporting` from 948 to 932 and `zero_mf` from 713 to 697.
-13. **`sort` is encoded in the URL hash** alongside the four things §6.5 lists,
-    so a linked view restores the table ordering the sender was looking at.
-14. **Playwright is a main dependency, not optional**, so that
-    `uv run scripts/check_site.py` works after a plain `uv sync`; the script
-    installs the Chromium build on first run and retries a transient driver
-    failure.
+    with its unit totals, not one row per record-year — the readable form of
+    §3.1's "every unmatched BPS record ... with its unit totals".
+11. **The table lists only `reporting` places.** §5 excludes coverage gaps from
+    rankings, and a table sortable by percent growth is a ranking.
+12. **`coverage` is judged on the metric window**, and unreported years are null
+    in `series`. See *A year with no BPS record for a place is null*.
+13. **`sort` is encoded in the URL hash** alongside §6.5's four, so a linked view
+    restores the sender's table ordering.
+14. **Playwright is a main dependency, not optional**, so `uv run
+    scripts/check_site.py` works after a plain `uv sync`; it installs Chromium on
+    first run and retries a transient driver failure.
 15. **`check_site.py` waits for the detail panel to finish rendering** rather than
-    sleeping a fixed interval. The panel fetches its shard over HTTP; a panel
-    that never renders still fails, so this bounds the wait rather than relaxing
-    the check.
-16. **Shard reads and writes are threaded** in `build.py` and `check_data.py`.
-    Every shard is still opened and parsed individually; only the concurrency
-    changed, because this working copy sits on a cloud file provider where one
-    small-file open costs about 280 ms.
-
-17. **`months_reported` gates the zero-5+ flag and is surfaced on the page.** §7
-    has no check for it and §6 does not mention it, but §1.3's rule — a missing
-    measurement is never a zero — applies as much to a year an office skipped as to
-    a year with no record. Five places lose their `zero_mf` flag to this; the rest
-    keep their figures and gain a caveat. `check_data.py` check B gates it.
-    (BLOCKERS.md #5.)
-18. **The "Zero multifamily" highlight became two switches with different names.**
-    §6.2 names one highlight. The old label described the 5+ bucket as though it
-    covered all multifamily, which is wrong for any municipality with a 3–4 unit
-    permit. Splitting it is a clarity fix, not a new feature: both switches read the
-    same already-built per-type totals.
+    sleeping a fixed interval. A panel that never renders still fails.
+16. **Shard reads and writes are threaded.** See *Shard I/O is threaded*.
+17. **`months_reported` gates the zero-5+ flag and is surfaced on the page.** See
+    *A 0-month year is a published estimate*. Data check B gates it.
+18. **The "Zero multifamily" highlight became two switches.** See *"Zero
+    multifamily" is two claims*.
 19. **The diverging midpoint and the sequential ladder are per structure type.**
-    §6.2 says the midpoint is "the Illinois average" and gives one figure. Read with
-    §6.2's own type filter, one figure cannot be right for five different views, so
-    `meta.json` carries five. `check_data.py` check C and site check 8 gate it.
-20. **The chart marks 2000–2009 as context rather than dropping it.** §6.4 asks for
-    the full 2000–YMAX series; this keeps it and adds the boundary the metric
-    definition implies.
-21. **Site checks 8 and 9 added**, both labelled as additions, for the two items
-    above. Site check 3's midpoint is now read from its own element rather than
-    scraped as the first number in the sentence — which stopped working the moment
-    the sentence could say "3–4 unit".
-22. **`check_site.py` may cache the pinned MapLibre bundle under
-    `data/raw/vendor/`** and serve it to the headless browser. §8 requires the
-    *build* to run offline and says nothing about the checks; this moves the checks
-    the same way. The page itself is untouched.
-23. **Fixed while in the file:** the legend title in Total units mode said
-    "Total units permitted 2000–YMAX" while the map coloured by the
-    METRIC_START–YMAX total. The label was wrong, not the data.
-24. *Recorded below, under "Added after the spec: `docs/about.html`".*
-25. **A state silhouette, a third legend swatch, and computed bounds.** §6.1
-    describes a plain background with county outlines. The state outline is a
-    fourth TIGER file (`cb_2025_us_state_500k`, same host and vintage as §3.4's),
-    rendered beneath the places so unincorporated land reads as territory.
-    Decision 8 still holds: no tiles, no runtime third-party request. Data check
-    **D** and site check **10** gate it, both labelled as additions. The offline
-    fallback in `build.py` rebuilds it with `topojson` like the other layers.
-26. **Fixed while in the file:** `fetch_geo.py` recorded `-clean` in the
-    provenance line it appends to `data/SOURCES.md`, though `-clean` is
-    deliberately not used. Earlier rows in that append-only log still say it; new
-    rows do not.
-27. **Permits vs. what the 2020 Census counted.** §1.5 and §3 name no 2020 housing
-    count, and §3.2 forbids substituting one for the 2010 denominator. It is used
-    here for one separate, requested comparison and nothing else: `pct_growth` is
-    untouched, which data check 4 still gates. It adds a table column and a
-    detail-panel section, not a map metric. Data check **E** and site check **11**
-    gate it, both labelled as additions. The global source line stays as §6.6
-    words it, because every figure on the map is still 2010-based; the 2020 table
-    is in `meta.sources` and the about page.
+    See *The colour break follows the structure-type filter*. Data check C and
+    site check 8 gate it.
+20. **The chart marks 2000–2009 as context.** See *The chart keeps 2000–2009*.
+21. **Site checks 8 and 9 added**, labelled as additions, for 19 and 20. Site
+    check 3 reads the midpoint from its own element rather than the first number
+    in the sentence, which broke once the sentence could say "3–4 unit".
+22. **`check_site.py` may cache the pinned MapLibre bundle.** See *`check_site.py`
+    serves the pinned MapLibre bundle from a local cache*. §8 binds the build, not
+    the checks; the page is untouched.
+23. **Fixed while in the file:** the Total units legend said "2000–YMAX" while the
+    map coloured by METRIC_START–YMAX. The label was wrong, not the data.
+24. **`docs/about.html`.** See *Added after the spec* below.
+25. **A state silhouette, a third legend swatch, and computed bounds.** See *The
+    state silhouette refines "no basemap tiles"*. Data check D and site check 10
+    gate it.
+26. **Fixed while in the file:** `fetch_geo.py` logged `-clean` in `SOURCES.md`
+    though it is not used. Earlier rows of that append-only log still say it.
+27. **Permits vs. what the 2020 Census counted.** See *Permits vs. built*. §3.2
+    forbids a 2020 denominator, and `pct_growth` is untouched (data check 4). Data
+    check E and site check 11 gate it. The global source line keeps §6.6's
+    wording because every map figure is still 2010-based.
 28. **Blank values sort last in the table in both directions.** A null used to
-    sort as −∞, which put every blank at the top of an ascending sort — a missing
-    value presented as the lowest rank. With the new column blank for 559 reporting
-    places, that stopped being a corner case.
+    sort as −∞, presenting a missing value as the lowest rank.
 29. **Check 7 is stricter than §7.7, and `build.py` sweeps the shard directory.**
-    The cloud file provider left 1,163 byte-identical conflict copies
-    (`1700113 3.json`) beside the shards during a rebuild. They never reached git,
-    but `git add docs/data` would have shipped them. The cause was `build.py`
-    deleting the shard directory and recreating it; the provider kept producing
-    copies after the build had finished. Shards are now overwritten in place,
-    anything that is not a current shard is deleted after the write, and check 7
-    fails if one is there.
-30. **A caveat at the top of the map page**, which §6 does not describe, at
-    Steffany's request: permits are a floor, and the census count is the better
-    measure of what exists. It pushed the map below a phone-height viewport, so
-    site check 4 now scrolls the map into view before its click, as a reader
-    would. The click must still land on the target place.
-31. **The legislator view** (`docs/districts.html`) and its two new sources:
-    TIGER `cb_2025_17_sldu_500k` / `_sldl_500k` and the Open States current
-    legislators file. §3 names neither and §6 describes no such page; both were
-    requested (Austin's legislator filter, Steffany's choice of a separate page).
-    It adds an estimated, area-weighted district total — a new figure, labelled
-    as an estimate everywhere it appears. Its source line adds "Open States" to
-    §6.6's fixed wording, because the member details are from there. Data check
-    **F** (including F.4: the estimates sum to 99–100% of municipal permits in each
-    chamber; 99.8% Senate, 99.5% House) and site check **12** gate it, both
-    labelled as additions.
+    The cloud file provider left 1,163 conflict copies (`1700113 3.json`) beside
+    the shards after `build.py` deleted and recreated the directory. Shards are now
+    overwritten in place, strays are deleted after the write, and check 7 fails
+    on any.
+30. **A caveat at the top of the map page.** See *Permits are a floor*. It pushed
+    the map below a phone-height viewport, so site check 4 scrolls the map into
+    view before its click.
+31. **The legislator view** and its two sources (TIGER `sldu`/`sldl`, Open
+    States). See *The legislator view is its own page*. Its source line adds
+    "Open States" to §6.6's wording. Data check F (F.4: estimates sum to 99.8%
+    Senate, 99.5% House of municipal permits) and site check 12 gate it.
+32. **District outlines are not simplified.** Reviewers found the legislator view
+    unclear and asked for "the shapefiles": at 10% retention a Chicago Senate
+    district was a few straight lines across streets and town borders.
+    `fetch_districts.py` now converts `cb_2025_17_sldu_500k` / `_sldl_500k` with
+    only §3.4's coordinate rounding (0.53 + 0.73 MB), and `build.py`'s fallback
+    does the same via `simplify_geo.convert`. TIGER/Line `tl_` files were rejected:
+    several times larger, and they run into Lake Michigan. District lines are drawn
+    heavier in `--ink` over a pale casing so they read apart from town borders. No
+    figure moved; `districts.json` is byte-identical.
+33. **A municipality opens beside the district table** instead of jumping to the
+    main map (Steffany). The panel code moved from `app.js` to `docs/detail.js`,
+    loaded by both pages. Wide screen: a sticky column beside the table; phone:
+    the bottom sheet. The row link still points at `index.html#place=…` for a
+    modified click, and the hash carries the place (`#senate-38&place=1760352`).
+    Site check 12 gates it.
+34. **The permits-vs-2020 table is two rows** (Steffany): the change in the count
+    and the units permitted. The two counts are in the census line under the
+    headline, and the difference is read out in the sentence below the table.
 
 ---
 
 ## Added after the spec: `docs/about.html`
 
 SPEC.md §1.6 says "no features beyond §6," and §6 describes only the map page.
-Steffany asked for an explainer page after the build was finished, so this is a
-deliberate, requested departure rather than scope creep, recorded here as
-**deviation 24**.
+Steffany asked for an explainer page after the build was finished (deviation 24).
+It restates the metric definition, the three things the numbers are *not*, the
+coverage rule, and every `BLOCKERS.md` item written for a reader, with the empty
+AHPAA list first, marked "needs you", including the column spec for
+`data/manual/ahpaa.csv`.
 
-The page restates the metric definition, the three things the numbers are *not*
-(authorised rather than built, no demolitions netted out, not a cost measure),
-the coverage rule, and every item from `BLOCKERS.md` written for a reader rather
-than for a maintainer — with the empty AHPAA list first and marked "needs you",
-including the exact column spec for `data/manual/ahpaa.csv`.
+Every figure on it is fetched from `docs/data/meta.json`, so there is no second
+copy of any number in the HTML. Site check **B** loads it, requires zero console
+errors, and asserts the rendered Illinois and U.S. figures, the two multifamily
+counts and the two months-reported counts match `meta.json`.
 
-Every figure on it is fetched from the same `docs/data/meta.json` the map reads,
-so it cannot drift out of date with the build; there is no second copy of any
-number in the HTML. `check_site.py` gained a disclosed extra check **B** that
-loads the page, requires zero console errors, and asserts the rendered Illinois
-and U.S. figures match `meta.json` — so a build that changes the numbers without
-updating the page fails the check rather than shipping a stale caveat. It now also
-asserts the two multifamily counts and the two months-reported counts, which are the
-figures a reader is most likely to quote.
-
-The page gained a section 4, *What "no 5+ unit" means, and what it does not*, using
-Glen Ellyn as the worked example, and a third callout in section 3 for the
-months-reported rule.
-
-Four former open items — county-filed permits, the three municipalities with no
-boundary, the 21-unit state-total discrepancy, and the derived county labels —
-moved to a section 8,
-*Design decisions*, at Steffany's request: each is settled, so listing it beside
-the AHPAA gap overstated what is still outstanding. `BLOCKERS.md` is unchanged.
-32. **District outlines are not simplified.** Reviewers found the legislator view
-    unclear and asked for "the shapefiles". At 10% retention a Chicago Senate
-    district was five or six straight lines cutting across streets and municipal
-    borders. `fetch_districts.py` now converts `cb_2025_17_sldu_500k` /
-    `_sldl_500k` to GeoJSON with only §3.4's coordinate rounding (Senate 0.53 MB,
-    House 0.73 MB, both loaded by `districts.html`), and the offline fallback in
-    `build.py` does the same through `simplify_geo.convert`. The full TIGER/Line
-    `tl_` files were rejected: several times larger, and their districts run out
-    into Lake Michigan. With real edges the district line followed the same streets
-    as town borders, so it is now drawn heavier, in `--ink`, over a pale casing.
-    No figure moved: membership and label points were already computed from the
-    unsimplified shapefiles, and `districts.json` is byte-identical.
+Section 4 explains "no 5+ unit" with Glen Ellyn; section 3 has a callout for the
+months-reported rule. Section 8, *Design decisions*, holds four former open
+items (county-filed permits, the three municipalities with no boundary, the
+21-unit state-total gap, derived county labels): each is settled, so listing it
+beside the AHPAA gap overstated what is outstanding. `BLOCKERS.md` is unchanged.
