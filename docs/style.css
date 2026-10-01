@@ -725,6 +725,8 @@ ul.sources { font-size: 12.5px; color: var(--ink-secondary); }
 /* ---------------------------------------------------------------- legislator view */
 
 .district-search, .place-search { flex: 1 1 260px; }
+/* The municipality search gets a row of its own above the map controls. */
+.place-search { flex-basis: 100%; }
 .district-search input, .place-search input {
   width: 100%;
   max-width: 420px;
