@@ -9,7 +9,7 @@
  */
 'use strict';
 
-const view = { chamber: 'senate', district: null };
+const view = { chamber: 'senate', district: null, place: null };
 
 let META = null;
 let DIST = null;            // districts.json
@@ -196,6 +196,13 @@ function buildMap(places, stateOutline) {
         document.getElementById('district-tip').hidden = true;
       });
     }
+    /* The municipality open in the detail panel, outlined over the districts. */
+    map.addLayer({
+      id: 'place-selected', type: 'line', source: 'places',
+      filter: ['==', ['get', 'geoid'], view.place || ''],
+      layout: { 'line-join': 'round' },
+      paint: { 'line-color': placeOutlineColor(), 'line-width': 3 }
+    });
     addLabelImages(false);
     for (const ch of ['senate', 'house']) {
       map.addSource(`${ch}-labels`, { type: 'geojson', data: labelPoints(ch) });
@@ -217,6 +224,8 @@ function buildMap(places, stateOutline) {
   });
 }
 
+function placeOutlineColor() { return darkMode() ? '#6fa8d8' : '#004B87'; }
+
 function applyView(fly) {
   if (!layersReady) return;
   for (const ch of ['senate', 'house']) {
@@ -233,6 +242,7 @@ function applyView(fly) {
     map.setFilter(`${ch}-selected`, ['==', ['get', 'district'],
       ch === view.chamber && view.district ? view.district : -1]);
   }
+  map.setFilter('place-selected', ['==', ['get', 'geoid'], view.place || '']);
   if (fly && view.district) {
     const f = OUTLINES[view.chamber].features.find(x => x.properties.district === view.district);
     if (f) map.fitBounds(bboxOf(f), { padding: 30, maxZoom: 12, duration: 600 });
@@ -274,7 +284,7 @@ function renderPanel() {
   const places = row.places;
   const rows = places.map(p => {
     const measured = p.coverage === 'reporting';
-    return `<tr>
+    return `<tr data-geoid="${esc(p.geoid)}"${p.geoid === view.place ? ' aria-selected="true"' : ''}>
       <td><a href="index.html#place=${p.geoid}">${esc(p.name)}</a>${p.zero_mf === true ? '<span class="zero-mf-tag">no 5+</span>' : ''}</td>
       <td class="num">${sharePct(p.share)}</td>
       <td class="num">${measured ? fmtPct(p.pct_growth) : '<span class="muted">no permit office</span>'}</td>
@@ -339,18 +349,62 @@ function selectDistrict(ch, d, fly) {
   writeHash();
 }
 
+/* A municipality opens beside the district table rather than sending the reader
+ * back to the municipality map. The row link still points there, so a
+ * modified click or "open in new tab" behaves as a link. */
+function openPlace(geoid, title) {
+  view.place = geoid;
+  document.getElementById('district-split').classList.add('has-detail');
+  document.getElementById('detail-maplink').href = `index.html#place=${geoid}`;
+  document.querySelectorAll('#district-rows tr').forEach(tr => {
+    if (tr.dataset.geoid === geoid) tr.setAttribute('aria-selected', 'true');
+    else tr.removeAttribute('aria-selected');
+  });
+  applyView(false);
+  writeHash();
+  return renderPlaceDetail(geoid, title);
+}
+
+function closePlace() {
+  view.place = null;
+  document.getElementById('detail').hidden = true;
+  document.getElementById('district-split').classList.remove('has-detail');
+  document.querySelectorAll('#district-rows tr[aria-selected]').forEach(tr => tr.removeAttribute('aria-selected'));
+  applyView(false);
+  writeHash();
+}
+
+function placeTitle(geoid) {
+  for (const ch of ['senate', 'house']) {
+    for (const r of chamberInfo(ch).districts) {
+      const p = r.places.find(x => x.geoid === geoid);
+      if (p) return p.name;
+    }
+  }
+  return null;
+}
+
 function writeHash() {
-  const h = view.district ? `#${view.chamber}-${view.district}` : `#${view.chamber}`;
+  const h = (view.district ? `#${view.chamber}-${view.district}` : `#${view.chamber}`)
+    + (view.place ? `&place=${view.place}` : '');
   if (location.hash !== h) history.replaceState(null, '', h);
 }
 
-/* "#senate-28", "#house", or nothing. Anything else is ignored. */
+/* "#senate-28", "#house", "#senate-28&place=1751622", or nothing. Anything else
+ * is ignored. */
 function readHash() {
-  const m = location.hash.match(/^#(senate|house)(?:-(\d{1,3}))?$/);
-  if (!m) return;
+  const m = location.hash.match(/^#(senate|house)(?:-(\d{1,3}))?(?:&place=(\d{7}))?$/);
+  if (!m) { view.place = null; return; }
   view.chamber = m[1];
   const d = m[2] ? +m[2] : null;
   view.district = d && d >= 1 && d <= chamberInfo(m[1]).n ? d : null;
+  view.place = m[3] && placeTitle(m[3]) ? m[3] : null;
+}
+
+/* Open or close the detail panel to match view.place after a hash change. */
+function syncPlace() {
+  if (view.place) openPlace(view.place, placeTitle(view.place));
+  else if (!document.getElementById('detail').hidden) closePlace();
 }
 
 function syncControls() {
@@ -394,7 +448,20 @@ function wireControls() {
   };
   input.addEventListener('change', pick);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') pick(); });
-  window.addEventListener('hashchange', () => { readHash(); syncControls(); applyView(true); renderPanel(); });
+  window.addEventListener('hashchange', () => {
+    readHash(); syncControls(); applyView(true); renderPanel(); syncPlace();
+  });
+  document.getElementById('district-body').addEventListener('click', e => {
+    const a = e.target.closest('#district-rows td:first-child a');
+    if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    const geoid = a.closest('tr').dataset.geoid;
+    openPlace(geoid, placeTitle(geoid) || a.textContent);
+  });
+  document.getElementById('detail-close').addEventListener('click', closePlace);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !document.getElementById('detail').hidden) closePlace();
+  });
 }
 
 function renderLegend() {
@@ -425,6 +492,14 @@ const districtsApp = {
   ready: false,
   view: () => ({ ...view }),
   selectDistrict,
+  openPlace: geoid => openPlace(geoid, placeTitle(geoid)),
+  closePlace,
+  place: () => ({
+    open: !document.getElementById('detail').hidden,
+    geoid: view.place,
+    name: document.getElementById('detail-name').textContent,
+    percentText: (document.querySelector('#detail .pct') || {}).textContent || ''
+  }),
   panel: () => ({
     member: (document.getElementById('member-name') || {}).textContent || '',
     rows: [...document.querySelectorAll('#district-rows tr td:first-child a')].map(a => a.textContent),
@@ -456,6 +531,7 @@ window.districtsApp = districtsApp;
         map.setPaintProperty(`${ch}-casing`, 'line-color', cssVar('--surface'));
         map.setPaintProperty(`${ch}-line`, 'line-color', cssVar('--ink'));
       }
+      map.setPaintProperty('place-selected', 'line-color', placeOutlineColor());
       if (map.hasImage('hatch')) map.updateImage('hatch', hatchImage());
       addLabelImages(true);
     });
@@ -470,6 +546,7 @@ window.districtsApp = districtsApp;
       setTimeout(finish, 20000);
     });
     applyView(true);
+    if (view.place) await openPlace(view.place, placeTitle(view.place));
     writeHash();
     districtsApp.ready = true;
   } catch (err) {

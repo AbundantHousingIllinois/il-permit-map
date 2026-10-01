@@ -626,30 +626,34 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                     timeout=15_000)
                 return page.evaluate("""() => {
                     const b = document.querySelector('#detail #built');
-                    const g = b.querySelector('.built-gap');
-                    const il = b.querySelector('#built-il-gap');
-                    const none = b.querySelector('.built-none');
-                    return { gap: g ? g.innerText : null, il: il ? il.innerText : null,
-                             none: none ? none.innerText : null,
-                             text: b.innerText };
+                    const q = s => { const e = b.querySelector(s); return e ? e.innerText : null; };
+                    return { gap: q('.built-gap'), net: q('.built-net'),
+                             permits: q('.built-permits'), il: q('#built-il-gap'),
+                             none: q('.built-none'), rows: b.querySelectorAll('tbody tr').length,
+                             text: b.innerText,
+                             panel: document.querySelector('#detail').innerText };
                 }""")
 
             nap = open_built("1751622")          # Naperville
             census = page.evaluate("() => (document.querySelector('#detail .census-net') || {}).innerText")
-            R.out(f"    Naperville: gap {nap['gap']!r}, Illinois {nap['il']!r}, "
+            R.out(f"    Naperville: change {nap['net']!r}, permitted {nap['permits']!r}, "
+                  f"gap {nap['gap']!r}, Illinois {nap['il']!r}, "
                   f"census change in the headline {census!r}")
             ok = ok and census == "+3,078"
             il_want = ("\u2212" if meta["built"]["il_gap"] < 0 else "+") \
                 + f"{abs(meta['built']['il_gap']):,}"
-            good = nap["gap"] == "\u2212733" and nap["il"] == il_want \
-                and "not a verdict" in nap["text"]
-            R.out(f"      figure, Illinois reference and caveat present: {good}")
+            # The table is the two parts only; the difference is read out in prose.
+            good = (nap["rows"] == 2 and nap["net"] == "+3,078"
+                    and nap["permits"] == f"{3078 + 733:,}"
+                    and nap["gap"] == "733 units less than" and nap["il"] == il_want
+                    and "not a verdict" in nap["text"])
+            R.out(f"      two-row table, difference, Illinois reference and caveat present: {good}")
             ok = ok and good
 
             cic = open_built("1714351")          # Cicero
             R.out(f"    Cicero: {(cic['none'] or '')[:110]!r}")
             good = (cic["gap"] is None and bool(cic["none"]) and "2010" in cic["none"]
-                    and "25,836" in cic["text"])
+                    and cic["net"] is not None and "25,836" in cic["panel"])
             R.out(f"      no figure, the reason names the years, and the census counts "
                   f"are still shown: {good}")
             ok = ok and good
@@ -730,7 +734,8 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             p4.wait_for_timeout(600)
             v = p4.evaluate("window.districtsApp.view()")
             R.out(f"    searching 'Laura Murphy' selects: {v}")
-            checks["search by name finds the district"] = v == {"chamber": "senate", "district": 28}
+            checks["search by name finds the district"] = (
+                v["chamber"] == "senate" and v["district"] == 28)
             p4.goto(f"{base}/districts.html#house-54", wait_until="load")
             p4.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
                                  timeout=READY_TIMEOUT_MS)
@@ -738,6 +743,30 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             R.out(f"    #house-54 restores: {got['member']!r}; first place {got['rows'][:1]}")
             checks["a House link restores its district"] = (
                 "Arlington Heights" in got["rows"] and got["member"].startswith("Rep."))
+            # A municipality in the district table opens beside it, on this page.
+            p4.click("#district-rows tr[data-geoid='1702154'] td:first-child a")
+            p4.wait_for_function("() => document.querySelector('#detail .pct')"
+                                 " && window.districtsApp.place().geoid === '1702154'",
+                                 timeout=15_000)
+            pl = p4.evaluate("window.districtsApp.place()")
+            url = p4.url.rsplit("/", 1)[-1]
+            R.out(f"    clicking Arlington Heights in the table: {url}, panel "
+                  f"{pl['name']!r} {pl['percentText']!r}")
+            checks["a table municipality opens beside the table, not on the main map"] = (
+                url.startswith("districts.html#house-54&place=1702154")
+                and pl["open"] and "Arlington Heights" in pl["name"]
+                and any(ch.isdigit() for ch in pl["percentText"]))
+            # A fresh page, so this is a load and not a same-document hash change.
+            p4.close()
+            p4 = context.new_page()
+            p4.on("pageerror", lambda e: errs.append(f"pageerror: {e}"))
+            p4.goto(f"{base}/districts.html#senate-28&place=1757875", wait_until="load")
+            p4.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            pl = p4.evaluate("window.districtsApp.place()")
+            R.out(f"    #senate-28&place=1757875 restores: {pl['name']!r}")
+            checks["a link with a place restores its panel"] = (
+                pl["open"] and "Park Ridge" in pl["name"])
             p4.close()
 
             page.evaluate("(g) => window.app.selectPlace(g)", "1702154")

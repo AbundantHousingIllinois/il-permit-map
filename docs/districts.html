@@ -60,10 +60,24 @@
   </div>
 </section>
 
+<div class="district-split" id="district-split">
 <section class="district-panel" id="district-panel" aria-live="polite">
   <p class="district-empty" id="district-empty">Tap a district on the map, or search for a legislator above.</p>
   <div id="district-body" hidden></div>
 </section>
+
+<aside id="detail" hidden aria-live="polite">
+  <div class="detail-head">
+    <div>
+      <h2 id="detail-name"></h2>
+      <p class="detail-sub" id="detail-sub"></p>
+    </div>
+    <button type="button" id="detail-close" aria-label="Close details">&times;</button>
+  </div>
+  <p class="detail-maplink"><a id="detail-maplink" href="index.html">Open on the municipality map &rarr;</a></p>
+  <div id="detail-body"></div>
+</aside>
+</div>
 
 <footer>
   <p id="footer-districts"></p>
@@ -73,6 +87,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js"></script>
 <script src="shared.js"></script>
+<script src="detail.js"></script>
 <script src="districts.js"></script>
 </body>
 </html>

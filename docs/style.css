@@ -475,7 +475,6 @@ svg.chart { display: block; width: 100%; height: auto; overflow: visible; }
 .detail-table caption { text-align: left; font-size: 11px; color: var(--ink-muted); padding-bottom: 4px; }
 
 .built table td:first-child { text-align: left; }
-.built .built-gap-row { border-top: 2px solid var(--rule-strong); }
 .built-read, .built-none { font-size: 12px; margin: 6px 0 0; }
 .built-note { font-size: 11px; color: var(--ink-muted); margin: 6px 0 0; line-height: 1.45; }
 
@@ -747,6 +746,23 @@ ul.sources { font-size: 12.5px; color: var(--ink-secondary); }
 }
 
 .district-panel { padding: 16px; max-width: 980px; }
+
+/* A municipality opened from the district table sits beside it on a wide
+ * screen, in the space the table leaves; on a phone it is the same bottom
+ * sheet as on the main map. */
+.detail-maplink { margin: 8px 0 0; font-size: 13px; }
+.detail-maplink a { color: var(--ahil-blue); font-weight: 600; text-decoration: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .detail-maplink a { color: #6fa8d8; }
+}
+@media (min-width: 880px) {
+  .district-split.has-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 980px) 380px;
+    align-items: start;
+  }
+  .district-split #detail { align-self: start; }
+}
 .district-empty { color: var(--ink-muted); font-size: 14px; margin: 0; }
 
 .member-card {
