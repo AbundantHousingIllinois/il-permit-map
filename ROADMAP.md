@@ -145,10 +145,9 @@ and share.
 - **Population inside the district.** Land share × town population is the cheap
   version and is what the district estimate already assumes. Census blocks would
   be exact but are a new data source.
-- **Geocoding the office.** The Census geocoder is keyless and returns the place
-  directly, but it is a network call, so it belongs in `fetch_districts.py` and
-  must be cached, never in `build.py`. The four members with no address get no
-  office town, and the sheet says so.
+- **Members with no usable office address.** Four have none, and two list a
+  Springfield capitol room. Either their sheets say "no district office listed",
+  or the addresses are corrected by hand from ilga.gov.
 
 **How it would work:**
 
