@@ -95,14 +95,24 @@ produces one clean US Letter page to leave behind in a meeting with that member.
 1. **The district's headline stats:** the member, the estimated units permitted
    since 2010, the change in the census housing count 2010→2020, and how many of
    its towns have permitted no 5+ unit building or are AHPAA non-exempt. All of
-   these are already in the district panel.
+   these are already in the district panel. **Beside them, a QR code and the
+   printed URL of the live district page** (`districts.html#senate-28`) (Austin).
 2. **The municipality the member's district office is in.** It is the place the
    member knows best and where the meeting usually happens. Open States carries a
-   `district_address` for 173 of 177 members (snapshot of 2026-09). The town comes
-   from geocoding that address to a Census place, not from the city name in the
-   address, which is often a mailing city ("Chicago" for an office outside it).
-   It may fall outside the district; if so, show it and say so.
-3. **A featured municipality: the "best option" for the district.** Chosen by a
+   `district_address` for 173 of 177 members (snapshot of 2026-09), and the city
+   in it can be matched exactly to a town in the district for 170 of them
+   (checked 2026-10-02). The three that do not match:
+   - House 69 (Sosnowski): the office is in Machesney Park, which is not in the
+     district. Show it and say the office is outside the district.
+   - House 55 (Cochran) and House 42 (DeLaRosa): the "district" address is a
+     Stratton Office Building room in Springfield, i.e. a capitol office. Treat
+     as no district office, or correct by hand in
+     `data/manual/legislator_overrides.csv` from ilga.gov.
+
+   An exact name match is enough; no geocoding is needed. A city that matches no
+   Census place fails the build loudly rather than being guessed.
+3. **The next best town: the "best option" for the district**, after the office
+   town (Austin: "the district office town, then the next best town"). Chosen by a
    weighted combination of
    - how much of the town's land is inside the district (the share the build
      already computes, `L.DISTRICT_SHARE_MIN` and up), and
@@ -110,8 +120,15 @@ produces one clean US Letter page to leave behind in a meeting with that member.
      the town who live inside the district.
 
    A town that is mostly inside the district and holds a lot of its people is the
-   one the member is most clearly answerable for. If the office town and the
-   featured town are the same, show it once.
+   one the member is most clearly answerable for. It is the highest-scoring town
+   other than the office town, so the sheet always shows two different towns
+   when the district has two.
+
+   **Chicago is shown as a whole city** (Austin), never split into wards or
+   community areas. In a district that includes Chicago, the sheet shows Chicago
+   and then the best suburb, if the district has one. The 2026-10-01 note that a
+   suburban office might carry a "Chicago" mailing address was a guess; the data
+   does not show it.
 
 For each of those towns, a short block: percent of the 2010 stock permitted
 against Illinois, units by structure type, the multifamily flag, and AHPAA status
@@ -132,9 +149,6 @@ and share.
   directly, but it is a network call, so it belongs in `fetch_districts.py` and
   must be cached, never in `build.py`. The four members with no address get no
   office town, and the sheet says so.
-- **Chicago.** It is in 19 Senate districts and would win "best option" in most of
-  them. Should the sheet feature a Chicago community area or ward instead, or a
-  suburb, or accept Chicago?
 
 **How it would work:**
 
@@ -145,8 +159,8 @@ and share.
   page already reads, so the sheet can never disagree with the map. The office
   town and the featured town are computed in the build and carried in
   `districts.json`, with the score, so the choice can be checked.
-- A small district map on the sheet, with the two towns marked. A link or QR
-  code back to the live district page; a QR generator must be inline, adding no
-  runtime request beyond the pinned MapLibre bundle.
+- A small district map on the sheet, with the two towns marked. The QR code
+  beside the headline must come from an inline generator (or be drawn in the
+  build), adding no runtime request beyond the pinned MapLibre bundle.
 - The caveat that permits are a floor, the build date and a sources line.
 - Use the `ahil-brand` guidelines for the layout.
