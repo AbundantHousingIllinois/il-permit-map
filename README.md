@@ -20,23 +20,51 @@ The map's default view is that percentage, on a diverging orange-to-blue scale
 whose **midpoint is the Illinois statewide figure (5.6%)**, so the colour break
 means "keeping up with the state." The U.S. figure over the same period is 15.0%.
 
-Alongside it: absolute unit counts (back to 2000 in the "Total units" view), a
+Alongside it: total units permitted 2010–2025 (the "Total units" view), a
 breakdown by structure type (single-family, duplex, 3–4 unit, 5+ unit), a
-per-year stacked chart on each municipality, two multifamily highlights ("No 5+
-unit buildings" and the stricter "Nothing above a duplex"), and IHDA's AHPAA
-status and affordable housing share for each municipality, with switches for the
-44 non-exempt and for those under 25% affordable with more than 2,000 people.
+per-year stacked chart on each municipality (2000–2009 drawn faded as context;
+only 2010 onward feeds any figure), two multifamily highlights ("No 5+ unit
+buildings" and the stricter "Nothing above a duplex"), and IHDA's AHPAA status
+and affordable housing share for each municipality, with switches for the 44
+non-exempt and for those under 25% affordable with more than 2,000 people.
 
-The site has three pages: the map (`docs/index.html`); the **legislator view**
-(`docs/districts.html`), one map with a State Senate / State House toggle where
-choosing a district shows its member's contact details, every municipality it
-overlaps with the share of its land inside, and an estimated district total; and
-**[Method and caveats](docs/about.html)** (`docs/about.html`), which explains
-what the numbers mean, what they are not, and the design decisions behind them. Its figures are read from the build's own `meta.json`, so it
-cannot go stale. Each district has its own link (`districts.html#senate-28`), and
-the page prints cleanly for a meeting.
+Below the map is a sortable table of every reporting municipality, with a
+"Multifamily since 2010" column and a blue "AHPAA non-exempt" tag beside the
+names it applies to. A "Find a municipality" search above the map reaches any
+place, whatever the filters, and opens its detail panel. The view — metric,
+type, filters, sort and the open place — is kept in the URL, so a link restores
+exactly what the sender saw.
+
+The site has three pages:
+
+- **The map** (`docs/index.html`).
+- **The legislator view** (`docs/districts.html`): one map with a State Senate /
+  State House toggle. District outlines are drawn at full Census detail over the
+  municipalities, coloured as on the main map. Choosing a district shows its
+  member's contact details, every municipality it overlaps with the share of its
+  land inside, an estimated district permit total (area-weighted, labelled an
+  estimate), and the change in the census housing count 2010→2020 weighted the
+  same way. Clicking a municipality in the district table opens its detail panel
+  beside the table (a bottom sheet on a phone). Each district has its own link
+  (`districts.html#senate-28`, or `#senate-28&place=1760352` with a town open),
+  and the page prints cleanly for a meeting. Each detail panel on the main map
+  links back to the place's districts.
+- **[Method and caveats](docs/about.html)** (`docs/about.html`), which explains
+  what the numbers mean, what they are not, and the design decisions behind
+  them. Its figures are read from the build's own `meta.json`, so it cannot go
+  stale.
 
 ## Caveats that matter, especially in testimony
+
+**Permits are a floor, not a count of homes.** This caveat sits at the top of the
+map page itself. The survey counts permits for new buildings: conversions,
+additions and basement apartments never appear, and a building can be missing
+from a town's record entirely (Berwyn's 52-unit reVerb Century Station is one;
+see `BLOCKERS.md` #6). For how much housing exists, the 2010 and 2020 census
+counts are the better measure, and every detail panel shows both where they
+exist, flagging a gap of more than 5% of the 2010 stock in either direction. The
+headline stays permit-based on purpose: it measures what a town *allowed* as new
+construction, which is the question the map exists for.
 
 **Permits are authorizations, not buildings.** The Building Permits Survey counts
 housing units *authorized by permit*. It does not count units completed, and it
@@ -73,7 +101,14 @@ it is a diagnostic, not a score: demolitions, unbuilt permits, construction lag,
 annexation and count error all separate the two. It is not a map colour, and
 the 2020 count is used for nothing else — percent growth stays on the 2010 count.
 
-The same rule applies year by year. A place whose permit office first reported in
+**Months not reported are estimated by the Census, and the site says so.** Some
+permit offices file fewer than 12 months; the published figure for those years
+includes the Census's own imputation. The chart ticks those years and the detail
+panel names them. A municipality whose office reported no month in any year
+since 2010 is never counted as having permitted zero multifamily
+(`BLOCKERS.md` #5).
+
+The coverage rule applies year by year too. A place whose permit office first reported in
 2013 has **no value**, not a zero, for 2010–2012: its chart shows a shaded gap
 over those years and its detail panel says which year its record starts from. The
 live counts above are printed by the build and are in `docs/data/meta.json`; they
@@ -115,6 +150,10 @@ uv run scripts/build.py            # regenerates everything under docs/data/
 uv run scripts/check_data.py       # SPEC.md §7 data checks
 uv run scripts/check_site.py       # SPEC.md §7 browser checks (Playwright)
 ```
+
+`scripts/import_ahpaa.py` is run only when a new IHDA AHPAA report is supplied;
+it rewrites `data/manual/ahpaa.csv` from the spreadsheet (see
+`data/manual/README.md`).
 
 The four `fetch_*` scripts are the only ones that touch the network, and they
 are idempotent — a file already in `data/raw/` is left alone. Once `data/raw/` is
@@ -226,8 +265,16 @@ data/
   SOURCES.md               every URL, date retrieved, file produced
 scripts/                   fetch_*, crosswalk, districts, import_ahpaa, simplify_geo,
                            build, check_data, check_site
-docs/                      GitHub Pages root (index.html, districts.html, about.html;
-                           shared.js holds the palette and formats both maps use)
+docs/                      GitHub Pages root
+  index.html, app.js       the map
+  districts.html,          the legislator view
+    districts.js
+  detail.js                the municipality detail panel, used by both maps
+  shared.js                palette, colour ladders, number formats, esc()
+  about.html               method and caveats
+  style.css, favicon*      shared styles and icons
+  data/                    meta.json, places.geojson, one shard per place,
+                           districts.json and boundary files, all from build.py
 ```
 
 ## Sources
