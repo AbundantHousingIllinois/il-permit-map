@@ -38,8 +38,9 @@ exactly what the sender saw.
 Every municipality and district also has a short address of its own
 (`…/il-permit-map/town/plano/`, `…/senate/28/`) that shows a proper preview,
 with its name and a card of its map, when pasted into Slack, a text message or a
-social post. The **Copy link** button in each panel hands it out (see *Link
-previews* below).
+social post. It is what the address bar shows once a town or district is open,
+and what the **Copy link** button in each panel copies (see *Link previews*
+below).
 
 The site has three pages:
 
@@ -52,9 +53,10 @@ The site has three pages:
   estimate), and the change in the census housing count 2010→2020 weighted the
   same way. Clicking a municipality in the district table opens its detail panel
   beside the table (a bottom sheet on a phone). Each district has its own link
-  (`districts.html#senate-28`, or `#senate-28&place=1760352` with a town open),
-  and the page prints cleanly for a meeting. A **Print one-page sheet** button
-  gives one Letter page per district to leave behind in a meeting: the member,
+  (`…/senate/28/`, which the address bar shows once it is open; with a town open
+  too, `…/senate/28/#senate-28&place=1760352`). Printing an open district, from
+  the **Print one-page sheet** button or the browser's own Print, gives one
+  Letter page per district to leave behind in a meeting: the member,
   the district's totals, a QR code, a map and two featured towns (the district
   office town, then the best other town, by a fixed rule). How each district's
   towns were chosen is in `docs/data/district_sheet_towns.csv`, with every
