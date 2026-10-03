@@ -180,7 +180,7 @@ PL file returns identical figures at every level, checked 2026-09-23. Illinois:
 +129,714 in the count against 183,247 permitted, −53,533. The permit decade is
 calendar 2010–2019 because both counts are as of April 1 (`L.BUILT_YEARS`).
 
-**Permits are a floor; the census count is the measure of what exists.** Asked to
+**Permits undercount; the census count is the measure of what exists.** Asked to
 double-check Cicero and Berwyn, the build proved correct and the Census record
 proved incomplete: Berwyn's record never shows the 52-unit reVerb Century Station
 (finished around 2010), and the permit survey never counts conversions
@@ -446,7 +446,7 @@ already under **Decisions**, the entry names that decision instead of repeating 
     the shards after `build.py` deleted and recreated the directory. Shards are now
     overwritten in place, strays are deleted after the write, and check 7 fails
     on any.
-30. **A caveat at the top of the map page.** See *Permits are a floor*. It pushed
+30. **A caveat at the top of the map page.** See *Permits undercount*. It pushed
     the map below a phone-height viewport, so site check 4 scrolls the map into
     view before its click.
 31. **The legislator view** and its two sources (TIGER `sldu`/`sldl`, Open

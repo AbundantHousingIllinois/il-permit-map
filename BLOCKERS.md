@@ -211,7 +211,7 @@ counts.
   office reported nothing.
 - The chart puts a tick under each such year and the detail panel names them in
   prose: *"reported no months to the Census in 2010–2014 and 2023 … treat them as
-  a floor."*
+  estimates."* (The wording was "a floor" until the 2026-10-03 plain-language pass.)
 - The **5 places that reported no month in any year of the window** get a null
   `zero_mf` rather than `true`. Every figure they have is an estimate, and "this
   town permitted zero apartments" is an advocacy claim the data cannot support for
@@ -221,7 +221,7 @@ counts.
 
 **What was not done.** The under-count itself. If a Cicero permit issued in 2012
 was never filed and Census's estimate for that office was 0, no published source
-recovers it. The honest form is the one now on the page: the figure is a floor,
+recovers it. The honest form is the one now on the page: the figure may be too low,
 and the years it rests on are named. A municipality-level FOIA of the permit
 office is the only thing that would settle a specific case, and that is a person's
 job, not the build's.
@@ -255,8 +255,9 @@ count rose by more than 5% of the 2010 stock beyond recorded permits in 33 (3.5%
 and fell more than 5% short of them in 222 (24%). Among the 373 with every month
 of 2010–2019 reported, the figures are 5 (1.3%) and 61 (16%).
 
-**What was done.** A caveat at the top of the map says permits are a floor and
-the census count is the better measure of what exists. The detail panel always
+**What was done.** A caveat at the top of the map ("Permits show what a town
+approved, not every home added") says permits miss housing and the census count is
+the better measure of what exists. The detail panel always
 shows the two census counts when both exist, and flags a gap above 5% of the 2010
 stock in either direction (`L.BUILT_FLAG_PCT`). `docs/about.html` §2 names the
 conversion gap with Berwyn as the example.

@@ -313,10 +313,11 @@ data/
   raw/                     downloaded sources, cached (committed; all < 50 MB)
   processed/               crosswalk.csv, unmatched.csv, tidy permits, geometry
   manual/                  IHDA's 2023 AHPAA spreadsheet, ahpaa.csv written from it
-                           by scripts/import_ahpaa.py, legislator_overrides.csv
+                           by scripts/import_ahpaa.py, legislator_overrides.csv,
+                           the AHIL logo
   SOURCES.md               every URL, date retrieved, file produced
-scripts/                   fetch_*, crosswalk, districts, import_ahpaa, simplify_geo,
-                           previews, build, check_data, check_site
+scripts/                   fetch_*, crosswalk, districts, district_towns, import_ahpaa,
+                           simplify_geo, previews, build, check_data, check_site
 docs/                      GitHub Pages root
   index.html, app.js       the map
   districts.html,          the legislator view
@@ -328,10 +329,13 @@ docs/                      GitHub Pages root
   about.html               method and caveats
   style.css, favicon*      shared styles and icons
   preview*.png             the whole-state link-preview cards
+  ahil-logo.png            the logo on the printable sheet
   town/, senate/, house/   one link-preview page and card per municipality and
-                           district, written by scripts/previews.py
+                           district (and each district's QR code), written by
+                           scripts/previews.py
   data/                    meta.json, places.geojson, one shard per place,
-                           districts.json and boundary files, all from build.py
+                           districts.json and boundary files, and the two
+                           district-sheet CSVs, all from build.py
 ```
 
 ## Sources
