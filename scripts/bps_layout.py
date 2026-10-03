@@ -78,6 +78,11 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw"
 RAW_BPS_PLACE = RAW / "bps" / "place"
 RAW_BPS_STATE = RAW / "bps" / "state"
+# County-level annual files and the OMB metro/micro delineation are fetched for
+# the Metros view (ROADMAP item 2). Nothing in the build reads them yet.
+RAW_BPS_COUNTY = RAW / "bps" / "county"
+RAW_CBSA = RAW / "cbsa"
+CBSA_DELINEATION = RAW_CBSA / "list1_2023.xlsx"
 RAW_BPS_DOC = RAW / "bps" / "doc"
 RAW_CENSUS = RAW / "census"
 RAW_GEO = RAW / "geo"
@@ -207,6 +212,10 @@ def place_file(year: int) -> Path:
 
 def state_file(year: int) -> Path:
     return RAW_BPS_STATE / f"st{year}a.txt"
+
+
+def county_file(year: int) -> Path:
+    return RAW_BPS_COUNTY / f"co{year}a.txt"
 
 
 # --------------------------------------------------------------------------

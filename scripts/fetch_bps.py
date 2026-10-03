@@ -30,6 +30,7 @@ import bps_layout as L
 BASE = "https://www2.census.gov/econ/bps"
 PLACE_DIR = f"{BASE}/Place/Midwest%20Region"
 STATE_DIR = f"{BASE}/State"
+COUNTY_DIR = f"{BASE}/County"
 DOC_DIR = f"{BASE}/Documentation"
 
 
@@ -43,6 +44,7 @@ def main() -> int:
     for name, note in (
         ("placeasc.pdf", "BPS place-file record layout (Attachment B: annual, 41 fields)"),
         ("stateasc.pdf", "BPS state-file record layout"),
+        ("cntyasc.pdf", "BPS county-file record layout"),
     ):
         L.download(f"{DOC_DIR}/{name}", L.RAW_BPS_DOC / name, note)
 
@@ -61,6 +63,24 @@ def main() -> int:
             L.state_file(year),
             f"BPS state-level annual (Illinois + United States totals), {year}",
         )
+
+    # National county files, every county in the U.S. For the Metros view
+    # (ROADMAP item 2): their Illinois rows are Census's own county totals,
+    # including permits counties file for unincorporated land, and an
+    # independent check on county sums built from the place files.
+    print(f"\nCounty-level annual files ({len(L.YEARS)} years):")
+    for year in L.YEARS:
+        L.download(
+            f"{COUNTY_DIR}/co{year}a.txt",
+            L.county_file(year),
+            f"BPS county-level annual (all U.S. counties; Metros view), {year}",
+        )
+    for year in L.YEARS:
+        rows = [ln for ln in L.county_file(year).read_text(encoding="latin-1").splitlines()
+                if ln.split(",")[1:2] == [L.STATE_FIPS]]
+        if not rows:
+            raise SystemExit(f"{L.rel(L.county_file(year))} has no Illinois rows")
+    print(f"  every county file has Illinois rows")
 
     # Confirm every file is parseable with a known layout before declaring success,
     # so a truncated download surfaces here rather than in the middle of the build.

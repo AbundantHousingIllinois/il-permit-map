@@ -76,6 +76,24 @@ QUERIES = [
         "County names for the Illinois county FIPS codes carried on BPS records "
         "(same 2010 SF1 dataset as §3.2; no new source)",
     ),
+    # By county, for the Metros view (ROADMAP item 2): each area's rate is its
+    # permits over its counties' whole 2010 housing count, the way il_pct_growth
+    # is computed for the state. Same datasets and variables as the place queries.
+    (
+        f"{API}/2010/dec/sf1?get=NAME,H001001&for=county:*&in=state:{L.STATE_FIPS}",
+        L.RAW_CENSUS / "h1_2010_county_17.json",
+        "2010 Decennial SF1 H001001 (housing units), Illinois counties -- Metros denominator",
+    ),
+    (
+        f"{API}/2020/dec/dhc?get=NAME,H1_001N&for=county:*&in=state:{L.STATE_FIPS}",
+        L.RAW_CENSUS / "h1_2020_county_17.json",
+        "2020 Decennial DHC H1_001N (housing units), Illinois counties -- Metros, permits-vs-built",
+    ),
+    (
+        f"{API}/2020/dec/pl?get=NAME,P1_001N&for=county:*&in=state:{L.STATE_FIPS}",
+        L.RAW_CENSUS / "p1_2020_county_17.json",
+        "2020 Decennial PL P1_001N (population), Illinois counties -- Metros",
+    ),
 ]
 
 
@@ -110,6 +128,11 @@ def main() -> int:
           f"{sum(int(r['H1_001N']) for r in h20):,} housing units")
     print(f"  2020 H1, Illinois total  : {int(il20[0]['H1_001N']):,}")
     print(f"  2020 H1, United States   : {int(us20[0]['H1_001N']):,}")
+    for name, var in (("h1_2010_county_17", "H001001"), ("h1_2020_county_17", "H1_001N"),
+                      ("p1_2020_county_17", "P1_001N")):
+        rows = L.read_census_json(L.RAW_CENSUS / f"{name}.json")
+        print(f"  {name:<18}       : {len(rows)} counties, "
+              f"{sum(int(r[var]) for r in rows):,} total")
     print(f"\nProvenance appended to {L.rel(L.SOURCES_MD)}")
     return 0
 

@@ -160,6 +160,7 @@ uv run scripts/fetch_census.py     # 2010 SF1 H1, 2020 PL P1, 2020 DHC H1  (need
 uv run scripts/fetch_geo.py        # TIGER places, counties, state outline + mapshaper
 uv run scripts/fetch_districts.py  # State Senate/House districts + Open States legislators
 uv run scripts/fetch_fonts.py      # Poppins, for the link-preview cards
+uv run scripts/fetch_cbsa.py       # OMB metro/micro area delineation (for the Metros view)
 uv run scripts/build.py            # regenerates docs/data/ and the link previews
 uv run scripts/check_data.py       # SPEC.md §7 data checks
 uv run scripts/check_site.py       # SPEC.md §7 browser checks (Playwright)
@@ -169,7 +170,7 @@ uv run scripts/check_site.py       # SPEC.md §7 browser checks (Playwright)
 it rewrites `data/manual/ahpaa.csv` from the spreadsheet (see
 `data/manual/README.md`).
 
-The five `fetch_*` scripts are the only ones that touch the network, and they
+The six `fetch_*` scripts are the only ones that touch the network, and they
 are idempotent — a file already in `data/raw/` is left alone. Once `data/raw/` is
 populated (it is committed, so a fresh clone already has it):
 

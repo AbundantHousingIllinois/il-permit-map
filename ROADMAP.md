@@ -98,6 +98,27 @@ Chicago suburbs with Peoria or the Metro East rather than town by town.
   trying to show where growth is happening within a metro area." Not the mean of
   its towns' rates.
 
+**The data is already fetched and committed (2026-10-03)**, so this can be built
+without a Census API key or any download:
+
+- `data/raw/cbsa/list1_2023.xlsx`: OMB Bulletin 23-01 (July 2023), every CBSA and
+  its counties (`scripts/fetch_cbsa.py`). 62 of Illinois's 102 counties are in
+  one of 33 CBSAs with an Illinois county: 12 metropolitan, 21 micropolitan. The
+  other 40 counties are in none, so a rural county has no area to compare to.
+- `data/raw/census/h1_2010_county_17.json`, `h1_2020_county_17.json`,
+  `p1_2020_county_17.json`: 2010 and 2020 housing counts and 2020 population for
+  every Illinois county (`scripts/fetch_census.py`). The county counts sum
+  exactly to the state's: 5,296,715 in 2010, 5,426,429 in 2020.
+- `data/raw/bps/county/co<YYYY>a.txt`, 2000–2025, and `data/raw/bps/doc/
+  cntyasc.pdf` (their record layout): Census's county-level permit files, every
+  U.S. county (`scripts/fetch_bps.py`). Units are fields 7, 10, 13 and 16
+  (1-unit, 2-unit, 3–4, 5+ units, reported and imputed). Their Illinois rows
+  sum exactly to the published state row in every year 2010–2025; in 2002 they
+  are 100 units over it (61,071 against 60,971), outside the metric window.
+  They are a cross-check on county sums built from the place files, or the
+  source of the county totals outright, since they include what counties file
+  for unincorporated land.
+
 Notes for whoever starts it:
 
 - **The area rate can include unincorporated permits.** About 8% of Illinois

@@ -88,3 +88,34 @@ it produced (SPEC.md §1.7). Appended automatically by the fetch scripts.
 | https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-SemiBold.ttf | 2026-10-03 | data/raw/vendor/fonts/Poppins-SemiBold.ttf | Poppins, SIL Open Font License; link-preview cards only |
 | https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Bold.ttf | 2026-10-03 | data/raw/vendor/fonts/Poppins-Bold.ttf | Poppins, SIL Open Font License; link-preview cards only |
 | https://github.com/google/fonts/raw/main/ofl/poppins/OFL.txt | 2026-10-03 | data/raw/vendor/fonts/OFL.txt | SIL Open Font License for the Poppins files beside it |
+| https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list1_2023.xlsx | 2026-10-03 | data/raw/cbsa/list1_2023.xlsx | OMB Bulletin 23-01 CBSA delineation (counties per metro/micro area) |
+| https://api.census.gov/data/2010/dec/sf1?get=NAME,H001001&for=county:*&in=state:17 | 2026-10-03 | data/raw/census/h1_2010_county_17.json | 2010 Decennial SF1 H001001 (housing units), Illinois counties -- Metros denominator |
+| https://api.census.gov/data/2020/dec/dhc?get=NAME,H1_001N&for=county:*&in=state:17 | 2026-10-03 | data/raw/census/h1_2020_county_17.json | 2020 Decennial DHC H1_001N (housing units), Illinois counties -- Metros, permits-vs-built |
+| https://api.census.gov/data/2020/dec/pl?get=NAME,P1_001N&for=county:*&in=state:17 | 2026-10-03 | data/raw/census/p1_2020_county_17.json | 2020 Decennial PL P1_001N (population), Illinois counties -- Metros |
+| https://www2.census.gov/econ/bps/Documentation/cntyasc.pdf | 2026-10-03 | data/raw/bps/doc/cntyasc.pdf | BPS county-file record layout |
+| https://www2.census.gov/econ/bps/County/co2000a.txt | 2026-10-03 | data/raw/bps/county/co2000a.txt | BPS county-level annual (all U.S. counties; Metros view), 2000 |
+| https://www2.census.gov/econ/bps/County/co2001a.txt | 2026-10-03 | data/raw/bps/county/co2001a.txt | BPS county-level annual (all U.S. counties; Metros view), 2001 |
+| https://www2.census.gov/econ/bps/County/co2002a.txt | 2026-10-03 | data/raw/bps/county/co2002a.txt | BPS county-level annual (all U.S. counties; Metros view), 2002 |
+| https://www2.census.gov/econ/bps/County/co2003a.txt | 2026-10-03 | data/raw/bps/county/co2003a.txt | BPS county-level annual (all U.S. counties; Metros view), 2003 |
+| https://www2.census.gov/econ/bps/County/co2004a.txt | 2026-10-03 | data/raw/bps/county/co2004a.txt | BPS county-level annual (all U.S. counties; Metros view), 2004 |
+| https://www2.census.gov/econ/bps/County/co2005a.txt | 2026-10-03 | data/raw/bps/county/co2005a.txt | BPS county-level annual (all U.S. counties; Metros view), 2005 |
+| https://www2.census.gov/econ/bps/County/co2006a.txt | 2026-10-03 | data/raw/bps/county/co2006a.txt | BPS county-level annual (all U.S. counties; Metros view), 2006 |
+| https://www2.census.gov/econ/bps/County/co2007a.txt | 2026-10-03 | data/raw/bps/county/co2007a.txt | BPS county-level annual (all U.S. counties; Metros view), 2007 |
+| https://www2.census.gov/econ/bps/County/co2008a.txt | 2026-10-03 | data/raw/bps/county/co2008a.txt | BPS county-level annual (all U.S. counties; Metros view), 2008 |
+| https://www2.census.gov/econ/bps/County/co2009a.txt | 2026-10-03 | data/raw/bps/county/co2009a.txt | BPS county-level annual (all U.S. counties; Metros view), 2009 |
+| https://www2.census.gov/econ/bps/County/co2010a.txt | 2026-10-03 | data/raw/bps/county/co2010a.txt | BPS county-level annual (all U.S. counties; Metros view), 2010 |
+| https://www2.census.gov/econ/bps/County/co2011a.txt | 2026-10-03 | data/raw/bps/county/co2011a.txt | BPS county-level annual (all U.S. counties; Metros view), 2011 |
+| https://www2.census.gov/econ/bps/County/co2012a.txt | 2026-10-03 | data/raw/bps/county/co2012a.txt | BPS county-level annual (all U.S. counties; Metros view), 2012 |
+| https://www2.census.gov/econ/bps/County/co2013a.txt | 2026-10-03 | data/raw/bps/county/co2013a.txt | BPS county-level annual (all U.S. counties; Metros view), 2013 |
+| https://www2.census.gov/econ/bps/County/co2014a.txt | 2026-10-03 | data/raw/bps/county/co2014a.txt | BPS county-level annual (all U.S. counties; Metros view), 2014 |
+| https://www2.census.gov/econ/bps/County/co2015a.txt | 2026-10-03 | data/raw/bps/county/co2015a.txt | BPS county-level annual (all U.S. counties; Metros view), 2015 |
+| https://www2.census.gov/econ/bps/County/co2016a.txt | 2026-10-03 | data/raw/bps/county/co2016a.txt | BPS county-level annual (all U.S. counties; Metros view), 2016 |
+| https://www2.census.gov/econ/bps/County/co2017a.txt | 2026-10-03 | data/raw/bps/county/co2017a.txt | BPS county-level annual (all U.S. counties; Metros view), 2017 |
+| https://www2.census.gov/econ/bps/County/co2018a.txt | 2026-10-03 | data/raw/bps/county/co2018a.txt | BPS county-level annual (all U.S. counties; Metros view), 2018 |
+| https://www2.census.gov/econ/bps/County/co2019a.txt | 2026-10-03 | data/raw/bps/county/co2019a.txt | BPS county-level annual (all U.S. counties; Metros view), 2019 |
+| https://www2.census.gov/econ/bps/County/co2020a.txt | 2026-10-03 | data/raw/bps/county/co2020a.txt | BPS county-level annual (all U.S. counties; Metros view), 2020 |
+| https://www2.census.gov/econ/bps/County/co2021a.txt | 2026-10-03 | data/raw/bps/county/co2021a.txt | BPS county-level annual (all U.S. counties; Metros view), 2021 |
+| https://www2.census.gov/econ/bps/County/co2022a.txt | 2026-10-03 | data/raw/bps/county/co2022a.txt | BPS county-level annual (all U.S. counties; Metros view), 2022 |
+| https://www2.census.gov/econ/bps/County/co2023a.txt | 2026-10-03 | data/raw/bps/county/co2023a.txt | BPS county-level annual (all U.S. counties; Metros view), 2023 |
+| https://www2.census.gov/econ/bps/County/co2024a.txt | 2026-10-03 | data/raw/bps/county/co2024a.txt | BPS county-level annual (all U.S. counties; Metros view), 2024 |
+| https://www2.census.gov/econ/bps/County/co2025a.txt | 2026-10-03 | data/raw/bps/county/co2025a.txt | BPS county-level annual (all U.S. counties; Metros view), 2025 |
