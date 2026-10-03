@@ -1058,11 +1058,18 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             small = p7.pdf(format="A4", print_background=True,
                            margin={k: "0.75in" for k in ("top", "bottom", "left", "right")})
             pages_small = len(re.findall(rb"/Type\s*/Page[^s]", small))
+            # An iPhone prints the page larger than desktop Chrome does: at its
+            # scale the stacked-town layout ran its last line off the page. 1.2x
+            # is the margin every sheet now has.
+            p7.evaluate("() => document.body.classList.add('print-sheet-on')")
+            big = p7.pdf(format="Letter", prefer_css_page_size=True, print_background=True,
+                         scale=1.2)
+            pages_big = len(re.findall(rb"/Type\s*/Page[^s]", big))
             p7.emulate_media(media="screen")
             R.out(f"    House 69 sheet towns: {got['towns']}; images loaded {got['imgs']}; "
                   f"map markers {got['marks']}")
             R.out(f"    in print: sheet / panel / map visible = {vis};  PDF pages {pages} "
-                  f"(Letter), {pages_small} (A4, 3/4-inch margins)")
+                  f"(Letter), {pages_small} (A4, 3/4-inch margins), {pages_big} (Letter at 1.2x)")
             checks = {
                 "the button opens the print dialog once": True,
                 "the member is on the sheet": "Joe Sosnowski" in got["text"],
@@ -1073,6 +1080,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 "the caveat and sources print with it": foot,
                 "it fits on one Letter page": pages == 1,
                 "it still fits one page with a smaller printable area": pages_small == 1,
+                "it still fits one page printed 20% larger, as on an iPhone": pages_big == 1,
                 "no console errors": not errs,
             }
             p7.close()

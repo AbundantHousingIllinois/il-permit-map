@@ -349,8 +349,11 @@ point instead. Printed from an iPhone, the first version lost its second town:
 town, which was set never to split across a page, had been pushed to page two.
 Print now sets both to `height: auto`, nothing is held unsplittable, the sheet
 is tighter, and its caveat is a `<div>` because the page's print rules hide
-`<footer>`. Every one of the 177 sheets was printed on Letter and on A4 with
-3/4-inch margins and fits one page; site check 16 holds House 69 to both.
+`<footer>`. A second iPhone print then lost only the sources line: iOS prints
+about 15% larger than desktop Chrome, which the A4 test did not model. The two
+towns now sit side by side beside the map instead of stacked, which leaves every
+one of the 177 sheets on one page at 1.2x scale (and 175 at 1.3x). Site check 16
+holds House 69 to Letter, A4 with 3/4-inch margins, and Letter at 1.2x.
 
 ## Things deliberately not done
 

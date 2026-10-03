@@ -871,7 +871,11 @@ ul.sources { font-size: 12.5px; color: var(--ink-secondary); }
 #print-sheet .sheet-qr img { width: 0.95in; height: 0.95in; display: block; }
 #print-sheet .sheet-qr figcaption { font-size: 6.5pt; color: #3C3C3C; word-break: break-all; }
 
-#print-sheet .sheet-body { display: grid; grid-template-columns: 2.9in 1fr; gap: 12pt; }
+/* Map, then the two towns side by side: stacking the towns made the sheet tall
+ * enough that an iPhone, which prints about 15% larger, ran off the page. */
+#print-sheet .sheet-body { display: grid; grid-template-columns: 2.55in 1fr; gap: 12pt; }
+#print-sheet .sheet-towns { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10pt; align-content: start; }
+#print-sheet .sheet-towns > .sheet-note { grid-column: 1 / -1; }
 #print-sheet .sheet-map { width: 100%; height: auto; display: block; border: 0.5pt solid #C8C8C8; border-radius: 6pt; }
 #print-sheet .sheet-note { font-size: 7.5pt; color: #787878; margin: 4pt 0 0; }
 
