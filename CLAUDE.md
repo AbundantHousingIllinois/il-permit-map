@@ -344,7 +344,13 @@ drawn by `segno` in the build and pointing at the district's preview page, so th
 page still makes no new request. The sheet's map is inline SVG, which prints
 sharply where a WebGL canvas does not. A town whose interior point is outside the
 district (Chicago in most of its districts) is marked at the district's label
-point instead.
+point instead. Printed from an iPhone, the first version lost its second town:
+`html, body { height: 100% }` clipped the print to one page, and the second
+town, which was set never to split across a page, had been pushed to page two.
+Print now sets both to `height: auto`, nothing is held unsplittable, the sheet
+is tighter, and its caveat is a `<div>` because the page's print rules hide
+`<footer>`. Every one of the 177 sheets was printed on Letter and on A4 with
+3/4-inch margins and fits one page; site check 16 holds House 69 to both.
 
 ## Things deliberately not done
 

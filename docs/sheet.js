@@ -201,7 +201,8 @@ function sheetHTML(ch, d) {
       </div>
     </div>
 
-    <footer class="sheet-foot">
+    <!-- A div, not <footer>: the district page's print rules hide footers. -->
+    <div class="sheet-foot">
       <p><b>Permits show what a town approved, not every home added.</b> They count new buildings
         only. Conversions, additions and basement apartments never show up, so the real number of
         homes added can be higher. A district's totals count each town's permits by the share of
@@ -209,7 +210,7 @@ function sheetHTML(ch, d) {
       <p>Sources: ${esc(META.source_line)}; 2020 Decennial Census; Open States (members, retrieved
         ${esc(DIST.legislators_as_of || 'date unknown')})${META.ahpaa.enabled ? `; IHDA ${esc(META.ahpaa.as_of || '')} AHPAA report` : ''}.
         Built ${esc(META.build_date)}. ${esc(link.replace(/^https?:\/\//, ''))}</p>
-    </footer>
+    </div>
   </div>`;
 }
 

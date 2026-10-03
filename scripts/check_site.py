@@ -1047,12 +1047,22 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 return !!e && getComputedStyle(e).display !== 'none'
                     && !!(e.offsetWidth || e.offsetHeight);
             })""")
+            foot = p7.evaluate("""() => { const f = document.querySelector('#print-sheet .sheet-foot');
+                return !!f && getComputedStyle(f).display !== 'none' && f.innerText.includes('Sources:'); }""")
             pdf = p7.pdf(format="Letter", prefer_css_page_size=True, print_background=True)
             pages = len(re.findall(rb"/Type\s*/Page[^s]", pdf))
+            # A smaller printable area than Letter at the sheet's own margins: A4
+            # with 3/4-inch margins, roughly what an iPhone gives. Printing fires
+            # afterprint, which takes the sheet down, so put it back first.
+            p7.evaluate("() => document.body.classList.add('print-sheet-on')")
+            small = p7.pdf(format="A4", print_background=True,
+                           margin={k: "0.75in" for k in ("top", "bottom", "left", "right")})
+            pages_small = len(re.findall(rb"/Type\s*/Page[^s]", small))
             p7.emulate_media(media="screen")
             R.out(f"    House 69 sheet towns: {got['towns']}; images loaded {got['imgs']}; "
                   f"map markers {got['marks']}")
-            R.out(f"    in print: sheet / panel / map visible = {vis};  PDF pages {pages}")
+            R.out(f"    in print: sheet / panel / map visible = {vis};  PDF pages {pages} "
+                  f"(Letter), {pages_small} (A4, 3/4-inch margins)")
             checks = {
                 "the button opens the print dialog once": True,
                 "the member is on the sheet": "Joe Sosnowski" in got["text"],
@@ -1060,7 +1070,9 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 "the logo and QR code load": len(got["imgs"]) == 2 and all(got["imgs"]),
                 "both towns are marked on the map": got["marks"] == 2,
                 "only the sheet prints": vis == [True, False, False],
+                "the caveat and sources print with it": foot,
                 "it fits on one Letter page": pages == 1,
+                "it still fits one page with a smaller printable area": pages_small == 1,
                 "no console errors": not errs,
             }
             p7.close()
