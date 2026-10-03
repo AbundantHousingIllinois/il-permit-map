@@ -6,3 +6,8 @@ __pycache__/
 # largest here is the national county archive at 11.8 MB, so everything under
 # data/raw/ is committed and a clean checkout can run build.py and both checks
 # with no network access.
+
+# Conflict copies the cloud file provider leaves beside real files
+# ("Poppins-Bold 2.ttf", "niantic 2/"). Never project files; never commit them.
+* [0-9]
+* [0-9].*
