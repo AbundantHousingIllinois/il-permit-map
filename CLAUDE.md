@@ -104,7 +104,7 @@ Raised by Austin Busch asking about Cicero; see BLOCKERS.md #5.
 on `mf5p_total == 0` and was labelled "Zero multifamily", which reads as "nothing
 but houses". Glen Ellyn has permitted 4 units in 3–4 unit buildings and 0 in 5+, and
 was in it. The switch is now **"No 5+ unit buildings"** (692 municipalities), with a
-second, stricter **"Nothing above a duplex"** on `mf34 + mf5p == 0` (635). Every
+second, stricter **"Nothing above a 2-flat"** (renamed from "duplex", 2026-10-03, as more idiomatic in Illinois) on `mf34 + mf5p == 0` (635). Every
 detail panel prints all four buckets, and a place in the first switch with 3–4 unit
 permits says so in the flag itself. In the tables the flag is a plain column,
 "Multifamily since 2010", showing the stricter claim that holds; Austin found the

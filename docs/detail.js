@@ -302,8 +302,8 @@ async function renderPlaceDetail(geoid, title) {
     ${shard.zero_mf ? `<div class="flag"><strong>No 5+ unit buildings.</strong> No units in
       buildings of five or more have been permitted here since ${shard.first_metric_year || META.metric_start}.${
         shard.mf34_total
-          ? ` ${fmtInt(shard.mf34_total)} unit${shard.mf34_total === 1 ? '' : 's'} in 3–4 unit buildings ${shard.mf34_total === 1 ? 'was' : 'were'} permitted over the same period — this measure counts those separately, so a town can appear here and still have permitted a small apartment building.`
-          : ' No 3–4 unit buildings either.'}${
+          ? ` ${fmtInt(shard.mf34_total)} unit${shard.mf34_total === 1 ? '' : 's'} in 3- and 4-flats ${shard.mf34_total === 1 ? 'was' : 'were'} permitted over the same period — this measure counts those separately, so a town can appear here and still have permitted a small apartment building.`
+          : ' No 3- or 4-flats either.'}${
         shard.first_metric_year && shard.first_metric_year > META.metric_start
           ? ` This place's permit office first reported to the Census in ${shard.first_metric_year}, so there is no record for ${META.metric_start}–${shard.first_metric_year - 1}.`
           : ''}</div>` : ''}

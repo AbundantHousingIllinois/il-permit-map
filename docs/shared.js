@@ -33,7 +33,7 @@ const SEQUENTIAL = ['#EEF4F9', '#CFE0EE', '#A3C4DE', '#6F9FC6', '#3C79A8', '#175
 const SEQ_STOPS = [0, 25, 100, 400, 1500, 6000, 25000];
 
 /* Four categorical series for the stacked area chart, assigned in fixed order
- * (single-family, duplex, 3-4, 5+) and never cycled. Both sets were run through
+ * (single-family, 2-flat, 3- or 4-flat, 5+) and never cycled. Both sets were run through
  * the palette validator and pass every check for their own surface: lightness
  * band, chroma floor, CVD separation, the normal-vision floor and contrast.
  */
@@ -41,8 +41,9 @@ const SERIES_LIGHT = { sf: '#2E6E9E', du: '#E87722', mf34: '#1F8A70', mf5p: '#9B
 const SERIES_DARK  = { sf: '#3E80B2', du: '#DC7420', mf34: '#26977C', mf5p: '#A468BE' };
 
 const TYPE_ORDER = ['sf', 'du', 'mf34', 'mf5p'];
-const TYPE_LABEL = { sf: 'Single-family', du: 'Duplex (2 units)', mf34: '3–4 units', mf5p: '5+ units' };
-const TYPE_LABEL_SHORT = { all: 'All types', sf: 'Single-family', du: 'Duplex', mf34: '3–4 unit', mf5p: '5+ unit' };
+/* 2-flat, 3-flat, 4-flat: what Illinois calls a two-, three- or four-unit building. */
+const TYPE_LABEL = { sf: 'Single-family', du: '2-flat (2 units)', mf34: '3- or 4-flat (3–4 units)', mf5p: '5+ units' };
+const TYPE_LABEL_SHORT = { all: 'All types', sf: 'Single-family', du: '2-flat', mf34: '3- or 4-flat', mf5p: '5+ unit' };
 
 function darkMode() {
   return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -114,10 +115,10 @@ const fmtPct = (n, d) => (n === null || n === undefined)
 const fmtShare = s => (s === null || s === undefined) ? '—' : fmtPct(s * 100, 1);
 
 /* The stricter of the two multifamily claims, as plain text for a table column.
- * Nothing above a duplex implies no 5+, so it wins when both hold. A reporting
+ * Nothing above a 2-flat implies no 5+, so it wins when both hold. A reporting
  * place with neither gets an empty cell; an unknown (null) gets a dash. */
 function mfLabel(p) {
-  if (p.zero_mf3p === true) return 'Nothing above a duplex';
+  if (p.zero_mf3p === true) return 'Nothing above a 2-flat';
   if (p.zero_mf === true) return 'No 5+ unit buildings';
   if (p.zero_mf === false) return '';
   return '—';

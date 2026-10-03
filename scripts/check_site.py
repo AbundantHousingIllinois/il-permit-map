@@ -1116,7 +1116,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             R.out(f"  Coverage reporting / gap  : {got['reporting']!r} / {got['gap']!r}")
             R.out(f"  Join rate rendered        : {got['join']!r}")
             R.out(f"  AHPAA state sentence      : {got['ahpaa']!r}")
-            R.out(f"  No 5+ unit / nothing above a duplex : "
+            R.out(f"  No 5+ unit / nothing above a 2-flat : "
                   f"{got['zero5p']!r} / {got['zero3p']!r}")
             R.out(f"  Full-month / no-month places       : "
                   f"{got['mfull']!r} / {got['mnone']!r}")
@@ -1140,7 +1140,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                     got["ahpaaU25"].replace(",", "") == str(meta["ahpaa"].get("n_under25", "—")),
                 "no-5+-unit count matches meta.json":
                     got["zero5p"].replace(",", "") == str(meta["n_zero_mf"]),
-                "nothing-above-a-duplex count matches meta.json":
+                "nothing-above-a-2-flat count matches meta.json":
                     got["zero3p"].replace(",", "") == str(meta["n_zero_mf3p"]),
                 "months-reported counts match meta.json":
                     got["mfull"].replace(",", "")

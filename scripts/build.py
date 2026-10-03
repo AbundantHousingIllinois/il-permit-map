@@ -901,7 +901,7 @@ def main() -> int:
     n_zero_mf = sum(1 for ft in features if ft["properties"]["zero_mf"] is True)
     n_zero_mf3p = sum(1 for ft in features if ft["properties"]["zero_mf3p"] is True)
     print(f"  Reporting places with zero 5+ unit permits: {n_zero_mf:,}")
-    print(f"  Reporting places with nothing above a duplex: {n_zero_mf3p:,}")
+    print(f"  Reporting places with nothing above a 2-flat: {n_zero_mf3p:,}")
 
     months_counts: dict[str, int] = defaultdict(int)
     for ft in features:

@@ -359,7 +359,7 @@ function renderTable() {
   document.getElementById('table-title').textContent =
     state.under25 && !state.zeroMf && !state.zeroMf3p
       ? `Municipalities under ${fmtPct(META.ahpaa.under25_share * 100, 0)} affordable`
-    : state.zeroMf3p ? 'Municipalities that have permitted nothing above a duplex since 2010'
+    : state.zeroMf3p ? 'Municipalities that have permitted nothing above a 2-flat since 2010'
       : state.zeroMf ? 'Municipalities with no 5+ unit buildings since 2010' : 'Municipalities';
   document.getElementById('table-meta').textContent =
     `${fmtInt(rows.length)} municipalities shown · ${fmtInt(total)} units permitted `
@@ -500,17 +500,17 @@ function wireControls() {
   };
   /* .hint is a single clipped line by design, so the short form goes here and
    * the counts go in the footer, which has room for them. */
-  const mfFull = `"5+ unit" counts units in buildings of five or more; buildings of `
-    + `three or four are counted separately, so a municipality can have permitted no `
-    + `5+ unit building and still have permitted a 3–4 unit one. `
+  const mfFull = `"5+ unit" counts units in buildings of five or more; 3- and 4-flats `
+    + `are counted separately, so a municipality can have permitted no 5+ unit `
+    + `building and still have permitted a 3- or 4-flat. `
     + `${fmtInt(META.n_zero_mf)} municipalities have permitted no 5+ unit building since `
-    + `${META.metric_start}; ${fmtInt(META.n_zero_mf3p)} have permitted nothing above a duplex.`;
+    + `${META.metric_start}; ${fmtInt(META.n_zero_mf3p)} have permitted nothing above a 2-flat.`;
   const mfHint = document.getElementById('mf-hint');
-  mfHint.textContent = '3–4 unit buildings are counted separately from 5+ unit ones.';
+  mfHint.textContent = '3- and 4-flats are counted separately from 5+ unit buildings.';
   mfHint.title = mfFull;
   document.getElementById('label-zero-mf').title = mfFull;
   document.getElementById('label-zero-mf3p').title =
-    'Municipalities that have permitted nothing larger than a two-unit building since '
+    'Municipalities that have permitted nothing larger than a 2-flat since '
     + META.metric_start + '.';
   document.getElementById('detail-close').onclick = closeDetail;
 
@@ -583,7 +583,7 @@ function renderFooter() {
     + `reporting to the Census; ${fmtInt(c.no_permit_office || 0)} do not. Those are drawn with a hatch `
     + `pattern, not as zero, and are left out of rankings and statewide totals. `
     + `${fmtInt(META.n_zero_mf)} reporting municipalities have permitted no building of 5+ units since `
-    + `${META.metric_start}, and ${fmtInt(META.n_zero_mf3p)} have permitted nothing above a duplex. `
+    + `${META.metric_start}, and ${fmtInt(META.n_zero_mf3p)} have permitted nothing above a 2-flat. `
     + `A permit office can also file for only part of a year: `
     + `${fmtInt((META.months_counts || {}).full || 0)} of the reporting municipalities reported all `
     + `twelve months in every year since ${META.metric_start}, and `

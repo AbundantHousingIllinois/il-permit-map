@@ -738,11 +738,11 @@ def cB():
     contradictory = [p["geoid"] for p in ps
                      if p.get("zero_mf3p") is True and p.get("zero_mf") is not True]
     if contradictory:
-        R.out(f"  B.5  'nothing above a duplex' true where 'no 5+ unit' is not: "
+        R.out(f"  B.5  'nothing above a 2-flat' true where 'no 5+ unit' is not: "
               f"{contradictory[:10]}")
         ok = False
     else:
-        R.out("  B.5  'Nothing above a duplex' is a strict subset of 'no 5+ unit'.")
+        R.out("  B.5  'Nothing above a 2-flat' is a strict subset of 'no 5+ unit'.")
 
     # The shard has to carry the years, so the detail panel can name them.
     bad_shard = []
@@ -769,7 +769,7 @@ def cB():
             continue
         R.out(f"         {label:<11} months_flag={d.get('months_flag'):<8} "
               f"coverage={d.get('months_coverage')}  "
-              f"3-4 unit={d.get('mf34_total')}  5+ unit={d.get('mf5p_total')}  "
+              f"3/4-flat={d.get('mf34_total')}  5+ unit={d.get('mf5p_total')}  "
               f"zero_mf={d.get('zero_mf')}")
     return ok
 
@@ -1220,8 +1220,12 @@ def cH():
                if (root / n).is_dir() for f in (root / n).iterdir()
                if f.name not in ("index.html", PV.CARD)
                and not (f.name == PV.QR and root != L.PREVIEW_TOWN_DIR)]
-    R.out(f"  H.5  stray files or directories in docs/town, docs/senate, docs/house: "
-          f"{len(strays)}")
+    # An empty directory cannot be committed, so it cannot ship. The cloud file
+    # provider recreates empty conflict copies ("niantic 2/") as fast as they are
+    # deleted; only a stray that holds a file is a real one.
+    strays = [q for q in strays if q.is_file() or any(f.is_file() for f in q.rglob("*"))]
+    R.out(f"  H.5  stray files, or directories holding files, in docs/town, docs/senate, "
+          f"docs/house: {len(strays)}")
     for q in strays[:5]:
         R.out(f"         {L.rel(q)}")
     ok &= not strays

@@ -128,10 +128,10 @@ function sheetTown(t, i) {
         `<tr><td>${TYPE_LABEL[k]}</td><td class="num">${fmtInt(t.units_by_type[k])}</td></tr>`).join('')}
       </tbody></table>` : '';
   const flag = t.zero_mf3p === true
-    ? `<p class="sheet-flag">Nothing above a duplex permitted since ${t.first_metric_year || ms}.</p>`
+    ? `<p class="sheet-flag">Nothing above a 2-flat permitted since ${t.first_metric_year || ms}.</p>`
     : t.zero_mf === true
       ? `<p class="sheet-flag">No 5+ unit buildings permitted since ${t.first_metric_year || ms}${
-          t.mf34_total ? ` (${fmtInt(t.mf34_total)} units in 3–4 unit buildings)` : ''}.</p>`
+          t.mf34_total ? ` (${fmtInt(t.mf34_total)} units in 3- and 4-flats)` : ''}.</p>`
       : '';
   const ahpaa = t.ahpaa_status
     ? `<p class="sheet-ahpaa">AHPAA: <b>${esc(t.ahpaa_status)}</b> · ${fmtShare(t.affordable_share)} of homes

@@ -21,10 +21,10 @@ whose **midpoint is the Illinois statewide figure (5.6%)**, so the colour break
 means "keeping up with the state." The U.S. figure over the same period is 15.0%.
 
 Alongside it: total units permitted 2010–2025 (the "Total units" view), a
-breakdown by structure type (single-family, duplex, 3–4 unit, 5+ unit), a
+breakdown by structure type (single-family, 2-flat, 3- or 4-flat, 5+ unit), a
 per-year stacked chart on each municipality (2000–2009 drawn faded as context;
 only 2010 onward feeds any figure), two multifamily highlights ("No 5+ unit
-buildings" and the stricter "Nothing above a duplex"), and IHDA's AHPAA status
+buildings" and the stricter "Nothing above a 2-flat"), and IHDA's AHPAA status
 and affordable housing share for each municipality, with switches for the 44
 non-exempt and for those under 25% affordable with more than 2,000 people.
 
