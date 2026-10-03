@@ -12,7 +12,41 @@ CLAUDE.md deviation 38), the plain-language pass Steven asked for (deviation 39)
 and the printable district sheet, formerly item 4 (deviation 40). Left: 2, then 1.
 Item 3 is shelved.
 
+**Austin's feedback, 2026-10-03.** Metros (item 2) is unblocked: the area's own
+rate. Economic context (item 1) waits on outside advice. Three problems he hit
+with what is live are item 0, which should go before either.
+
 ---
+
+## 0. Fixes from Austin's 2026-10-03 testing
+
+*Austin, 2026-10-03, after trying the district sheet and the link previews.*
+
+- **Printing a district from the browser menu does not give the sheet.** In Edge
+  he got "a weird map" and in Firefox no map, and "no featured place". His
+  screenshot is the whole district page printed with Ctrl+P (or the menu): the
+  live map prints black or blank, and the sheet only appears from the "Print
+  one-page sheet" button. Fix: whenever a district is open, any print (button,
+  menu or Ctrl+P) produces the sheet, via a `beforeprint` handler. Test it in
+  Firefox and WebKit as well as Chromium.
+- **"The district thing should show the district portion of the map."** Read
+  two ways, possibly both:
+  1. A link copied from the address bar (`districts.html#senate-28`) previews as
+     the whole-state card, because a preview service never sees `#…`. Only
+     `senate/28/` links preview the district, and only "Copy link" hands those
+     out. Fix: make the address bar show the shareable form (`…/senate/28/`,
+     `…/town/plano/`) as a district or town is opened, so any copied link
+     previews correctly. It changes how both pages handle their addresses
+     (a `<base>` element pinned to the site root, `history.replaceState` to the
+     preview path); every old `#…` link must keep working, and a site check
+     should prove it.
+  2. The selected district is outlined in orange, which is hard to see over the
+     orange (below-Illinois) towns, on the page, on its preview card and on the
+     sheet. Steffany's reading. Fix: fade everything outside the district and
+     draw its edge in dark ink, so the district's own part of the map stands out.
+- **The 5.6% on the whole-state cards needs saying what it is.** Austin's
+  wording: "Statewide, Illinois has permitted 5.6% of new housing units to its
+  2010 housing stock." Use it on `preview.png` and `preview-districts.png`.
 
 ## 1. Economic context for towns that permit little
 
@@ -44,9 +78,26 @@ meaningless; small villages are noisy, and an unknown value is `null`, never a
 substituted number. Show it in the detail panel and as optional table columns,
 **not** in the map colours. Say so in `about.html`.
 
-**Decide first.** SPEC.md §10 excludes "housing cost or rent data from ACS", and
-median home value is exactly that. Austin asked for it, so this is a deliberate
-deviation to record in CLAUDE.md, not an oversight. Steffany should confirm.
+**On hold for outside advice (2026-10-03).** Steffany: "design here is key", and
+someone with an economics background, or who has thought about low-demand places,
+should weigh in before it is built. Austin agreed: ask Emily at MPC, and probably
+the WNN folks too. Questions worth putting to them:
+
+- Do a town's change in median income and median home value actually separate
+  "nobody wants to build here" from "the town is blocking it"? What would they
+  use instead, or as well (population or job change, vacancy, sales prices,
+  rents, distance to jobs)?
+- Is 2006–2010 against 2020–2024 a fair window, given the 2008 crash sits inside
+  the first period?
+- How should a small village's wide margin of error be shown: blanked, flagged,
+  or grouped?
+- Should the comparison be to Illinois, to the town's own metro (item 2), or to
+  similar towns?
+
+**Then decide.** SPEC.md §10 excludes "housing cost or rent data from ACS", and
+median home value is exactly that. Austin asked for it, so if it survives the
+advice above, it is a deliberate deviation to record in CLAUDE.md, not an
+oversight, and Steffany signs it off.
 
 **Opportunity Zones: deferred.** They need the CDFI Fund's designated-tract XLSX,
 TIGER tract geometry and a tract-to-place overlap, and the designations are frozen
@@ -72,6 +123,10 @@ Chicago suburbs with Peoria or the Metro East rather than town by town.
 - **An average permit rate for each area**, and each municipality evaluated
   against its own area's rate, **in this tab's summary only**. The main map keeps
   Illinois as its reference.
+- **The area rate is the area's own rate** (Austin, 2026-10-03): all its permits
+  ÷ all its 2010 housing, as `il_pct_growth` is for the state, "because we're
+  trying to show where growth is happening within a metro area." Not the mean of
+  its towns' rates.
 
 Notes for whoever starts it:
 
@@ -84,11 +139,8 @@ Notes for whoever starts it:
   county sum can be checked the same way.
 - A municipality that straddles two counties in different CBSAs (rare) needs a
   rule; by largest land share is the obvious one.
-- **Decide first:** whether "average permit rate" means the area's own rate
-  (all its permits ÷ all its 2010 housing, as `il_pct_growth` is for the state) or
-  the mean of its towns' rates. The first is consistent with the rest of the site
-  and is not swayed by tiny villages; the second is what "average" literally says.
-  Ask Austin.
+- Nothing is left to decide before starting. Steffany plans to build it in its
+  own session.
 
 ## 3. Downloadable shapefiles — shelved
 
