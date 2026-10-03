@@ -81,3 +81,9 @@ attached to a district is exactly the error a legislator meeting cannot absorb.
 
 An override naming a chamber, district or field that does not exist fails
 `scripts/check_data.py` rather than being silently dropped.
+
+## `ahil_logo.png`
+
+Abundant Housing Illinois's logo, orange and blue on white, as supplied with
+AHIL's brand guidelines. `scripts/previews.py` crops it to the mark and places it
+on every link-preview card. It is not shown on the map pages.

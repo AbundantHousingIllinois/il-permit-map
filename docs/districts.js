@@ -342,6 +342,7 @@ function renderPanel() {
   body.innerHTML = `
     <div class="member-card">
       <p class="member-district">${esc(districtLabel(ch, d))}</p>
+      <p class="share-line">${copyLinkButton(`${ch}/${d}/`, false)}</p>
       <h2 class="member-name" id="member-name">${m.vacant ? 'Vacant' : `${esc(title)} ${esc(m.name || 'not listed')}`}${
         m.party ? ` <span class="party">(${esc(PARTY_SHORT[m.party] || m.party)})</span>` : ''}</h2>
       ${contact}

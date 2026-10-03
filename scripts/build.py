@@ -12,6 +12,8 @@ Outputs
   docs/data/meta.json           il_pct_growth, us_pct_growth, ymax, build_date,
                                 sources, and the coverage/join counts the page
                                 cites in its footer
+  docs/town/, docs/senate/,     a link-preview page and card per municipality and
+  docs/house/, docs/preview*.png  district, written by previews.py (step 7)
 
 Hard rules this file exists to honour:
   * A place with no BPS record gets ``coverage = "no_permit_office"`` and NULL
@@ -40,6 +42,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import bps_layout as L
 import crosswalk as CW
 import districts as DI
+import previews as PV
 import simplify_geo as SG
 
 
@@ -214,15 +217,17 @@ def main() -> int:
     for chamber in L.CHAMBERS:
         need(L.district_zip(chamber), "fetch_districts.py")
     need(L.LEGISLATORS_CSV, "fetch_districts.py")
+    for name in L.FONTS.values():
+        need(L.FONT_DIR / name, "fetch_fonts.py")
     ensure_geometry()
 
     # ---------------- crosswalk ----------------
-    print("\n[1/6] Crosswalk (SPEC.md §3.1)")
+    print("\n[1/7] Crosswalk (SPEC.md §3.1)")
     print("-" * 78)
     CW.main()
 
     # ---------------- load ----------------
-    print("\n[2/6] Loading raw sources")
+    print("\n[2/7] Loading raw sources")
     print("-" * 78)
     records = L.read_all_place_years()
     L.learn_municipal_ids(records)
@@ -282,7 +287,7 @@ def main() -> int:
           f"{'ENABLED' if ahpaa_enabled else 'DISABLED (nothing is faked)'}")
 
     # ---------------- aggregate permits per place per year ----------------
-    print("\n[3/6] Aggregating permits onto places")
+    print("\n[3/7] Aggregating permits onto places")
     print("-" * 78)
     # Keyed by year ON DEMAND. A year with no BPS record for a place is a year
     # the Census has no administrative count for, which is not the same as a year
@@ -319,7 +324,7 @@ def main() -> int:
     print(f"  Wrote {L.rel(L.PERMITS_CSV)}")
 
     # ---------------- reference rates ----------------
-    print("\n[4/6] Reference rates (SPEC.md §4)")
+    print("\n[4/7] Reference rates (SPEC.md §4)")
     print("-" * 78)
     il_units = us_units = 0
     # The same reference rate, per structure type. The map's neutral midpoint is
@@ -389,7 +394,7 @@ def main() -> int:
               f"   us {us_pct_by_type[k]:>7}%")
 
     # ---------------- features and shards ----------------
-    print("\n[5/6] Writing features and shards")
+    print("\n[5/7] Writing features and shards")
     print("-" * 78)
     geom = json.loads(L.SIMPLIFIED_GEOJSON.read_text(encoding="utf-8"))
     tiger = {t["geoid"]: t for t in L.tiger_places()}
@@ -407,7 +412,7 @@ def main() -> int:
     legs = DI.legislators()
 
     features = []
-    shard_payload: list[tuple[str, str]] = []
+    shard_payload: list[tuple[str, dict]] = []
     cov_counts: dict[str, int] = defaultdict(int)
     for f in geom["features"]:
         geoid = f["properties"]["GEOID"]
@@ -681,12 +686,22 @@ def main() -> int:
                  "This place is excluded from rankings and from statewide totals.")
             ),
         }
-        shard_payload.append((geoid, json.dumps(shard, separators=(",", ":"))))
+        shard_payload.append((geoid, shard))
+
+    # The address of each place's link-preview page (docs/town/<slug>/). A shared
+    # name takes the county, which is only known once every place has been seen.
+    slugs = L.place_slugs((ft["properties"]["geoid"], ft["properties"]["name"],
+                           ft["properties"]["county"]) for ft in features)
+    for ft in features:
+        ft["properties"]["slug"] = slugs[ft["properties"]["geoid"]]
+    for geoid, shard in shard_payload:
+        shard["slug"] = slugs[geoid]
 
     # Writing 1,461 small files is latency-bound, not CPU-bound, so thread it.
     def _write(item):
-        geoid, text = item
-        (L.DOCS_SHARDS / f"{geoid}.json").write_text(text, encoding="utf-8")
+        geoid, shard = item
+        (L.DOCS_SHARDS / f"{geoid}.json").write_text(
+            json.dumps(shard, separators=(",", ":")), encoding="utf-8")
 
     with ThreadPoolExecutor(max_workers=32) as pool:
         list(pool.map(_write, shard_payload))
@@ -861,7 +876,7 @@ def main() -> int:
     print("     says which year their record starts from.")
 
     # ---------------- meta ----------------
-    print("\n[6/6] meta.json")
+    print("\n[6/7] meta.json")
     print("-" * 78)
     with L.UNMATCHED_CSV.open(newline="", encoding="utf-8") as fh:
         unmatched = list(csv.DictReader(fh))
@@ -979,6 +994,11 @@ def main() -> int:
           f"ymax {L.YMAX}   build {meta['build_date']}")
     print(f"  join rate (municipal) {meta['join']['join_rate_municipal_pct']}%")
     print(f"  Wrote {L.rel(L.DOCS_DATA / 'meta.json')}")
+
+    # Link previews read what was just written, so they come last.
+    print("\n[7/7] Link previews (docs/town/, docs/senate/, docs/house/)")
+    print("-" * 78)
+    PV.main()
 
     print("\n" + "=" * 78)
     print("Build complete. Next: uv run scripts/check_data.py")

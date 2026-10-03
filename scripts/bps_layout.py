@@ -138,6 +138,65 @@ LEGISLATOR_OVERRIDES_CSV = MANUAL / "legislator_overrides.csv"
 # carried so a partial member is never presented as a whole one.
 DISTRICT_SHARE_MIN = 0.01
 CROSSWALK_CSV = PROCESSED / "crosswalk.csv"
+
+# Link previews. A link-preview scraper (Slack, iMessage, Facebook) never sees the
+# part of a URL after "#", so every municipality and district gets a real page of
+# its own under docs/, carrying Open Graph tags and a 1200x630 card, which sends
+# a reader straight on to the map. og:url and og:image must be absolute, so the
+# published address lives here and only here (GitHub Pages, no custom domain).
+SITE_URL = "https://abundanthousingillinois.github.io/il-permit-map/"
+# Austin Busch's wording, verbatim.
+PREVIEW_TITLE = "How much housing has {} permitted?"
+PREVIEW_DESCRIPTION = ("A visualization of building permits issued, per data collected "
+                       "by the U.S. Census, allowing exploration of housing production "
+                       "at the municipality level.")
+PREVIEW_SIZE = (1200, 630)
+PREVIEW_TOWN_DIR = DOCS / "town"            # docs/town/<slug>/index.html + card.png
+PREVIEW_DEFAULT_PNG = DOCS / "preview.png"  # the whole-state card for the three pages
+# Poppins (SIL Open Font License) is AHIL's text face. The cards are drawn by the
+# build, which is offline, so the font files are fetched once by fetch_fonts.py.
+FONT_DIR = RAW / "vendor" / "fonts"
+FONT_BASE_URL = "https://github.com/google/fonts/raw/main/ofl/poppins/"
+FONTS = {"regular": "Poppins-Regular.ttf", "semibold": "Poppins-SemiBold.ttf",
+         "bold": "Poppins-Bold.ttf"}
+AHIL_LOGO = MANUAL / "ahil_logo.png"
+
+
+def preview_dir(chamber: str | None = None) -> Path:
+    """Where a chamber's district preview pages live (docs/senate/, docs/house/)."""
+    return PREVIEW_TOWN_DIR if chamber is None else DOCS / chamber
+
+
+_SLUG_DROP = re.compile(r"[’'.]")
+_SLUG_SEP = re.compile(r"[^a-z0-9]+")
+
+
+def _slug(text: str) -> str:
+    return _SLUG_SEP.sub("-", _SLUG_DROP.sub("", text.lower())).strip("-")
+
+
+def place_slugs(places) -> dict[str, str]:
+    """GEOID -> URL slug for each place: ``{"1760352": "plano"}``.
+
+    ``places`` is an iterable of ``(geoid, short_name, county)``. A name that
+    two Illinois municipalities share (Windsor, Lakewood, ...) takes its county
+    on every holder, never on just the second one found, so no slug depends on
+    the order the places were read in.
+    """
+    places = list(places)
+    by_name: dict[str, list] = {}
+    for g, name, county in places:
+        by_name.setdefault(_slug(name), []).append(g)
+    out = {}
+    for g, name, county in places:
+        s = _slug(name)
+        if len(by_name[s]) > 1:
+            s = f"{s}-{_slug(re.sub(r' County$', '', county or ''))}"
+        out[g] = s
+    if len(set(out.values())) != len(out):
+        dup = sorted(s for s in set(out.values()) if list(out.values()).count(s) > 1)
+        raise ValueError(f"place slugs are not unique: {dup}")
+    return out
 UNMATCHED_CSV = PROCESSED / "unmatched.csv"
 PERMITS_CSV = PROCESSED / "permits_tidy.csv"
 

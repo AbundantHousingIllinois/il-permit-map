@@ -84,3 +84,7 @@ it produced (SPEC.md §1.7). Appended automatically by the fetch scripts.
 | npx mapshaper@0.6.109 -filter-fields -o precision=0.00001 | 2026-09-30 | data/processed/sldu_simplified.geojson | Conversion step, not a download. State Senate districts, not simplified; coordinates quantized to 0.00001. |
 | npx mapshaper@0.6.109 -filter-fields -o precision=0.00001 | 2026-09-30 | data/processed/sldl_simplified.geojson | Conversion step, not a download. State House districts, not simplified; coordinates quantized to 0.00001. |
 | https://www.ihda.org/wp-content/uploads/2023/12/2023-AHPAA-Statewide-Affordability-List.pdf | 2026-10-01 | data/manual/ahpaa.csv | Transcribed by scripts/import_ahpaa.py from data/manual/2023-AHPAA-Local-Government-Data.xlsx (supplied by Impact for Equity); every row checked against this PDF on 2026-10-01. |
+| https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Regular.ttf | 2026-10-03 | data/raw/vendor/fonts/Poppins-Regular.ttf | Poppins, SIL Open Font License; link-preview cards only |
+| https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-SemiBold.ttf | 2026-10-03 | data/raw/vendor/fonts/Poppins-SemiBold.ttf | Poppins, SIL Open Font License; link-preview cards only |
+| https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Bold.ttf | 2026-10-03 | data/raw/vendor/fonts/Poppins-Bold.ttf | Poppins, SIL Open Font License; link-preview cards only |
+| https://github.com/google/fonts/raw/main/ofl/poppins/OFL.txt | 2026-10-03 | data/raw/vendor/fonts/OFL.txt | SIL Open Font License for the Poppins files beside it |

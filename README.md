@@ -35,6 +35,12 @@ place, whatever the filters, and opens its detail panel. The view — metric,
 type, filters, sort and the open place — is kept in the URL, so a link restores
 exactly what the sender saw.
 
+Every municipality and district also has a short address of its own
+(`…/il-permit-map/town/plano/`, `…/senate/28/`) that shows a proper preview,
+with its name and a card of its map, when pasted into Slack, a text message or a
+social post. The **Copy link** button in each panel hands it out (see *Link
+previews* below).
+
 The site has three pages:
 
 - **The map** (`docs/index.html`).
@@ -146,7 +152,8 @@ uv run scripts/fetch_bps.py        # Building Permits Survey flat files
 uv run scripts/fetch_census.py     # 2010 SF1 H1, 2020 PL P1, 2020 DHC H1  (needs CENSUS_API_KEY)
 uv run scripts/fetch_geo.py        # TIGER places, counties, state outline + mapshaper
 uv run scripts/fetch_districts.py  # State Senate/House districts + Open States legislators
-uv run scripts/build.py            # regenerates everything under docs/data/
+uv run scripts/fetch_fonts.py      # Poppins, for the link-preview cards
+uv run scripts/build.py            # regenerates docs/data/ and the link previews
 uv run scripts/check_data.py       # SPEC.md §7 data checks
 uv run scripts/check_site.py       # SPEC.md §7 browser checks (Playwright)
 ```
@@ -155,7 +162,7 @@ uv run scripts/check_site.py       # SPEC.md §7 browser checks (Playwright)
 it rewrites `data/manual/ahpaa.csv` from the spreadsheet (see
 `data/manual/README.md`).
 
-The four `fetch_*` scripts are the only ones that touch the network, and they
+The five `fetch_*` scripts are the only ones that touch the network, and they
 are idempotent — a file already in `data/raw/` is left alone. Once `data/raw/` is
 populated (it is committed, so a fresh clone already has it):
 
@@ -173,7 +180,7 @@ written to disk, and the URLs recorded in `data/SOURCES.md` have no key on them.
 `scripts/check_data.py` is the definition of done for the data. It exits 0 only
 if all ten SPEC.md §7 conditions hold, and prints a readable report either way.
 It re-reads the TIGER archive and the raw BPS files itself rather than trusting
-anything the build wrote. It also runs seven extra checks of its own, each
+anything the build wrote. It also runs eight extra checks of its own, each
 labelled as an addition:
 
 - **A** verifies the BPS column positions against the shipped column headers and
@@ -196,13 +203,19 @@ labelled as an addition:
   Census place of the same name, checks it reaches the map, the shards and the
   district file unchanged, and recomputes the under-25% set from IHDA's own
   population.
+- **H** requires a link-preview page and card for every municipality and
+  district, with the right title, description, address, image and redirect, and
+  nothing else in those directories; and redraws a sample of cards from the
+  current data to prove they are not stale. That comparison is byte for byte, so
+  on a different operating system it can fail because fonts rasterise slightly
+  differently; rebuilding there fixes it.
 
 Check 7 is also held stricter than §7.7 reads: the shard directory may contain
 nothing but the current shards (the cloud file provider this copy lives under
 has left conflict copies there, and `build.py` now sweeps them).
 
 `scripts/check_site.py` serves `docs/` over HTTP and drives it with headless
-Chromium, installing the browser on first run if needed. Site checks 8 to 14 and B
+Chromium, installing the browser on first run if needed. Site checks 8 to 15 and B
 are additions too: 8 asserts the map's colour break follows the structure-type filter,
 9 asserts the chart separates the pre-2010 context from the metric window and marks
 the years a permit office did not report, and 10 asserts the state silhouette is
@@ -214,7 +227,9 @@ link restores its member and towns, the chamber toggle swaps the outlines, a
 search by name finds the district, and a place's panel links to its districts; 13
 drives both AHPAA switches, the status tag and share column in both tables, the
 links to the explainer, and an unscored place; 14 drives the municipality search
-and the multifamily column; and B loads `about.html` and holds every figure on it
+and the multifamily column; 15 opens a town's and a district's preview page and
+checks it lands on that view, carries the sender's filters, and that "Copy link"
+hands the page out; and B loads `about.html` and holds every figure on it
 to `meta.json`.
 
 The page's one external dependency is the pinned MapLibre CDN build. `check_site.py`
@@ -248,6 +263,31 @@ runtime API calls and needs no key. There is no webfont request either — the p
 uses Poppins if the reader already has it and a system sans-serif otherwise — so
 the pinned MapLibre CDN is the only external request the page makes.
 
+### Link previews
+
+A link pasted into Slack, iMessage or a social post shows a title, a description
+and an image read from the page's Open Graph tags. A preview service never sees
+the part of a URL after `#`, so `index.html#place=1760352` would preview as the
+generic map. The build therefore writes a small page for every municipality and
+district, each with its own title and a 1200×630 card, which forwards a reader to
+the map straight away:
+
+```
+docs/town/plano/        "How much housing has Plano permitted?"
+docs/senate/28/         "How much housing has State Senate District 28 permitted?"
+docs/house/54/
+```
+
+The **Copy link** button in a town's or district's panel hands out these
+addresses (with the current filters, on the main map). The address bar still
+shows the `#…` form, and a link copied from there previews as the whole map.
+
+The addresses are absolute and live in one place, `SITE_URL` in
+`scripts/bps_layout.py`; if the site moves to a custom domain, change it there and
+rebuild. Preview services cache what they read. After publishing, paste one town
+link into a Slack message or https://www.opengraph.xyz/ to confirm; a link Slack
+has already unfurled may keep its old preview for a while.
+
 ---
 
 ## Layout
@@ -264,15 +304,19 @@ data/
                            by scripts/import_ahpaa.py, legislator_overrides.csv
   SOURCES.md               every URL, date retrieved, file produced
 scripts/                   fetch_*, crosswalk, districts, import_ahpaa, simplify_geo,
-                           build, check_data, check_site
+                           previews, build, check_data, check_site
 docs/                      GitHub Pages root
   index.html, app.js       the map
   districts.html,          the legislator view
     districts.js
   detail.js                the municipality detail panel, used by both maps
-  shared.js                palette, colour ladders, number formats, esc()
+  shared.js                palette, colour ladders, number formats, esc(),
+                           the "Copy link" button
   about.html               method and caveats
   style.css, favicon*      shared styles and icons
+  preview*.png             the whole-state link-preview cards
+  town/, senate/, house/   one link-preview page and card per municipality and
+                           district, written by scripts/previews.py
   data/                    meta.json, places.geojson, one shard per place,
                            districts.json and boundary files, all from build.py
 ```

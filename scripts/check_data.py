@@ -16,6 +16,7 @@ import collections
 import csv
 import json
 import math
+import re
 import sys
 import traceback
 from concurrent.futures import ThreadPoolExecutor
@@ -1132,6 +1133,138 @@ def cF():
 # Extra, disclosed: layout verification against the published state totals
 # --------------------------------------------------------------------------
 
+@check("H", "Every municipality and district has a link-preview page whose tags, "
+            "card and redirect match the data", gating=True)
+def cH():
+    R.out("  Not in SPEC.md §7. Added with the link previews (CLAUDE.md deviation")
+    R.out("  38): a scraper reads these pages and never the map, so a stale or")
+    R.out("  mislabelled one puts the wrong town's name on a shared link.")
+    R.out("")
+    import hashlib
+    import html as H
+    import io
+    import previews as PV
+    from PIL import Image
+
+    tag = lambda text, attr, key: (lambda m: H.unescape(m[1]) if m else None)(
+        re.search(rf'<meta {attr}="{re.escape(key)}" content="([^"]*)">', text))
+    ok = True
+
+    # H.1  Slugs: present, unique, and what the rule in bps_layout gives.
+    feats = props()
+    want_slugs = L.place_slugs((p["geoid"], p["name"], p["county"]) for p in feats)
+    bad_slug = [p["geoid"] for p in feats if p.get("slug") != want_slugs[p["geoid"]]]
+    bad_shard = [g for g, sh in shards().items()
+                 if isinstance(sh, dict) and sh.get("slug") != want_slugs.get(g)]
+    R.out(f"  H.1  slugs: {len(want_slugs):,} unique;  feature mismatches "
+          f"{len(bad_slug)}, shard mismatches {len(bad_shard)}")
+    ok &= not bad_slug and not bad_shard
+
+    # H.2-H.4  One page and one card per entity, with the right tags.
+    D = json.loads((L.DOCS_DATA / "districts.json").read_text(encoding="utf-8"))
+    entities = [(f"town/{p['slug']}/", PV.L.PREVIEW_TITLE.format(p["name"]),
+                 "index.html", f"#place={p['geoid']}") for p in feats]
+    for ch, c in L.CHAMBERS.items():
+        for r in D["chambers"][ch]["districts"]:
+            entities.append((f"{ch}/{r['district']}/",
+                             L.PREVIEW_TITLE.format(f"{c['label']} District {r['district']}"),
+                             "districts.html", f"#{ch}-{r['district']}"))
+    missing, bad_tags, bad_card, sizes = [], [], [], []
+    for rel, title, target, dhash in entities:
+        page, card = L.DOCS / rel / "index.html", L.DOCS / rel / PV.CARD
+        if not page.exists() or not card.exists():
+            missing.append(rel)
+            continue
+        text = page.read_text(encoding="utf-8")
+        png = card.read_bytes()
+        url = L.SITE_URL + rel
+        img = f"{url}{PV.CARD}?v={hashlib.sha1(png).hexdigest()[:10]}"
+        want = {("property", "og:title"): title, ("name", "twitter:title"): title,
+                ("property", "og:description"): L.PREVIEW_DESCRIPTION,
+                ("name", "twitter:description"): L.PREVIEW_DESCRIPTION,
+                ("property", "og:url"): url, ("property", "og:image"): img,
+                ("name", "twitter:image"): img,
+                ("name", "twitter:card"): "summary_large_image"}
+        wrong = [k for (a, k), v in want.items() if tag(text, a, k) != v]
+        if f'<link rel="canonical" href="{url}">' not in text:
+            wrong.append("canonical")
+        if f"'{'../' * rel.count('/')}{target}'" not in text or f"'{dhash}'" not in text:
+            wrong.append("redirect")
+        if wrong:
+            bad_tags.append((rel, wrong))
+        with Image.open(io.BytesIO(png)) as im:
+            if im.size != L.PREVIEW_SIZE:
+                bad_card.append((rel, im.size))
+        sizes.append(len(png))
+    R.out(f"  H.2  {len(entities):,} preview pages expected ({len(feats):,} towns, "
+          f"{len(entities) - len(feats)} districts);  missing {len(missing)}")
+    for rel in missing[:5]:
+        R.out(f"         missing: docs/{rel}")
+    R.out(f"  H.3  pages whose tags, canonical link or redirect are wrong: {len(bad_tags)}")
+    for rel, wrong in bad_tags[:5]:
+        R.out(f"         docs/{rel}: {', '.join(wrong)}")
+    cap = 120_000
+    big = [s for s in sizes if s > cap]
+    R.out(f"  H.4  cards {L.PREVIEW_SIZE[0]}x{L.PREVIEW_SIZE[1]}: wrong size "
+          f"{len(bad_card)};  over {cap // 1000} KB: {len(big)};  total "
+          f"{sum(sizes) / 1e6:.1f} MB, largest {max(sizes, default=0) / 1e3:.0f} KB")
+    ok &= not missing and not bad_tags and not bad_card and not big
+
+    # H.5  Nothing else in the preview directories: a stray is shipped by git add.
+    want_dirs = {L.PREVIEW_TOWN_DIR: {p["slug"] for p in feats}}
+    for ch, c in L.CHAMBERS.items():
+        want_dirs[L.preview_dir(ch)] = {str(d) for d in range(1, c["n"] + 1)}
+    strays = [q for root, names in want_dirs.items() for q in root.iterdir()
+              if q.name not in names]
+    strays += [f for root, names in want_dirs.items() for n in names
+               if (root / n).is_dir() for f in (root / n).iterdir()
+               if f.name not in ("index.html", PV.CARD)]
+    R.out(f"  H.5  stray files or directories in docs/town, docs/senate, docs/house: "
+          f"{len(strays)}")
+    for q in strays[:5]:
+        R.out(f"         {L.rel(q)}")
+    ok &= not strays
+
+    # H.6  The three real pages carry the default card, at its current hash.
+    for page, png in (("index.html", L.PREVIEW_DEFAULT_PNG),
+                      ("about.html", L.PREVIEW_DEFAULT_PNG),
+                      ("districts.html", L.DOCS / "preview-districts.png")):
+        text = (L.DOCS / page).read_text(encoding="utf-8")
+        img = (f"{L.SITE_URL}{png.name}?v="
+               f"{hashlib.sha1(png.read_bytes()).hexdigest()[:10]}" if png.exists() else None)
+        good = (img is not None and tag(text, "property", "og:image") == img
+                and tag(text, "property", "og:description") == L.PREVIEW_DESCRIPTION)
+        R.out(f"  H.6  {page:<15} og:image is {png.name} at its current hash: {good}")
+        ok &= good
+
+    # H.7  The cards are current: redraw a sample from today's data and compare
+    # bytes. Rendering is deterministic on one machine, so any difference is a
+    # stale card. Text rasterisation can differ between platforms (Pillow's
+    # FreeType build), so on a machine other than the one that built the cards,
+    # a failure here may mean "rebuild on this machine", not "the data moved".
+    sample = [("chicago", "town"), ("plano", "town"), (None, ("senate", 1)),
+              (None, ("house", 118))]
+    PV._init()
+    meta = json.loads((L.DOCS_DATA / "meta.json").read_text(encoding="utf-8"))
+    by_slug = {p["slug"]: p for p in feats}
+    stale = []
+    for slug, kind in sample:
+        if slug:
+            job, rel = PV.town_job(by_slug[slug], meta), f"town/{slug}/"
+        else:
+            ch, d = kind
+            job = PV.district_job(ch, D["chambers"][ch]["districts"][d - 1], meta)
+            rel = f"{ch}/{d}/"
+        job["out"] = rel
+        _, png = PV._render(job)
+        if png != (L.DOCS / rel / PV.CARD).read_bytes():
+            stale.append(rel)
+    R.out(f"  H.7  sample cards redrawn from current data and compared byte for byte: "
+          f"{len(sample)};  stale {len(stale)} {stale if stale else ''}")
+    ok &= not stale
+    return ok
+
+
 @check("A", "BPS column positions reproduce the published Illinois state totals", gating=True)
 def cA():
     R.out("  Not in SPEC.md §7. Added because every number on the site depends on the")
@@ -1211,7 +1344,7 @@ def cA():
 
 def main() -> int:
     for name in ("c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10",
-                 "cB", "cC", "cA"):
+                 "cB", "cC", "cH", "cA"):
         globals()[name]  # checks run at decoration time; this keeps ordering explicit
 
     R.out("")

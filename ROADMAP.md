@@ -6,79 +6,99 @@ at the repo root, outside `docs/`, so it is not published with the site.
 
 Each item says where it came from and what has to be decided before it starts.
 
+**Austin's feedback, 2026-10-02.** He answered items 1, 2 and 4, shelved 3, and
+added link previews as the top priority; those were built on 2026-10-03 (CLAUDE.md
+deviation 38). Steven asked for a language pass, now item 5. Suggested order:
+5, 4, 2, 1. Item 3 is shelved.
+
 ---
 
 ## 1. Economic context for towns that permit little
 
-*From the Slack feedback plan (formerly `docs/PHASES.md`, Phase 5), 2026-09.*
+*From the Slack feedback plan (formerly `docs/PHASES.md`, Phase 5), 2026-09.
+Narrowed by Austin, 2026-10-02.*
 
 A town that has permitted almost nothing is either one where nobody wants to
 build or one that is blocking it. Context helps tell those apart.
 
-**Measures**, from ACS 5-year at place level (same Census API and key as the
-rest of the build; variables were verified to exist):
+**Measures (Austin):** the *change* in median household income
+(`B19013_001E`) and the *change* in median home value (`B25077_001E`), from ACS
+5-year at place level, each with its `_M` margin of error. Unemployment and
+vacancy are dropped. He asked whether each should be compared with the change
+for Illinois as a whole; that is cheap (the state row comes from the same query)
+and is the natural reading, so plan on it.
 
-- Employment and income: `B23025_003E`, `B23025_005E` (unemployment rate),
-  `B19013_001E` (median household income).
-- Market signal: `B25004_001E` (vacancy), `B25077_001E` (median home value).
+**The period cannot be 2010–2025.** An ACS 5-year estimate covers five years, and
+the latest published is 2020–2024 (2021–2025 is due around December 2026). The
+honest pair is **2006–2010 against 2020–2024**: it starts at the permit window's
+start and does not overlap, which matters because the Census advises against
+comparing overlapping 5-year periods. Swap to 2021–2025 when it is out.
 
-**How.** A new `scripts/fetch_acs.py`. Carry each `_M` margin-of-error variable
-beside its estimate and null any estimate whose margin makes it meaningless: ACS
-5-year is noisy for small villages, and an unknown value is `null`, never a
-substituted number. Show it as a context block in the detail panel and as
-optional table columns. **Not** in the map colours: that would be a new headline
-metric, and Steffany and Austin should decide that explicitly. Say so in
-`about.html`.
+**Dollars must be adjusted.** A change in a dollar figure across fourteen years is
+mostly inflation unless both ends are in the same dollars. Use the Census-advised
+CPI-U-RS factor and say so beside the figure.
+
+**How.** A new `scripts/fetch_acs.py`. Null any estimate whose margin makes it
+meaningless; small villages are noisy, and an unknown value is `null`, never a
+substituted number. Show it in the detail panel and as optional table columns,
+**not** in the map colours. Say so in `about.html`.
 
 **Decide first.** SPEC.md §10 excludes "housing cost or rent data from ACS", and
-median home value is exactly that. Unemployment, income and vacancy do not run
-into it.
+median home value is exactly that. Austin asked for it, so this is a deliberate
+deviation to record in CLAUDE.md, not an oversight. Steffany should confirm.
 
-**Opportunity Zones: deferred.** They need the CDFI Fund's designated-tract XLSX
-(reachable, no key), TIGER tract geometry and a tract-to-place areal overlap, and
-the designations are frozen on 2010-vintage tracts, a weaker fit for "is demand
-working here now" than current ACS.
+**Opportunity Zones: deferred.** They need the CDFI Fund's designated-tract XLSX,
+TIGER tract geometry and a tract-to-place overlap, and the designations are frozen
+on 2010-vintage tracts.
 
-## 2. County and metro view
+## 2. Metros view
 
-*Steffany, 2026-10-01.*
+*Steffany, 2026-10-01. Shaped by Austin, 2026-10-02.*
 
-The same measure for each county, and for each metro area (Census CBSA), so a
-reader can compare the Chicago suburbs with Peoria or the Metro East rather than
-town by town.
+The same measure for each metro and micro area, so a reader can compare the
+Chicago suburbs with Peoria or the Metro East rather than town by town.
+
+**Austin's answers:**
+
+- **Its own page**, with a tab called **"Metros"** beside "By municipality" and
+  "By legislative district".
+- **Core-based statistical areas** (CBSAs): metropolitan *and* micropolitan, on
+  OMB's current delineation (July 2023).
+- **Every CBSA that includes an Illinois county, counting only its Illinois
+  counties.** So the Chicago metro here is its Illinois counties only, and the
+  same for St. Louis (the Metro East) and the Quad Cities. Take the county lists
+  from OMB's delineation file, not from memory.
+- **An average permit rate for each area**, and each municipality evaluated
+  against its own area's rate, **in this tab's summary only**. The main map keeps
+  Illinois as its reference.
 
 Notes for whoever starts it:
 
-- **County totals can include unincorporated permits.** About 8% of Illinois
+- **The area rate can include unincorporated permits.** About 8% of Illinois
   permits 2010–2025 are filed by county offices for unincorporated land and are
   left off the municipal map (BLOCKERS.md #1). A county is the first level where
-  they have a home. The denominator then has to be the whole county's 2010
-  housing count, not the sum of its towns, or the two will not match.
+  they have a home. The denominator is then the counties' whole 2010 housing
+  count, not the sum of their towns, or the two will not match.
 - The published state rows already reconcile with the place files (check A), so a
   county sum can be checked the same way.
-- **Decide first:** a third page, or a toggle on the main map? The legislator view
-  became its own page for the reasons in CLAUDE.md (*The legislator view is its
-  own page*); the same argument probably applies. Which metro definition (CBSA
-  2023 delineation) and whether Chicago's metro includes its Indiana and Wisconsin
-  counties (the data here is Illinois only).
+- A municipality that straddles two counties in different CBSAs (rare) needs a
+  rule; by largest land share is the obvious one.
+- **Decide first:** whether "average permit rate" means the area's own rate
+  (all its permits ÷ all its 2010 housing, as `il_pct_growth` is for the state) or
+  the mean of its towns' rates. The first is consistent with the rest of the site
+  and is not swayed by tiny villages; the second is what "average" literally says.
+  Ask Austin.
 
-## 3. Downloadable shapefiles
+## 3. Downloadable shapefiles — shelved
 
-*Steffany, 2026-10-01.*
+*Steffany, 2026-10-01. Shelved by Austin, 2026-10-02.*
 
-Let a reader download the map's data as GIS files, so an analyst or a reporter
-can open it in QGIS or ArcGIS rather than scraping the page.
-
-- What to offer: municipalities with their figures (pct_growth, units by type,
-  coverage, AHPAA status and share), and the Senate and House districts with their
-  estimates. Plus a CSV of the same table for people without GIS.
-- Format: GeoJSON is already built and is enough for most tools; a zipped
-  Shapefile is what many government users expect. Shapefile truncates field names
-  to 10 characters, so it needs a documented field list. GeoPackage avoids that.
-- Ship the **unsimplified** TIGER geometry, not the simplified display geometry,
-  and say so. Every download carries the build date and a sources file.
-- **Decide first:** which formats, and whether the files are built by `build.py`
-  (offline, so via `pyogrio`/`fiona` or a pure-Python writer) or only on release.
+Austin: "very low priority." What he had asked for under "shapefiles" was map
+boundaries that look like the real ones, which the unsimplified district outlines
+already did (CLAUDE.md deviation 32), not a downloadable dataset. Kept here only
+so the idea is not re-proposed from scratch: if it comes back, ship the
+unsimplified TIGER geometry with the figures, as GeoJSON plus GeoPackage (no
+10-character field limit) and a CSV, with the build date and sources.
 
 ## 4. A printable one-page sheet per legislative district
 
@@ -96,7 +116,8 @@ produces one clean US Letter page to leave behind in a meeting with that member.
    since 2010, the change in the census housing count 2010→2020, and how many of
    its towns have permitted no 5+ unit building or are AHPAA non-exempt. All of
    these are already in the district panel. **Beside them, a QR code and the
-   printed URL of the live district page** (`districts.html#senate-28`) (Austin).
+   printed URL of the district's own page** (`…/il-permit-map/senate/28/`,
+   which previews properly when shared) (Austin).
 2. **The municipality the member's district office is in.** It is the place the
    member knows best and where the meeting usually happens. Open States carries a
    `district_address` for 173 of 177 members (snapshot of 2026-09), and the city
@@ -134,20 +155,21 @@ For each of those towns, a short block: percent of the 2010 stock permitted
 against Illinois, units by structure type, the multifamily flag, and AHPAA status
 and share.
 
-**Decide first:**
+**Austin's answers, 2026-10-02:**
 
-- **The weighting.** For example `score = land_share × population_inside`.
-  That is close to "the people of this district who live in this town" and favours
-  big towns. A version that adds the two parts with weights (`a × land_share +
-  b × population_share`) lets a small town that sits wholly inside compete.
-  Try both on a few districts (one in Chicago, one suburban, one downstate) and
-  pick the one whose answers look right to Austin.
-- **Population inside the district.** Land share × town population is the cheap
-  version and is what the district estimate already assumes. Census blocks would
-  be exact but are a new data source.
-- **Members with no usable office address.** Four have none, and two list a
-  Springfield capitol room. Either their sheets say "no district office listed",
-  or the addresses are corrected by hand from ilga.gov.
+- **Scoring the next best town:** first, towns with **more than 50% of their land
+  in the district and more than 5,000 people**; then everything else by
+  **population × land share**. Within the first group, order by population × land
+  share too (assumed; he did not say).
+- **Population inside the district:** land share × the town's 2020 population, as
+  the district estimate already assumes. No block data.
+- **Members without a viable office:** Cochran (House 55) and DeLaRosa (House 42),
+  whose "district office" is a Springfield capitol room, get **the next two best
+  towns** instead.
+
+**Still to decide:** Sosnowski (House 69) lists a real office in Machesney Park,
+which is outside his district. Is that "viable"? Either show it and say it is
+outside the district, or treat him like the two above. Ask Austin.
 
 **How it would work:**
 
@@ -163,3 +185,21 @@ and share.
   build), adding no runtime request beyond the pinned MapLibre bundle.
 - The caveat that permits are a floor, the build date and a sources line.
 - Use the `ahil-brand` guidelines for the layout.
+
+## 5. A plain-language pass over the site's wording
+
+*Steven, relayed by Austin, 2026-10-02.*
+
+"It has British spellings ('Colour'). And it says Claude things like 'permits are a
+floor', which isn't a thing normal people say."
+
+- **American spelling** everywhere a reader sees it: `index.html`,
+  `districts.html`, `about.html`, the panel text in `detail.js` and `districts.js`,
+  and the text `build.py` writes into shards (`months_note`, `coverage_note`).
+  Code comments and these notes can stay as they are.
+- **Rewrite the stock phrases** in plain English, starting with the header
+  caveat's "Permits are a floor, not a count of homes." Say what it means: permits
+  count new buildings a town approved; they miss conversions and basement
+  apartments, so the real number of homes added can be higher.
+- Site checks read some of this text (the caveat, check B's figures), so run both
+  check scripts after the pass.

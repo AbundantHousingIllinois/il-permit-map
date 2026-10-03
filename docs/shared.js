@@ -137,3 +137,33 @@ function hatchImage() {
   g.stroke();
   return g.getImageData(0, 0, s, s);
 }
+
+/* ---------------------------------------------------------------- share */
+
+/* A link that previews properly when pasted into Slack or a text message. A
+ * preview scraper never sees the "#place=..." part of the address bar, so this
+ * button hands out the place's or district's own page instead (town/<slug>/,
+ * senate/<n>/, house/<n>/). scripts/previews.py writes those pages; each carries
+ * its own title and card and forwards a reader straight on to the map.
+ * ``keepHash`` adds the current view's hash, so the sender's filters travel too. */
+function copyLinkButton(path, keepHash) {
+  return `<button type="button" class="copy-link" data-path="${esc(path)}"`
+    + `${keepHash ? ' data-keep-hash="1"' : ''}>Copy link</button>`;
+}
+
+document.addEventListener('click', async e => {
+  const b = e.target.closest && e.target.closest('.copy-link');
+  if (!b) return;
+  const url = new URL(b.dataset.path, location.href).href + (b.dataset.keepHash ? location.hash : '');
+  b.dataset.url = url;
+  try {
+    await navigator.clipboard.writeText(url);
+  } catch (err) {
+    /* No clipboard (an insecure origin, or permission refused): show the link so
+     * it can be copied by hand. */
+    window.prompt('Copy this link:', url);
+    return;
+  }
+  b.textContent = 'Link copied';
+  setTimeout(() => { b.textContent = 'Copy link'; }, 2000);
+});

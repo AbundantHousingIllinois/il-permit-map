@@ -214,6 +214,15 @@ async function loadShard(geoid) {
   return shard;
 }
 
+/* "Copy link" for this place. On the main map it carries the view's hash, so the
+ * recipient sees the sender's filters; from the district page it is the plain
+ * town link, since that hash belongs to districts.html. */
+function shareLine(shard) {
+  if (!shard.slug) return '';
+  const main = !document.body.classList.contains('district-page');
+  return `<p class="share-line">${copyLinkButton(`town/${shard.slug}/`, main)}</p>`;
+}
+
 /* Fill the #detail panel for one municipality. ``title`` is shown at once, while
  * the shard is still loading. */
 let detailToken = 0;          // a later click wins over a slower earlier fetch
@@ -247,7 +256,7 @@ async function renderPlaceDetail(geoid, title) {
   /* SPEC.md §5: a place that is not reporting gets the explanation instead of
    * metrics. It is not shown as a zero anywhere. */
   if (shard.coverage !== 'reporting') {
-    body.innerHTML = `<div class="coverage-note"><strong>No permit-office data for this place.</strong>
+    body.innerHTML = `${shareLine(shard)}<div class="coverage-note"><strong>No permit-office data for this place.</strong>
       <p style="margin:6px 0 0">${shard.coverage_note}</p></div>
       ${ahpaaLine(shard)}
       ${districtsLine(shard)}
@@ -274,7 +283,7 @@ async function renderPlaceDetail(geoid, title) {
       <td class="num">${fmtPct(shard.pct_growth_by_type[k], 2)}</td>
     </tr>`).join('');
 
-  body.innerHTML = `
+  body.innerHTML = `${shareLine(shard)}
     <div class="headline">
       <span class="pct">${pctText}</span>
       <span class="units">${shard.units_total_2010 === null ? '' : fmtInt(shard.units_total_2010) + ' units'}</span>

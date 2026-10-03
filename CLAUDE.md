@@ -285,6 +285,34 @@ share at or above 25% is `false` even without a population (Gulfport). The switc
 does not name a bill, because none was supplied. The AHPAA hint and every panel's
 "AHPAA" link to `about.html#ahpaa`.
 
+**Link previews are a page per town and district, not tags on the map.** Austin
+asked for Open Graph tags whose title and image follow the URL. A preview scraper
+reads the HTML and never sees `#place=…`, so tags on `index.html` can only ever
+describe the whole map. `scripts/previews.py` (step 7 of `build.py`) therefore
+writes `docs/town/<slug>/`, `docs/senate/<n>/` and `docs/house/<n>/`: each an
+`index.html` with Austin's title and description verbatim (`L.PREVIEW_TITLE`,
+`L.PREVIEW_DESCRIPTION`) and a 1200×630 `card.png`, which forwards a person to the
+map with `location.replace` (not a meta refresh, which some scrapers follow and
+would then read the generic tags). A hash on the shared link is forwarded if it
+names the same place or district, so filters travel. A "Copy link" button in each
+panel hands these addresses out; without it nobody would ever share one. The three
+real pages get a default card in a marked block `previews.py` rewrites, so
+`SITE_URL` and the image hash are never typed by hand. Steffany chose one card per
+entity over districts-only or a single image.
+
+The slug is the town's name, lowercased; a name two municipalities share (Windsor,
+Lakewood, Kingston, Willowbrook, Wilmington) takes the county on both, never on
+just the second one found. The cards draw the map as the page does: the palette is
+parsed from `shared.js` and the map colours from `style.css`, so there is still one
+definition of each, and the selection ring is the page's orange. The headline
+figure is in ink, not orange, because on the map orange means "below Illinois".
+Poppins is fetched once by `fetch_fonts.py` (the build is offline). Rendering is
+deterministic and a file is written only when its bytes change, so a rebuild with
+unchanged data touches none of the 3,281 files; each `og:image` carries
+`?v=<hash>` so a changed card is re-fetched. A 2× box-filtered render quantised to
+64 octree colours is about 24 KB a card, 38.5 MB in all; Lanczos and 256 colours
+were 85 MB. The address is GitHub Pages' (`gh api` shows no custom domain).
+
 ## Things deliberately not done
 
 Everything in SPEC.md §10, plus: no municipal-succession mapping for the three
@@ -445,3 +473,9 @@ beside the AHPAA gap overstated what is outstanding. `BLOCKERS.md` is unchanged.
     and panel to the explainer. See *Timberlane stays as IHDA published it* and
     *"Under 25% affordable" is a second, proposed line*. Data check G and site
     check 13 gate them.
+38. **Link previews.** A page and a card per municipality and district, a default
+    card on the three real pages, and a "Copy link" button in each panel. See *Link
+    previews are a page per town and district*. Austin asked for it after the spec
+    was written. `Pillow` is a dependency; `fetch_fonts.py` is a fifth fetch script;
+    `data/manual/ahil_logo.png` is the logo. Data check **H** and site check **15**
+    gate it.

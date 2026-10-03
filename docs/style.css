@@ -402,6 +402,17 @@ td.mf-flag { font-size: 12px; color: var(--ink-secondary); white-space: nowrap; 
   background: var(--surface); color: var(--ink-secondary); cursor: pointer;
 }
 
+/* "Copy link": hands out the place's or district's preview page (shared.js). */
+.share-line { margin: 8px 0 0; }
+.copy-link {
+  font: inherit; font-size: 12px; font-weight: 600; line-height: 1;
+  padding: 7px 12px; min-height: 30px;
+  border: 1px solid var(--rule-strong); border-radius: 999px;
+  background: var(--surface); color: var(--ink-secondary); cursor: pointer;
+}
+.copy-link:hover { border-color: var(--ahil-blue); color: var(--ahil-blue); }
+@media print { .share-line { display: none; } }
+
 .headline {
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
   margin: 12px 0 2px;

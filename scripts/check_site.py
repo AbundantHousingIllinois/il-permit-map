@@ -942,6 +942,77 @@ def run_checks(sync_playwright, base, built, target, console_errors):
         R.run(14, "Search finds a municipality; the multifamily flag is a plain column; "
                   "totals and population carry their years", s14)
 
+        # ---------------- 15 (added, disclosed) ----------------
+        def s15():
+            R.out("  Not in SPEC.md §7. Added with the link previews (CLAUDE.md")
+            R.out("  deviation 38): a shared link is a town's or district's own page,")
+            R.out("  which must land a reader on the right view, carrying any filters")
+            R.out("  in its hash, and \"Copy link\" must hand that page out.")
+            errs: list[str] = []
+            context.grant_permissions(["clipboard-read", "clipboard-write"], origin=base)
+            p6 = context.new_page()
+            p6.on("console", lambda m: errs.append(f"console.{m.type}: {m.text}")
+                  if m.type == "error" else None)
+            p6.on("pageerror", lambda e: errs.append(f"pageerror: {e}"))
+            p6.on("requestfailed",
+                  lambda r: errs.append(f"requestfailed: {r.url} {r.failure}"))
+            slug = next(f["properties"]["slug"] for f in built["geojson"]["features"]
+                        if f["properties"]["geoid"] == "1751622")
+            checks = {}
+
+            p6.goto(f"{base}/town/{slug}/", wait_until="load")
+            p6.wait_for_function("window.app && window.app.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            p6.wait_for_function("() => window.app.detail().geoid === '1751622'"
+                                 " && document.querySelector('#detail .copy-link')",
+                                 timeout=15_000)
+            at = p6.evaluate("() => location.pathname + location.hash")
+            R.out(f"    /town/{slug}/ lands on {at}")
+            checks["a town's page opens that town on the map"] = (
+                at.startswith("/index.html#place=1751622"))
+            p6.click("#detail .copy-link")
+            p6.wait_for_timeout(300)
+            url = p6.evaluate("() => document.querySelector('#detail .copy-link').dataset.url")
+            clip = p6.evaluate("() => navigator.clipboard.readText()")
+            R.out(f"    Copy link gives {url}")
+            checks["Copy link gives the town's page, with the view's hash"] = (
+                url.startswith(f"{base}/town/{slug}/#place=1751622") and clip == url)
+
+            p6.goto(f"{base}/town/{slug}/#place=1751622&metric=units_total&type=mf5p",
+                    wait_until="load")
+            p6.wait_for_function("window.app && window.app.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            h = p6.evaluate("() => location.hash")
+            R.out(f"    with the sender's filters, lands on hash {h}")
+            checks["the sender's filters travel with the link"] = (
+                "metric=units_total" in h and "type=mf5p" in h and "place=1751622" in h)
+
+            p6.goto(f"{base}/senate/28/", wait_until="load")
+            p6.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            p6.wait_for_timeout(400)
+            at = p6.evaluate("() => location.pathname + location.hash")
+            member = p6.evaluate("window.districtsApp.panel()")["member"]
+            R.out(f"    /senate/28/ lands on {at}: {member!r}")
+            checks["a district's page opens that district"] = (
+                at.startswith("/districts.html#senate-28") and "Laura Murphy" in member)
+            p6.click("#district-body .copy-link")
+            p6.wait_for_timeout(300)
+            url = p6.evaluate("() => document.querySelector('#district-body .copy-link').dataset.url")
+            R.out(f"    Copy link gives {url}")
+            checks["Copy link gives the district's page"] = url == f"{base}/senate/28/"
+
+            R.out(f"    console errors / failed requests: {len(errs)}")
+            for e in errs[:10]:
+                R.out(f"      {e}")
+            checks["no console errors"] = not errs
+            p6.close()
+            for k, val in checks.items():
+                R.out(f"    {'ok  ' if val else 'FAIL'} {k}")
+            return all(checks.values())
+        R.run(15, "Link previews: a town's or district's page opens it on the map, and "
+                  "Copy link hands that page out", s15)
+
         # ---------------- B ----------------
         def sB():
             R.out("  Not in SPEC.md §7. about.html was added at the user's request,")
