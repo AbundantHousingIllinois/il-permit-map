@@ -51,6 +51,8 @@ import bps_layout as L
 W, H = L.PREVIEW_SIZE
 SS = 2                      # drawn at twice the size, then downsampled: antialiasing
 CARD = "card.png"
+QR = "qr.svg"               # districts only: the printable sheet's QR code
+LOGO_WEB = L.DOCS / "ahil-logo.png"   # the printable sheet's logo
 
 # AHIL brand colours (ahil-brand skill). Text only; the map's colours come from
 # the page's own CSS and palette, read below.
@@ -490,8 +492,6 @@ def town_job(p: dict, meta: dict) -> dict:
                      f"({fmt_int(p['units_total_2010'])} units)"},
             {"text": f"Illinois: {il}", "weight": "semibold", "color": BLUE}], 76
     county = p.get("county") or ""
-    if county and not county.endswith(" County"):
-        county += " County"
     return {"title": L.PREVIEW_TITLE.format(name), "big": big, "big_px": big_px,
             "lines": lines, "kind": "town", "geoid": p["geoid"],
             "foot": [f"{p['namelsad']}{', ' + county if county else ''}", _domain()],
@@ -622,6 +622,29 @@ def _write_if_changed(path: Path, data: bytes) -> bool:
     return True
 
 
+def qr_svg(url: str) -> bytes:
+    """A QR code for ``url`` as a small SVG, drawn offline by segno."""
+    import io
+    import segno
+    buf = io.BytesIO()
+    segno.make(url, error="m").save(buf, kind="svg", scale=4, border=2, dark=INK,
+                                    xmldecl=False, title=url)
+    return buf.getvalue()
+
+
+def logo_png() -> bytes:
+    """The AHIL logo cropped to the mark, 480 px wide, for the printable sheet."""
+    import io
+    from PIL import Image, ImageChops
+    logo = Image.open(L.AHIL_LOGO).convert("RGB")
+    logo = logo.crop(ImageChops.difference(logo, Image.new("RGB", logo.size, WHITE)).getbbox())
+    logo = logo.resize((480, round(logo.height * 480 / logo.width)), Image.LANCZOS)
+    buf = io.BytesIO()
+    logo.quantize(colors=32, method=Image.Quantize.FASTOCTREE,
+                  dither=Image.Dither.NONE).save(buf, format="PNG", optimize=True)
+    return buf.getvalue()
+
+
 def _short_hash(data: bytes) -> str:
     return hashlib.sha1(data).hexdigest()[:10]
 
@@ -686,6 +709,13 @@ def build(workers: int | None = None) -> dict:
             files.append((L.DOCS / page, _splice(L.DOCS / page, default_tags(
                 j["title"], out.name, url, j["alt"], _short_hash(png))).encode()))
 
+    # The district sheet's QR code points at the district's preview page, so a
+    # phone that scans the printout gets the same page a shared link does.
+    for j in jobs:
+        if j["kind"] == "district":
+            files.append((Path(j["out"]).parent / QR, qr_svg(L.SITE_URL + j["page"]["rel"])))
+    files.append((LOGO_WEB, logo_png()))
+
     with ThreadPoolExecutor(max_workers=32) as pool:
         changed = sum(pool.map(lambda fb: _write_if_changed(*fb), files))
 
@@ -703,7 +733,7 @@ def build(workers: int | None = None) -> dict:
                 strays += 1
             elif p.is_dir():
                 for q in p.iterdir():
-                    if q.name not in ("index.html", CARD):
+                    if q.name not in ("index.html", CARD, QR):
                         shutil.rmtree(q) if q.is_dir() else q.unlink()
                         strays += 1
     return {"pages": len(jobs), "towns": sum(j["kind"] == "town" for j in jobs),

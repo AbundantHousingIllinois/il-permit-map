@@ -66,6 +66,23 @@ function divergingStopsAt(m) {
   ];
 }
 
+/* The colour a value gets on the diverging ladder: MapLibre's linear interpolate
+ * in RGB, so a drawing outside the map (the printable sheet) matches it. */
+function divergingColor(v, m) {
+  const stops = divergingStopsAt(m);
+  const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const x = v === null || v === undefined ? 0 : v;
+  if (x <= stops[0][0]) return stops[0][1];
+  for (let i = 1; i < stops.length; i++) {
+    const [b, cb] = stops[i], [a, ca] = stops[i - 1];
+    if (x <= b) {
+      const t = b > a ? (x - a) / (b - a) : 0, A = rgb(ca), B = rgb(cb);
+      return `rgb(${A.map((c, j) => Math.round(c + (B[j] - c) * t)).join(',')})`;
+    }
+  }
+  return stops[stops.length - 1][1];
+}
+
 /* ---------------------------------------------------------------- formats */
 
 /* Text from a third-party file (legislator names, offices) goes through this

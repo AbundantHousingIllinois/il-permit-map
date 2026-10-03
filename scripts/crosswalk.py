@@ -82,10 +82,14 @@ def place_geometry() -> tuple[dict, dict]:
     places = json.loads(L.SIMPLIFIED_GEOJSON.read_text(encoding="utf-8"))
     counties = json.loads(COUNTIES_GEOJSON.read_text(encoding="utf-8"))
 
+    # The boundary file's NAME is "Greene"; a BPS-derived label is "Greene County".
+    # Use the same 2010 SF1 names as the BPS path, so the two read alike.
+    sf1 = county_names()
     cgeoms, cnames = [], []
     for f in counties["features"]:
         cgeoms.append(shape(f["geometry"]))
-        cnames.append((f["properties"]["GEOID"][-3:], f["properties"]["NAME"]))
+        fips = f["properties"]["GEOID"][-3:]
+        cnames.append((fips, sf1.get(fips) or f"{f['properties']['NAME']} County"))
     tree = STRtree(cgeoms)
 
     points, assigned = {}, {}

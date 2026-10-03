@@ -313,6 +313,39 @@ unchanged data touches none of the 3,281 files; each `og:image` carries
 64 octree colours is about 24 KB a card, 38.5 MB in all; Lanczos and 256 colours
 were 85 MB. The address is GitHub Pages' (`gh api` shows no custom domain).
 
+**Reader-facing text is American English and plain.** Steven (via Austin) found
+British spellings ("colour") and stock phrases ("permits are a floor") that "normal
+people" do not say. Every string a reader sees — the three pages, the panel and
+legend text in the scripts, the notes `build.py` writes into shards — now uses
+American spelling, and the top caveat says what it means: "Permits show what a
+town approved, not every home added." Code comments and these notes keep their
+spelling. `aria-labelledby` is an HTML attribute and stays. Site check 11 reads
+the new wording. Geometry-derived county labels lacked " County" ("Greene"); they
+now take the same 2010 SF1 names as BPS-derived ones.
+
+**The printable sheet's towns are chosen in the build, by Austin's rule.**
+`scripts/district_towns.py` picks them and `build.py` carries them in
+`districts.json`; the page only lays them out (`docs/sheet.js`). Office town
+first, when the city in the Open States address matches a municipality in the
+district; otherwise the two best towns. That covers the four members with no
+address, Cochran (House 55) and DeLaRosa (House 42), whose only address is a
+Stratton Building room, and Sosnowski (House 69), whose Machesney Park office is
+outside his district — Steffany chose two best towns for him over showing the
+office. "Best": more than half the land inside and more than 5,000 people first,
+then the rest, each by land share × 2020 population, ties to the larger share.
+Within the first group Austin did not specify an order; land share × population
+is the assumption, stated. CDPs are never featured: they have no government to
+meet. All 22 one-town sheets are all-Chicago districts. Steffany asked for the
+reasoning to be written down, so the build writes
+`docs/data/district_sheet_towns.csv` (each district, its two towns, and why, in
+words) and `docs/data/district_town_ranking.csv` (every candidate, scored and
+ranked), linked from `about.html#sheet`. The QR code is `docs/<chamber>/<n>/qr.svg`,
+drawn by `segno` in the build and pointing at the district's preview page, so the
+page still makes no new request. The sheet's map is inline SVG, which prints
+sharply where a WebGL canvas does not. A town whose interior point is outside the
+district (Chicago in most of its districts) is marked at the district's label
+point instead.
+
 ## Things deliberately not done
 
 Everything in SPEC.md §10, plus: no municipal-succession mapping for the three
@@ -479,3 +512,10 @@ beside the AHPAA gap overstated what is outstanding. `BLOCKERS.md` is unchanged.
     was written. `Pillow` is a dependency; `fetch_fonts.py` is a fifth fetch script;
     `data/manual/ahil_logo.png` is the logo. Data check **H** and site check **15**
     gate it.
+39. **The plain-language pass.** See *Reader-facing text is American English and
+    plain*. Site check 11's caveat assertions follow the new wording.
+40. **The printable district sheet** (ROADMAP item 4, Austin's rules). See *The
+    printable sheet's towns are chosen in the build*. `segno` is a dependency.
+    Data check **I** (the rule re-implemented independently, the named cases, the
+    two CSVs and every QR code) and site check **16** (the button, the chosen
+    towns, only the sheet prints, one Letter page) gate it.

@@ -7,9 +7,10 @@ at the repo root, outside `docs/`, so it is not published with the site.
 Each item says where it came from and what has to be decided before it starts.
 
 **Austin's feedback, 2026-10-02.** He answered items 1, 2 and 4, shelved 3, and
-added link previews as the top priority; those were built on 2026-10-03 (CLAUDE.md
-deviation 38). Steven asked for a language pass, now item 5. Suggested order:
-5, 4, 2, 1. Item 3 is shelved.
+added link previews as the top priority. Built since: link previews (2026-10-03,
+CLAUDE.md deviation 38), the plain-language pass Steven asked for (deviation 39),
+and the printable district sheet, formerly item 4 (deviation 40). Left: 2, then 1.
+Item 3 is shelved.
 
 ---
 
@@ -99,107 +100,3 @@ already did (CLAUDE.md deviation 32), not a downloadable dataset. Kept here only
 so the idea is not re-proposed from scratch: if it comes back, ship the
 unsimplified TIGER geometry with the figures, as GeoJSON plus GeoPackage (no
 10-character field limit) and a CSV, with the build date and sources.
-
-## 4. A printable one-page sheet per legislative district
-
-*Steffany, 2026-10-01. The idea of a print button comes from Electrify Chicago's
-"Print Flyer" (https://electrifychicago.net/building/willis-tower-rivion-llc/)
-and a post by @chiwho.bike (https://bsky.app/profile/chiwho.bike/post/3mvopkkqlf22s),
-but the sheet is our own, not a copy of theirs.*
-
-A "Print" button on each Senate and House district in the legislator view that
-produces one clean US Letter page to leave behind in a meeting with that member.
-
-**What the sheet holds:**
-
-1. **The district's headline stats:** the member, the estimated units permitted
-   since 2010, the change in the census housing count 2010→2020, and how many of
-   its towns have permitted no 5+ unit building or are AHPAA non-exempt. All of
-   these are already in the district panel. **Beside them, a QR code and the
-   printed URL of the district's own page** (`…/il-permit-map/senate/28/`,
-   which previews properly when shared) (Austin).
-2. **The municipality the member's district office is in.** It is the place the
-   member knows best and where the meeting usually happens. Open States carries a
-   `district_address` for 173 of 177 members (snapshot of 2026-09), and the city
-   in it can be matched exactly to a town in the district for 170 of them
-   (checked 2026-10-02). The three that do not match:
-   - House 69 (Sosnowski): the office is in Machesney Park, which is not in the
-     district. Show it and say the office is outside the district.
-   - House 55 (Cochran) and House 42 (DeLaRosa): the "district" address is a
-     Stratton Office Building room in Springfield, i.e. a capitol office. Treat
-     as no district office, or correct by hand in
-     `data/manual/legislator_overrides.csv` from ilga.gov.
-
-   An exact name match is enough; no geocoding is needed. A city that matches no
-   Census place fails the build loudly rather than being guessed.
-3. **The next best town: the "best option" for the district**, after the office
-   town (Austin: "the district office town, then the next best town"). Chosen by a
-   weighted combination of
-   - how much of the town's land is inside the district (the share the build
-     already computes, `L.DISTRICT_SHARE_MIN` and up), and
-   - how many people live there: the town's 2020 population, or the people of
-     the town who live inside the district.
-
-   A town that is mostly inside the district and holds a lot of its people is the
-   one the member is most clearly answerable for. It is the highest-scoring town
-   other than the office town, so the sheet always shows two different towns
-   when the district has two.
-
-   **Chicago is shown as a whole city** (Austin), never split into wards or
-   community areas. In a district that includes Chicago, the sheet shows Chicago
-   and then the best suburb, if the district has one. The 2026-10-01 note that a
-   suburban office might carry a "Chicago" mailing address was a guess; the data
-   does not show it.
-
-For each of those towns, a short block: percent of the 2010 stock permitted
-against Illinois, units by structure type, the multifamily flag, and AHPAA status
-and share.
-
-**Austin's answers, 2026-10-02:**
-
-- **Scoring the next best town:** first, towns with **more than 50% of their land
-  in the district and more than 5,000 people**; then everything else by
-  **population × land share**. Within the first group, order by population × land
-  share too (assumed; he did not say).
-- **Population inside the district:** land share × the town's 2020 population, as
-  the district estimate already assumes. No block data.
-- **Members without a viable office:** Cochran (House 55) and DeLaRosa (House 42),
-  whose "district office" is a Springfield capitol room, get **the next two best
-  towns** instead.
-
-**Still to decide:** Sosnowski (House 69) lists a real office in Machesney Park,
-which is outside his district. Is that "viable"? Either show it and say it is
-outside the district, or treat him like the two above. Ask Austin.
-
-**How it would work:**
-
-- A `@media print` stylesheet and a print layout, not a PDF library. The
-  browser's "Save as PDF" gives the PDF. The district view already prints
-  cleanly (README), so this extends that.
-- Every figure comes from `districts.json`, the shards and `meta.json`, which the
-  page already reads, so the sheet can never disagree with the map. The office
-  town and the featured town are computed in the build and carried in
-  `districts.json`, with the score, so the choice can be checked.
-- A small district map on the sheet, with the two towns marked. The QR code
-  beside the headline must come from an inline generator (or be drawn in the
-  build), adding no runtime request beyond the pinned MapLibre bundle.
-- The caveat that permits are a floor, the build date and a sources line.
-- Use the `ahil-brand` guidelines for the layout.
-
-## 5. A plain-language pass over the site's wording
-
-*Steven, relayed by Austin, 2026-10-02.*
-
-"It has British spellings ('Colour'). And it says Claude things like 'permits are a
-floor', which isn't a thing normal people say."
-
-- **American spelling** everywhere a reader sees it: `index.html`,
-  `districts.html`, `about.html`, the panel text in `detail.js` and `districts.js`,
-  and the text `build.py` writes into shards (`months_note`, `coverage_note`).
-  Code comments and these notes can stay as they are.
-- **Rewrite the stock phrases** in plain English, starting with the header
-  caveat's "Permits are a floor, not a count of homes." Say what it means: permits
-  count new buildings a town approved; they miss conversions and basement
-  apartments, so the real number of homes added can be higher.
-- Site checks read some of this text (the caveat, check B's figures), so run both
-  check scripts after the pass.

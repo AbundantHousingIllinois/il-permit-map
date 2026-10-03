@@ -225,7 +225,7 @@ function renderLegend() {
    * did -- would pick up the wrong number. */
   const midValue = `<b>${midWhat}: <span id="legend-midpoint-value">${fmtPct(mid, 2)}</span></b>`;
   document.getElementById('legend-midpoint').innerHTML = isPct
-    ? `Colour break is the state average for whatever is being shown — `
+    ? `The color changes at the Illinois average for what is shown — `
       + `${midValue}. Orange is below it, blue above.`
     : `Sequential scale, light to dark, with breaks fitted to `
       + `${state.type === 'all' ? 'all types' : TYPE_LABEL_SHORT[state.type].toLowerCase()}. `
@@ -580,8 +580,8 @@ function renderFooter() {
     + `not completed, and does not subtract demolitions — this is "how much was added", not net change.`;
   document.getElementById('footer-coverage').textContent =
     `${fmtInt(META.n_places)} Illinois places. ${fmtInt(c.reporting || 0)} have a permit office `
-    + `reporting to the Census; ${fmtInt(c.no_permit_office || 0)} do not and are drawn with a hatch `
-    + `rather than a zero-value colour, excluded from rankings and from statewide totals. `
+    + `reporting to the Census; ${fmtInt(c.no_permit_office || 0)} do not. Those are drawn with a hatch `
+    + `pattern, not as zero, and are left out of rankings and statewide totals. `
     + `${fmtInt(META.n_zero_mf)} reporting municipalities have permitted no building of 5+ units since `
     + `${META.metric_start}, and ${fmtInt(META.n_zero_mf3p)} have permitted nothing above a duplex. `
     + `A permit office can also file for only part of a year: `

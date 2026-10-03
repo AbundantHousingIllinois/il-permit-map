@@ -41,6 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import bps_layout as L
 import crosswalk as CW
+import district_towns as DT
 import districts as DI
 import previews as PV
 import simplify_geo as SG
@@ -632,8 +633,8 @@ def main() -> int:
                  f"Census in {year_ranges(imputed_years)}. The Census still "
                  "publishes a figure for those years \u2014 its own estimate for a "
                  "non-reporting office \u2014 so the numbers below are what the Census "
-                 "published, not what the municipality counted. Treat them as a "
-                 "floor."
+                 "published, not what the municipality counted. Treat them as "
+                 "estimates."
                  + ("" if months_flag != "none" else
                     " Every year in the window is on this footing, so this place "
                     "is not counted in the zero-multifamily total."))
@@ -733,6 +734,65 @@ def main() -> int:
     props_by_geoid = {ft["properties"]["geoid"]: ft["properties"] for ft in features}
     leg_as_of = (L.LEGISLATORS_RETRIEVED.read_text(encoding="utf-8").strip()
                  if L.LEGISLATORS_RETRIEVED.exists() else None)
+    # The printable sheet's two towns per district (district_towns.py), with the
+    # figures each town block prints, and the reasoning kept for the CSVs.
+    sheet_rows: list[dict] = []
+    rank_rows: list[dict] = []
+
+    def sheet_for(ch, d, places_d, member):
+        pick = DT.choose(places_d, member)
+        towns = []
+        for t in pick["towns"]:
+            p = props_by_geoid[t["geoid"]]
+            towns.append({
+                "geoid": t["geoid"], "name": t["name"], "slug": p["slug"],
+                "role": t["role"], "why": t["why"], "share": t["share"],
+                "pop2020": t["pop2020"], "tier": t["tier"], "score": t["score"],
+                "coverage": p["coverage"], "pct_growth": p["pct_growth"],
+                "units_total_2010": p["units_total_2010"],
+                "units_by_type": {k: p[f"u_{k}"] for k in L.STRUCTURE_TYPES},
+                "first_metric_year": p["first_metric_year"],
+                "zero_mf": p["zero_mf"], "zero_mf3p": p["zero_mf3p"],
+                "mf34_total": p["mf34_total"],
+                "ahpaa_status": p["ahpaa_status"],
+                "affordable_share": p["affordable_share"],
+            })
+        role = {t["geoid"]: t["role"] for t in towns}
+        sheet_rows.append({
+            "chamber": ch, "district": d, "member": (member or {}).get("name") or "",
+            "office_address": pick["office"]["address"] or "",
+            "office_city": pick["office"]["city"] or "",
+            "office_status": pick["office"]["status"],
+            **{f"town_{i}{k}": (towns[i - 1][v] if len(towns) >= i else "")
+               for i in (1, 2) for k, v in (("", "name"), ("_geoid", "geoid"),
+                                            ("_role", "role"), ("_why", "why"))},
+        })
+        for r in pick["ranked"]:
+            rank_rows.append({
+                "chamber": ch, "district": d, "rank": r["rank"], "geoid": r["geoid"],
+                "town": r["name"], "land_share": r["share"], "pop2020": r["pop2020"],
+                "tier": r["tier"], "score": r["score"],
+                "is_office_town": r["geoid"] == pick["office"]["geoid"],
+                "on_sheet": role.get(r["geoid"], ""),
+            })
+        return {"office": pick["office"], "towns": towns}
+
+    def write_sheet_csvs():
+        for path, rows_, note in (
+                (L.DOCS_DATA / "district_sheet_towns.csv", sheet_rows,
+                 "one row per district: the two towns on its sheet and why"),
+                (L.DOCS_DATA / "district_town_ranking.csv", rank_rows,
+                 "every municipality in every district, ranked")):
+            with path.open("w", newline="", encoding="utf-8") as fh:
+                w = csv.DictWriter(fh, fieldnames=list(rows_[0]))
+                w.writeheader()
+                w.writerows(rows_)
+            print(f"  {path.name:<28}: {len(rows_):,} rows, {note}")
+        st = defaultdict(int)
+        for r in sheet_rows:
+            st[r["office_status"]] += 1
+        print("  district offices: " + ", ".join(f"{k} {v}" for k, v in sorted(st.items())))
+
     districts_out: dict[str, dict] = {}
     for ch, c in L.CHAMBERS.items():
         rev: dict[int, list] = defaultdict(list)
@@ -753,7 +813,8 @@ def main() -> int:
                 if p is None:
                     continue
                 places_d.append({
-                    "geoid": g, "name": p["name"], "share": sh,
+                    "geoid": g, "name": p["name"], "namelsad": p["namelsad"],
+                    "share": sh,
                     "coverage": p["coverage"], "pop2020": p["pop2020"],
                     "pct_growth": p["pct_growth"],
                     "units_total_2010": p["units_total_2010"],
@@ -778,6 +839,7 @@ def main() -> int:
             rows.append({
                 "district": d,
                 "member": legs[ch].get(d),
+                "sheet": sheet_for(ch, d, places_d, legs[ch].get(d)),
                 "places": places_d,
                 "n_places": len(places_d),
                 "n_reporting": n_rep,
@@ -800,6 +862,7 @@ def main() -> int:
             json.dumps(gj, separators=(",", ":")), encoding="utf-8")
         print(f"  {ch}.geojson    : {len(gj['features'])} districts, "
               f"{(L.DOCS_DATA / f'{ch}.geojson').stat().st_size:,} bytes")
+    write_sheet_csvs()
     (L.DOCS_DATA / "districts.json").write_text(json.dumps({
         "share_min": L.DISTRICT_SHARE_MIN,
         "legislators_as_of": leg_as_of,

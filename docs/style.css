@@ -829,3 +829,66 @@ ul.sources { font-size: 12.5px; color: var(--ink-secondary); }
   .district-page table { min-width: 0; font-size: 11px; }
   .district-page tr { break-inside: avoid; }
 }
+
+/* ---------------------------------------------------------------- printable sheet */
+
+/* The one-page district sheet (sheet.js). It never shows on screen; while it is
+ * being printed, it is the only thing that prints. Colors are fixed, not theme
+ * tokens: paper is white whatever the reader's screen is set to. */
+@media print {
+  @page { size: letter; margin: 0.45in; }
+  body.print-sheet-on { background: #fff; }
+  body.print-sheet-on > *:not(#print-sheet) { display: none !important; }
+  body.print-sheet-on #print-sheet { display: block !important; }
+}
+
+#print-sheet {
+  color: #1E1E1E; font-family: var(--font-sans); font-size: 10pt; line-height: 1.35;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+#print-sheet .sheet { border-top: 6pt solid #E87722; padding-top: 10pt; }
+/* The sheet's own header must not pick up the site header's bar and padding. */
+#print-sheet .sheet-head { display: flex; gap: 14pt; align-items: center;
+  border: 0; padding: 0; background: none; position: static; }
+#print-sheet .sheet-logo { height: 52pt; width: auto; }
+#print-sheet .sheet-kicker { margin: 0; font-size: 9pt; font-weight: 600; color: #004B87;
+  text-transform: uppercase; letter-spacing: .04em; }
+#print-sheet h1 { margin: 1pt 0 0; font-size: 22pt; line-height: 1.1; }
+#print-sheet .sheet-member { margin: 2pt 0 0; font-size: 13pt; font-weight: 600; }
+
+#print-sheet .sheet-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 10pt; align-items: start;
+  margin: 12pt 0 10pt; padding: 10pt 0; border-top: 1.2pt solid #E87722; border-bottom: 0.5pt solid #C8C8C8;
+}
+#print-sheet .sheet-stats b { display: block; font-size: 20pt; line-height: 1.1; color: #E87722;
+  font-variant-numeric: tabular-nums; }
+#print-sheet .sheet-stats span { display: block; font-size: 8.5pt; color: #3C3C3C; margin-top: 2pt; }
+#print-sheet .sheet-qr { margin: 0; width: 1.05in; text-align: center; }
+#print-sheet .sheet-qr img { width: 1.05in; height: 1.05in; display: block; }
+#print-sheet .sheet-qr figcaption { font-size: 6.5pt; color: #3C3C3C; word-break: break-all; }
+
+#print-sheet .sheet-body { display: grid; grid-template-columns: 3.3in 1fr; gap: 14pt; }
+#print-sheet .sheet-map { width: 100%; height: auto; display: block; border: 0.5pt solid #C8C8C8; border-radius: 6pt; }
+#print-sheet .sheet-note { font-size: 7.5pt; color: #787878; margin: 4pt 0 0; }
+
+#print-sheet .sheet-town { border-left: 2pt solid #004B87; padding: 2pt 0 4pt 10pt; margin-bottom: 10pt;
+  break-inside: avoid; }
+#print-sheet .sheet-town-role { margin: 0; font-size: 8pt; font-weight: 600; color: #004B87;
+  text-transform: uppercase; letter-spacing: .04em; display: flex; align-items: center; gap: 5pt; }
+#print-sheet .sheet-num { display: inline-block; width: 13pt; height: 13pt; border-radius: 50%;
+  background: #004B87; color: #fff; text-align: center; line-height: 13pt; font-size: 8pt; }
+#print-sheet .sheet-town h2 { margin: 2pt 0 0; font-size: 15pt; }
+#print-sheet .sheet-where { margin: 0 0 4pt; font-size: 8.5pt; color: #3C3C3C; }
+#print-sheet .sheet-big { margin: 0; font-size: 22pt; font-weight: 700; line-height: 1.1;
+  font-variant-numeric: tabular-nums; }
+#print-sheet .sheet-big-text { font-size: 15pt; }
+#print-sheet .sheet-cap { margin: 1pt 0 4pt; font-size: 8.5pt; color: #3C3C3C; }
+#print-sheet .sheet-types { border-collapse: collapse; font-size: 8.5pt; margin: 2pt 0 4pt; }
+#print-sheet .sheet-types td { padding: 0.5pt 10pt 0.5pt 0; }
+#print-sheet .sheet-types .num { text-align: right; font-variant-numeric: tabular-nums; }
+#print-sheet .sheet-flag { margin: 2pt 0; font-size: 8.5pt; font-weight: 600; color: #7E3505; }
+#print-sheet .sheet-ahpaa { margin: 2pt 0 0; font-size: 8.5pt; }
+
+#print-sheet .sheet-foot { margin-top: 10pt; padding-top: 6pt; border-top: 0.5pt solid #C8C8C8;
+  font-size: 7.5pt; color: #3C3C3C; }
+#print-sheet .sheet-foot p { margin: 0 0 3pt; }

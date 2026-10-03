@@ -53,7 +53,12 @@ The site has three pages:
   same way. Clicking a municipality in the district table opens its detail panel
   beside the table (a bottom sheet on a phone). Each district has its own link
   (`districts.html#senate-28`, or `#senate-28&place=1760352` with a town open),
-  and the page prints cleanly for a meeting. Each detail panel on the main map
+  and the page prints cleanly for a meeting. A **Print one-page sheet** button
+  gives one Letter page per district to leave behind in a meeting: the member,
+  the district's totals, a QR code, a map and two featured towns (the district
+  office town, then the best other town, by a fixed rule). How each district's
+  towns were chosen is in `docs/data/district_sheet_towns.csv`, with every
+  candidate ranked in `docs/data/district_town_ranking.csv`. Each detail panel on the main map
   links back to the place's districts.
 - **[Method and caveats](docs/about.html)** (`docs/about.html`), which explains
   what the numbers mean, what they are not, and the design decisions behind
@@ -62,7 +67,7 @@ The site has three pages:
 
 ## Caveats that matter, especially in testimony
 
-**Permits are a floor, not a count of homes.** This caveat sits at the top of the
+**Permits show what a town approved, not every home added.** This caveat sits at the top of the
 map page itself. The survey counts permits for new buildings: conversions,
 additions and basement apartments never appear, and a building can be missing
 from a town's record entirely (Berwyn's 52-unit reVerb Century Station is one;
@@ -86,7 +91,7 @@ authorized before the count, so it is not also in the numerator.
 
 **A coverage gap is never a zero.** Not every Illinois place has a permit office
 reporting to the Census. 932 of the state's 1,461 places have at least one permit
-record inside 2010–2025; 529 do not. Those 529 are drawn with a **grey hatch**, never with a low-value colour, are labelled
+record inside 2010–2025; 529 do not. Those 529 are drawn with a **gray hatch**, never with a low-value color, are labelled
 in the legend as *"No permit office reporting to Census — not a zero"*, are left
 out of the table and of every statewide aggregate, and show an explanation
 instead of metrics when opened. A municipality with no permit office is not a
@@ -180,7 +185,7 @@ written to disk, and the URLs recorded in `data/SOURCES.md` have no key on them.
 `scripts/check_data.py` is the definition of done for the data. It exits 0 only
 if all ten SPEC.md §7 conditions hold, and prints a readable report either way.
 It re-reads the TIGER archive and the raw BPS files itself rather than trusting
-anything the build wrote. It also runs eight extra checks of its own, each
+anything the build wrote. It also runs nine extra checks of its own, each
 labelled as an addition:
 
 - **A** verifies the BPS column positions against the shipped column headers and
@@ -203,6 +208,11 @@ labelled as an addition:
   Census place of the same name, checks it reaches the map, the shards and the
   district file unchanged, and recomputes the under-25% set from IHDA's own
   population.
+- **I** re-implements the printable sheet's town rule independently and requires
+  every district's two towns to match it, no Census-designated place to be
+  featured, the named cases to hold (Sosnowski, Cochran and DeLaRosa get the two
+  best towns), both CSVs to agree with `districts.json`, and every QR code to
+  point at its district's page.
 - **H** requires a link-preview page and card for every municipality and
   district, with the right title, description, address, image and redirect, and
   nothing else in those directories; and redraws a sample of cards from the
@@ -215,7 +225,7 @@ nothing but the current shards (the cloud file provider this copy lives under
 has left conflict copies there, and `build.py` now sweeps them).
 
 `scripts/check_site.py` serves `docs/` over HTTP and drives it with headless
-Chromium, installing the browser on first run if needed. Site checks 8 to 15 and B
+Chromium, installing the browser on first run if needed. Site checks 8 to 16 and B
 are additions too: 8 asserts the map's colour break follows the structure-type filter,
 9 asserts the chart separates the pre-2010 context from the metric window and marks
 the years a permit office did not report, and 10 asserts the state silhouette is
@@ -229,7 +239,9 @@ drives both AHPAA switches, the status tag and share column in both tables, the
 links to the explainer, and an unscored place; 14 drives the municipality search
 and the multifamily column; 15 opens a town's and a district's preview page and
 checks it lands on that view, carries the sender's filters, and that "Copy link"
-hands the page out; and B loads `about.html` and holds every figure on it
+hands the page out; 16 prints a district sheet and checks its towns, its map
+markers, its logo and QR code, that only the sheet prints, and that it fits one
+Letter page; and B loads `about.html` and holds every figure on it
 to `meta.json`.
 
 The page's one external dependency is the pinned MapLibre CDN build. `check_site.py`
@@ -310,6 +322,7 @@ docs/                      GitHub Pages root
   districts.html,          the legislator view
     districts.js
   detail.js                the municipality detail panel, used by both maps
+  sheet.js                 the printable one-page district sheet
   shared.js                palette, colour ladders, number formats, esc(),
                            the "Copy link" button
   about.html               method and caveats

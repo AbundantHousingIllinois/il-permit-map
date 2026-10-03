@@ -14,6 +14,7 @@ const view = { chamber: 'senate', district: null, place: null, sort: null };
 let META = null;
 let DIST = null;            // districts.json
 let OUTLINES = {};          // chamber -> geojson
+let PLACES = null;          // places.geojson, for the printable sheet's map
 let map = null;
 let layersReady = false;
 
@@ -342,7 +343,8 @@ function renderPanel() {
   body.innerHTML = `
     <div class="member-card">
       <p class="member-district">${esc(districtLabel(ch, d))}</p>
-      <p class="share-line">${copyLinkButton(`${ch}/${d}/`, false)}</p>
+      <p class="share-line">${copyLinkButton(`${ch}/${d}/`, false)}
+        <button type="button" class="copy-link" id="print-sheet-btn">Print one-page sheet</button></p>
       <h2 class="member-name" id="member-name">${m.vacant ? 'Vacant' : `${esc(title)} ${esc(m.name || 'not listed')}`}${
         m.party ? ` <span class="party">(${esc(PARTY_SHORT[m.party] || m.party)})</span>` : ''}</h2>
       ${contact}
@@ -565,7 +567,7 @@ window.districtsApp = districtsApp;
       get('data/meta.json'), get('data/districts.json'), get('data/places.geojson'),
       get('data/state.geojson'), get('data/senate.geojson'), get('data/house.geojson')
     ]);
-    META = meta; DIST = dist; OUTLINES = { senate, house };
+    META = meta; DIST = dist; OUTLINES = { senate, house }; PLACES = places;
     readHash();
     renderLegend();
     wireControls();

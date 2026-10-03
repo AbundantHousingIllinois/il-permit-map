@@ -403,8 +403,8 @@ function builtSection(shard) {
   const caveat = `These do not have to match. Demolitions and conversions lower the count but `
     + `not the permit total; not every permitted unit gets built, and one permitted late in `
     + `${y1} may not be standing on April 1, ${y1 + 1}; annexation moves boundaries between `
-    + `the two counts; and each count has its own error. A large gap is a question to ask, `
-    + `not a verdict.`;
+    + `the two counts; and each count has its own error. A large gap is worth asking a town about, `
+    + `but on its own it proves nothing.`;
   /* The change in the count is a fact whenever both counts exist, whatever the
    * permit office filed, so it is shown even when the comparison is withheld.
    * The two counts themselves are in the census line under the headline. */

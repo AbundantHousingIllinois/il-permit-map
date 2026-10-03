@@ -57,7 +57,7 @@
 </section>
 
 <div class="map-wrap">
-  <div id="map" role="application" aria-label="Map of Illinois legislative districts over municipalities coloured by housing permitted since 2010"></div>
+  <div id="map" role="application" aria-label="Map of Illinois legislative districts over municipalities colored by housing permitted since 2010"></div>
   <div class="district-tip" id="district-tip" hidden></div>
 </div>
 
@@ -94,6 +94,10 @@
 </aside>
 </div>
 
+<!-- The printable one-page sheet (sheet.js). Empty and hidden until "Print
+     one-page sheet" fills it; only it prints then. -->
+<div id="print-sheet" hidden></div>
+
 <footer>
   <p id="footer-districts"></p>
   <p><a href="about.html#districts"><b>How districts are matched &rarr;</b></a> — and why a municipality can appear under more than one legislator.</p>
@@ -104,5 +108,6 @@
 <script src="shared.js"></script>
 <script src="detail.js"></script>
 <script src="districts.js"></script>
+<script src="sheet.js"></script>
 </body>
 </html>

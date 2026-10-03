@@ -86,4 +86,5 @@ An override naming a chamber, district or field that does not exist fails
 
 Abundant Housing Illinois's logo, orange and blue on white, as supplied with
 AHIL's brand guidelines. `scripts/previews.py` crops it to the mark and places it
-on every link-preview card. It is not shown on the map pages.
+on every link-preview card and writes a small copy, `docs/ahil-logo.png`, for the
+printable district sheet. It is not shown on the map pages.

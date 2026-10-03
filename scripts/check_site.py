@@ -647,7 +647,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             good = (nap["rows"] == 2 and nap["net"] == "+3,078"
                     and nap["permits"] == f"{3078 + 733:,}"
                     and nap["gap"] == "733 units less than" and nap["il"] == il_want
-                    and "not a verdict" in nap["text"])
+                    and "proves nothing" in nap["text"])
             R.out(f"      two-row table, difference, Illinois reference and caveat present: {good}")
             ok = ok and good
 
@@ -663,7 +663,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
 
             top = page.evaluate("() => { const t = document.getElementById('top-caveat');"
                                 " return t ? t.innerText : ''; }")
-            good = "floor" in top and "census" in top.lower()
+            good = "approved" in top and "census" in top.lower()
             R.out(f"    top-of-page caveat present: {good}")
             ok = ok and good
 
@@ -1012,6 +1012,63 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             return all(checks.values())
         R.run(15, "Link previews: a town's or district's page opens it on the map, and "
                   "Copy link hands that page out", s15)
+
+        # ---------------- 16 (added, disclosed) ----------------
+        def s16():
+            R.out("  Not in SPEC.md §7. Added with the printable district sheet (CLAUDE.md")
+            R.out("  deviation 40): the button fills one Letter page with the member, the")
+            R.out("  two towns the build chose, a map and a QR code, and only that prints.")
+            errs: list[str] = []
+            p7 = context.new_page()
+            p7.on("console", lambda m: errs.append(f"console.{m.type}: {m.text}")
+                  if m.type == "error" else None)
+            p7.on("pageerror", lambda e: errs.append(f"pageerror: {e}"))
+            p7.on("requestfailed",
+                  lambda r: errs.append(f"requestfailed: {r.url} {r.failure}"))
+            p7.goto(f"{base}/districts.html#house-69", wait_until="load")
+            p7.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            p7.evaluate("() => { window.__printed = 0; window.print = () => { window.__printed++; }; }")
+            p7.click("#print-sheet-btn")
+            p7.wait_for_function("() => window.__printed === 1", timeout=15_000)
+            got = p7.evaluate("""() => {
+                const el = document.getElementById('print-sheet');
+                return {
+                    text: el.innerText,
+                    towns: [...el.querySelectorAll('.sheet-town h2')].map(h => h.textContent),
+                    imgs: [...el.querySelectorAll('img')].map(i => i.naturalWidth > 0),
+                    marks: el.querySelectorAll('.sheet-map circle').length,
+                    on: document.body.classList.contains('print-sheet-on')
+                };
+            }""")
+            p7.emulate_media(media="print")
+            vis = p7.evaluate("""() => ['print-sheet', 'district-panel', 'map'].map(id => {
+                const e = document.getElementById(id);
+                return !!e && getComputedStyle(e).display !== 'none'
+                    && !!(e.offsetWidth || e.offsetHeight);
+            })""")
+            pdf = p7.pdf(format="Letter", prefer_css_page_size=True, print_background=True)
+            pages = len(re.findall(rb"/Type\s*/Page[^s]", pdf))
+            p7.emulate_media(media="screen")
+            R.out(f"    House 69 sheet towns: {got['towns']}; images loaded {got['imgs']}; "
+                  f"map markers {got['marks']}")
+            R.out(f"    in print: sheet / panel / map visible = {vis};  PDF pages {pages}")
+            checks = {
+                "the button opens the print dialog once": True,
+                "the member is on the sheet": "Joe Sosnowski" in got["text"],
+                "Sosnowski's sheet shows the two best towns": got["towns"] == ["Huntley", "Harvard"],
+                "the logo and QR code load": len(got["imgs"]) == 2 and all(got["imgs"]),
+                "both towns are marked on the map": got["marks"] == 2,
+                "only the sheet prints": vis == [True, False, False],
+                "it fits on one Letter page": pages == 1,
+                "no console errors": not errs,
+            }
+            p7.close()
+            for k, val in checks.items():
+                R.out(f"    {'ok  ' if val else 'FAIL'} {k}")
+            return all(checks.values())
+        R.run(16, "The printable district sheet: the chosen towns, a map and a QR code, "
+                  "and only the sheet prints, on one page", s16)
 
         # ---------------- B ----------------
         def sB():

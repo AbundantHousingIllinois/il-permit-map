@@ -1218,7 +1218,8 @@ def cH():
               if q.name not in names]
     strays += [f for root, names in want_dirs.items() for n in names
                if (root / n).is_dir() for f in (root / n).iterdir()
-               if f.name not in ("index.html", PV.CARD)]
+               if f.name not in ("index.html", PV.CARD)
+               and not (f.name == PV.QR and root != L.PREVIEW_TOWN_DIR)]
     R.out(f"  H.5  stray files or directories in docs/town, docs/senate, docs/house: "
           f"{len(strays)}")
     for q in strays[:5]:
@@ -1262,6 +1263,75 @@ def cH():
     R.out(f"  H.7  sample cards redrawn from current data and compared byte for byte: "
           f"{len(sample)};  stale {len(stale)} {stale if stale else ''}")
     ok &= not stale
+    return ok
+
+
+@check("I", "Every district's printable sheet features the towns Austin's rule picks, "
+            "and the reference CSVs say why", gating=True)
+def cI():
+    R.out("  Not in SPEC.md §7. Added with the printable district sheet (CLAUDE.md")
+    R.out("  deviation 40). The rule is re-implemented here from its description,")
+    R.out("  not imported from district_towns.py, so a bug there cannot pass itself.")
+    R.out("")
+    import html as H
+    D = json.loads((L.DOCS_DATA / "districts.json").read_text(encoding="utf-8"))
+    ok = True
+    want_sheet, want_rank = [], 0
+    bad, cdp, outside, qr_bad = [], [], [], []
+    status_of = {}
+    for ch in L.CHAMBERS:
+        for r in D["chambers"][ch]["districts"]:
+            d = r["district"]
+            m = r.get("member") or {}
+            addr = m.get("office") or ""
+            mm = re.search(r",\s*([^,]+?),\s*IL\s+\d{5}", addr)
+            city = mm[1].strip().lower() if mm else None
+            muni = [p for p in r["places"] if not p["namelsad"].endswith(" CDP")]
+            want_rank += len(muni)
+            ranked = sorted(muni, key=lambda p: (
+                0 if p["share"] > 0.5 and (p["pop2020"] or 0) > 5000 else 1,
+                -round(p["share"] * (p["pop2020"] or 0)), -p["share"], p["name"]))
+            office = next((p for p in muni if city and p["name"].lower() == city), None)
+            picks = ([office] if office else []) + [p for p in ranked if p is not office]
+            want = [p["geoid"] for p in picks[:2]]
+            got = [t["geoid"] for t in r["sheet"]["towns"]]
+            if got != want:
+                bad.append((ch, d, got, want))
+            status_of[(ch, d)] = r["sheet"]["office"]["status"]
+            ids = {p["geoid"] for p in r["places"]}
+            cdp += [(ch, d, t["name"]) for t in r["sheet"]["towns"]
+                    if t["geoid"] in ids and next(p for p in r["places"]
+                                                  if p["geoid"] == t["geoid"])["namelsad"].endswith(" CDP")]
+            outside += [(ch, d, t["name"]) for t in r["sheet"]["towns"] if t["geoid"] not in ids]
+            want_sheet.append((ch, str(d), *(got + ["", ""])[:2]))
+            qr = L.DOCS / ch / str(d) / "qr.svg"
+            title = re.search(r"<title>([^<]*)</title>", qr.read_text(encoding="utf-8")) if qr.exists() else None
+            if not title or H.unescape(title[1]) != f"{L.SITE_URL}{ch}/{d}/":
+                qr_bad.append((ch, d))
+    R.out(f"  I.1  districts whose two towns differ from the rule recomputed here: {len(bad)}")
+    for b in bad[:5]:
+        R.out(f"         {b}")
+    R.out(f"  I.2  featured towns that are CDPs: {len(cdp)};  not in the district: {len(outside)}")
+    named = {("house", 69): "outside district", ("house", 55): "capitol office",
+             ("house", 42): "capitol office", ("senate", 28): "in district"}
+    named_ok = all(status_of.get(k) == v for k, v in named.items())
+    roles = {k: [t["role"] for t in D["chambers"][k[0]]["districts"][k[1] - 1]["sheet"]["towns"]]
+             for k in named}
+    named_ok &= all(roles[k] == ["best", "best"] for k in named if named[k] != "in district")
+    named_ok &= roles[("senate", 28)][0] == "office"
+    R.out(f"  I.3  named cases (Sosnowski House 69 outside, Cochran 55 and DeLaRosa 42 "
+          f"capitol office, each with two best towns; Senate 28 office first): {named_ok}")
+    with (L.DOCS_DATA / "district_sheet_towns.csv").open(encoding="utf-8") as fh:
+        sheet_csv = [(r["chamber"], r["district"], r["town_1_geoid"], r["town_2_geoid"])
+                     for r in csv.DictReader(fh)]
+    with (L.DOCS_DATA / "district_town_ranking.csv").open(encoding="utf-8") as fh:
+        n_rank = sum(1 for _ in csv.DictReader(fh))
+    csv_ok = sheet_csv == want_sheet and n_rank == want_rank
+    R.out(f"  I.4  district_sheet_towns.csv matches districts.json ({len(sheet_csv)} rows) "
+          f"and district_town_ranking.csv lists every municipal candidate "
+          f"({n_rank:,} of {want_rank:,}): {csv_ok}")
+    R.out(f"  I.5  district QR codes missing or pointing elsewhere: {len(qr_bad)}")
+    ok = not bad and not cdp and not outside and named_ok and csv_ok and not qr_bad
     return ok
 
 
@@ -1344,7 +1414,7 @@ def cA():
 
 def main() -> int:
     for name in ("c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10",
-                 "cB", "cC", "cH", "cA"):
+                 "cB", "cC", "cH", "cI", "cA"):
         globals()[name]  # checks run at decoration time; this keeps ordering explicit
 
     R.out("")
