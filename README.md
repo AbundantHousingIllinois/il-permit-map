@@ -290,9 +290,15 @@ docs/senate/28/         "How much housing has State Senate District 28 permitted
 docs/house/54/
 ```
 
-The **Copy link** button in a town's or district's panel hands out these
-addresses (with the current filters, on the main map). The address bar still
-shows the `#…` form, and a link copied from there previews as the whole map.
+The address bar shows these addresses too: open Plano and it reads
+`…/town/plano/#place=…`, open Senate 28 and it reads `…/senate/28/#senate-28`, so
+a link copied from it previews as that place and reopens the same view, filters
+included. The **Copy link** button in each panel copies the same thing. Old
+`index.html#place=…` and `districts.html#senate-28` links still open the right
+view, and the address then moves to the shareable form.
+
+Printing a district, from the **Print one-page sheet** button or from the
+browser's own menu, gives the one-page sheet.
 
 The addresses are absolute and live in one place, `SITE_URL` in
 `scripts/bps_layout.py`; if the site moves to a custom domain, change it there and

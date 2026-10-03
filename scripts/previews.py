@@ -254,7 +254,7 @@ def _intersects(a, b) -> bool:
     return not (a[2] < b[0] or a[0] > b[2] or a[3] < b[1] or a[1] > b[3])
 
 
-def _draw_map(size, view, subject=None, locator=False):
+def _draw_map(size, view, subject=None, locator=False, fade=False):
     """The map panel: a (w, h) image at SS of ``view`` (projected bbox)."""
     from PIL import Image, ImageDraw
     c, meta = _W["colors"], _W["meta"]
@@ -295,9 +295,21 @@ def _draw_map(size, view, subject=None, locator=False):
             _outline(draw, xf, f["polys"], COUNTY_LINE, lw if statewide else round(1.4 * SS))
     for f in _W["state"]:
         _outline(draw, xf, f["polys"], c["state_line"], round(1.2 * SS))
-    if subject is not None:
-        # The page's selection mark, for a town and a district alike: orange over
-        # a pale casing, so it reads against either wing of the ladder.
+    if subject is not None and fade:
+        # A district, as the district page now draws it: everything outside it
+        # faded toward white and its edge in ink, so its own part of the map
+        # stands out. An orange edge was hard to see over orange towns (Austin,
+        # 2026-10-03).
+        from PIL import Image as _I
+        inside = _I.new("RGB", (w, h), "#000000")
+        _fill(inside, xf, subject["polys"], WHITE)
+        img = _I.composite(img, _I.blend(img, _I.new("RGB", (w, h), WHITE), 0.62),
+                           inside.convert("L"))
+        draw = ImageDraw.Draw(img)
+        _outline(draw, xf, subject["polys"], WHITE, 7 * SS)
+        _outline(draw, xf, subject["polys"], INK, 3 * SS)
+    elif subject is not None:
+        # A town: the page's orange selection ring over a pale casing.
         _outline(draw, xf, subject["polys"], WHITE, 7 * SS)
         _outline(draw, xf, subject["polys"], ORANGE, 4 * SS)
     if locator:
@@ -358,7 +370,8 @@ def _card(job: dict) -> bytes:
     # Map panel on the right.
     mx0, my0, mx1, my1 = 640, 34, 1170, 600
     panel = _draw_map((s(mx1 - mx0), s(my1 - my0)), job["view"],
-                      job.get("subject"), job.get("locator", False))
+                      job.get("subject"), job.get("locator", False),
+                      fade=job.get("kind") == "district")
     mask = Image.new("L", panel.size, 0)
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, panel.width - 1, panel.height - 1),
                                            radius=s(14), fill=255)
@@ -521,8 +534,9 @@ def default_job(meta: dict, what: str) -> dict:
     ms, ym = meta["metric_start"], meta["ymax"]
     return {"title": L.PREVIEW_TITLE.format(what), "big": fmt_pct(meta["il_pct_growth"]),
             "lines": [
-                {"text": f"Illinois has permitted new housing equal to this share of its "
-                         f"2010 stock, {ms}–{ym}."},
+                # Austin's wording (2026-10-03), so the number says whose it is.
+                {"text": f"Statewide, Illinois has permitted {fmt_pct(meta['il_pct_growth'])} "
+                         f"of new housing units to its 2010 housing stock ({ms}–{ym})."},
                 {"text": f"Every municipality, mapped: {fmt_int(meta['n_places'])}",
                  "weight": "semibold", "color": BLUE}],
             "kind": None, "foot": [_domain()],

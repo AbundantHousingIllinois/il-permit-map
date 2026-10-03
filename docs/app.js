@@ -407,7 +407,8 @@ function writeHash() {
   if (state.under25) parts.push('under25=1');
   parts.push('sort=' + state.sort.key + ':' + state.sort.dir);
   const h = '#' + parts.join('&');
-  if (location.hash !== h) history.replaceState(null, '', h);
+  const slug = state.selected && (FEATURES.find(p => p.geoid === state.selected) || {}).slug;
+  setAddress(slug ? `town/${slug}/` : 'index.html', h);
 }
 
 function readHash() {

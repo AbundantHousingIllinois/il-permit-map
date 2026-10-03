@@ -355,6 +355,35 @@ towns now sit side by side beside the map instead of stacked, which leaves every
 one of the 177 sheets on one page at 1.2x scale (and 175 at 1.3x). Site check 16
 holds House 69 to Letter, A4 with 3/4-inch margins, and Letter at 1.2x.
 
+**The address bar is always a shareable link.** Steffany shared a
+`districts.html#…` link, which previews as the whole state: a preview service
+never sees `#…`, and only "Copy link" handed out the town and district pages.
+Now, as a town or district opens, `setAddress()` (`shared.js`) puts that page's
+own address in the bar with `history.replaceState`: `town/plano/#place=…`,
+`senate/28/#senate-28`; with nothing open it is `index.html#…` or
+`districts.html#…`. Reloading or sharing it reaches the preview page, which
+forwards its hash to the map. Both map pages pin a `<base>` to the directory
+they were loaded from, before anything else in `<head>`, so data files, links
+and images keep resolving from the site root after the path changes; they are
+only ever loaded from the root, since the preview pages forward rather than
+serve the app. URLs built in script use `document.baseURI`, not `location`.
+
+**A selected district is faded around, not ringed in orange.** Austin found the
+orange edge hard to see over orange towns. The district page, its preview card
+and its printed sheet now fade everything outside the district toward the page
+color (62%) and draw its edge in ink over a pale casing. A selected town keeps
+the orange ring; Austin found the municipal view fine. The whole-state cards
+carry Austin's sentence: "Statewide, Illinois has permitted 5.6% of new housing
+units to its 2010 housing stock."
+
+**Any print of an open district is the sheet.** Austin printed from the browser
+menu in Edge and Firefox and got the whole page with the live map black or
+blank. A `beforeprint` handler now swaps in the sheet whenever a district is
+open, and the sheet is filled as soon as the district opens, so its logo and QR
+code have loaded before any print starts. With no district open the page prints
+as before. Only Chromium is tested here; WebKit and Firefox were not downloaded,
+at Steffany's choice.
+
 ## Things deliberately not done
 
 Everything in SPEC.md §10, plus: no municipal-succession mapping for the three
@@ -528,3 +557,9 @@ beside the AHPAA gap overstated what is outstanding. `BLOCKERS.md` is unchanged.
     Data check **I** (the rule re-implemented independently, the named cases, the
     two CSVs and every QR code) and site check **16** (the button, the chosen
     towns, only the sheet prints, one Letter page) gate it.
+41. **Shareable addresses, the district fade, and menu printing** (Austin's
+    2026-10-03 testing, ROADMAP item 0). See *The address bar is always a
+    shareable link*, *A selected district is faded around* and *Any print of an
+    open district is the sheet*. Site checks 12, 15 and 16 follow: 15 proves old
+    `#…` links still open and the address moves to the shareable form, and 16
+    prints from the menu without the button.

@@ -158,6 +158,16 @@ function hatchImage() {
 
 /* ---------------------------------------------------------------- share */
 
+/* Put the view in the address bar. ``path`` is relative to the site root (the
+ * <base> the page pins): a town's or district's own page when one is open, so a
+ * link copied from the address bar previews as that place (a preview service
+ * never sees the "#..." part), or the page itself otherwise. Loading that address
+ * comes back to this view: the town and district pages forward their hash. */
+function setAddress(path, hash) {
+  const url = new URL(path, document.baseURI).href + hash;
+  if (location.href !== url) history.replaceState(null, '', url);
+}
+
 /* A link that previews properly when pasted into Slack or a text message. A
  * preview scraper never sees the "#place=..." part of the address bar, so this
  * button hands out the place's or district's own page instead (town/<slug>/,
@@ -172,7 +182,7 @@ function copyLinkButton(path, keepHash) {
 document.addEventListener('click', async e => {
   const b = e.target.closest && e.target.closest('.copy-link');
   if (!b) return;
-  const url = new URL(b.dataset.path, location.href).href + (b.dataset.keepHash ? location.hash : '');
+  const url = new URL(b.dataset.path, document.baseURI).href + (b.dataset.keepHash ? location.hash : '');
   b.dataset.url = url;
   try {
     await navigator.clipboard.writeText(url);

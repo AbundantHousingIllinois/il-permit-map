@@ -95,6 +95,7 @@ function sheetMap(ch, d, towns) {
     <g clip-path="url(#sheet-clip)">
       <rect width="${W}" height="${H}" fill="#eef0ec"/>
       ${fills}
+      <path d="M0,0H${W}V${H}H0Z${path(dp)}" fill="#fff" fill-opacity="0.62" fill-rule="evenodd"/>
       <path d="${path(dp)}" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
       <path d="${path(dp)}" fill="none" stroke="#1E1E1E" stroke-width="2" stroke-linejoin="round"/>
       ${rings}${marks}
@@ -153,7 +154,7 @@ function sheetHTML(ch, d) {
   const who = m.vacant ? 'Seat listed as vacant'
     : `${esc(title)} ${esc(m.name || 'not listed')}${m.party ? ` (${esc(PARTY_SHORT[m.party] || m.party)})` : ''}`;
   const nNe = row.places.filter(p => (p.ahpaa_status || '').toLowerCase() === 'non-exempt').length;
-  const link = new URL(`${ch}/${d}/`, location.href).href;
+  const link = new URL(`${ch}/${d}/`, document.baseURI).href;
   const ms = META.metric_start, ym = META.ymax;
   const office = sheet.office || {};
   const n = sheet.towns.length;
@@ -216,21 +217,41 @@ function sheetHTML(ch, d) {
 
 /* ---------------------------------------------------------------- print */
 
+/* The sheet is filled as soon as a district is opened, not when printing starts:
+ * a print from the browser's menu or Ctrl+P gives no time to wait for the logo
+ * and QR code to load, and an <img> inside a hidden element still loads. */
+let preparedFor = null;
+function prepareSheet() {
+  const key = view.district ? `${view.chamber}-${view.district}` : null;
+  if (key === preparedFor) return;
+  preparedFor = key;
+  document.getElementById('print-sheet').innerHTML =
+    key ? sheetHTML(view.chamber, view.district) : '';
+}
+
 async function printSheet() {
   if (!view.district) return;
+  prepareSheet();
   const el = document.getElementById('print-sheet');
-  el.innerHTML = sheetHTML(view.chamber, view.district);
-  /* Wait for the logo and QR code, or the print can catch them half-loaded. */
   await Promise.all([...el.querySelectorAll('img')].map(img =>
     img.complete ? null : new Promise(res => { img.onload = img.onerror = res; })));
   document.body.classList.add('print-sheet-on');
   window.print();
 }
 
+/* Any print of an open district is the sheet, however it was started. Austin
+ * printed from the browser's menu in Edge and Firefox and got the whole page,
+ * with the live map printing black or blank. With no district open, the page
+ * prints as it always has. */
+window.addEventListener('beforeprint', () => {
+  if (!view.district) return;
+  prepareSheet();
+  document.body.classList.add('print-sheet-on');
+});
 window.addEventListener('afterprint', () => document.body.classList.remove('print-sheet-on'));
 
 document.addEventListener('click', e => {
   if (e.target.closest && e.target.closest('#print-sheet-btn')) printSheet();
 });
 
-window.sheetApp = { html: sheetHTML, print: printSheet };
+window.sheetApp = { html: sheetHTML, print: printSheet, prepare: prepareSheet };

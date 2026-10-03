@@ -13,40 +13,10 @@ and the printable district sheet, formerly item 4 (deviation 40). Left: 2, then 
 Item 3 is shelved.
 
 **Austin's feedback, 2026-10-03.** Metros (item 2) is unblocked: the area's own
-rate. Economic context (item 1) waits on outside advice. Three problems he hit
-with what is live are item 0, which should go before either.
+rate. Economic context (item 1) waits on outside advice. The three problems he
+hit with what was live were fixed the same day (CLAUDE.md deviation 41).
 
 ---
-
-## 0. Fixes from Austin's 2026-10-03 testing
-
-*Austin, 2026-10-03, after trying the district sheet and the link previews.*
-
-- **Printing a district from the browser menu does not give the sheet.** In Edge
-  he got "a weird map" and in Firefox no map, and "no featured place". His
-  screenshot is the whole district page printed with Ctrl+P (or the menu): the
-  live map prints black or blank, and the sheet only appears from the "Print
-  one-page sheet" button. Fix: whenever a district is open, any print (button,
-  menu or Ctrl+P) produces the sheet, via a `beforeprint` handler. Test it in
-  Firefox and WebKit as well as Chromium.
-- **"The district thing should show the district portion of the map."** Read
-  two ways, possibly both:
-  1. A link copied from the address bar (`districts.html#senate-28`) previews as
-     the whole-state card, because a preview service never sees `#…`. Only
-     `senate/28/` links preview the district, and only "Copy link" hands those
-     out. Fix: make the address bar show the shareable form (`…/senate/28/`,
-     `…/town/plano/`) as a district or town is opened, so any copied link
-     previews correctly. It changes how both pages handle their addresses
-     (a `<base>` element pinned to the site root, `history.replaceState` to the
-     preview path); every old `#…` link must keep working, and a site check
-     should prove it.
-  2. The selected district is outlined in orange, which is hard to see over the
-     orange (below-Illinois) towns, on the page, on its preview card and on the
-     sheet. Steffany's reading. Fix: fade everything outside the district and
-     draw its edge in dark ink, so the district's own part of the map stands out.
-- **The 5.6% on the whole-state cards needs saying what it is.** Austin's
-  wording: "Statewide, Illinois has permitted 5.6% of new housing units to its
-  2010 housing stock." Use it on `preview.png` and `preview-districts.png`.
 
 ## 1. Economic context for towns that permit little
 

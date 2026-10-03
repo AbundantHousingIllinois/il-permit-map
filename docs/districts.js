@@ -28,6 +28,20 @@ function memberLine(ch, d) {
   if (m.vacant) return 'vacant';
   return `${m.name}${m.party ? ` (${PARTY_SHORT[m.party] || m.party})` : ''}`;
 }
+/* A polygon covering the world with the district cut out of it, for the fade.
+ * MapLibre tells a hole from an outer ring by winding, so each hole is wound
+ * against the outer ring. (The district's own holes are left unfaded.) */
+function maskOutside(f) {
+  const area = r => r.reduce((a, [x, y], i) => {
+    const [x2, y2] = r[(i + 1) % r.length];
+    return a + x * y2 - x2 * y;
+  }, 0);
+  const world = [[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]];
+  const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+  const holes = polys.map(p => Math.sign(area(p[0])) === Math.sign(area(world)) ? p[0].slice().reverse() : p[0]);
+  return { type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [world, ...holes] } };
+}
+
 function districtLabel(ch, d) { return `${chamberInfo(ch).label} District ${d}`; }
 
 /* ---------------------------------------------------------------- map */
@@ -152,6 +166,14 @@ function buildMap(places, stateOutline) {
       id: 'places-line', type: 'line', source: 'places',
       paint: { 'line-color': cssVar('--rule-strong'), 'line-width': 0.3, 'line-opacity': 0.7 }
     });
+    /* Everything outside the selected district, faded toward the page color, so
+     * the district's own part of the map stands out. An orange edge alone was
+     * hard to see over the orange (below-Illinois) towns (Austin, 2026-10-03). */
+    map.addSource('district-mask', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    map.addLayer({
+      id: 'district-mask', type: 'fill', source: 'district-mask',
+      paint: { 'fill-color': cssVar('--surface'), 'fill-opacity': 0.62 }
+    });
     for (const ch of ['senate', 'house']) {
       /* A near-transparent fill so the whole district, not just its edge, takes
        * a tap and a hover. */
@@ -173,11 +195,18 @@ function buildMap(places, stateOutline) {
         layout: { visibility: ch === view.chamber ? 'visible' : 'none', 'line-join': 'round' },
         paint: { 'line-color': cssVar('--ink'), 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 1, 11, 2.2] }
       });
+      /* The selected district's edge: dark ink over a wide pale casing. */
+      map.addLayer({
+        id: `${ch}-selected-casing`, type: 'line', source: ch,
+        filter: ['==', ['get', 'district'], -1],
+        layout: { visibility: ch === view.chamber ? 'visible' : 'none', 'line-join': 'round' },
+        paint: { 'line-color': cssVar('--surface'), 'line-width': 7 }
+      });
       map.addLayer({
         id: `${ch}-selected`, type: 'line', source: ch,
         filter: ['==', ['get', 'district'], -1],
-        layout: { visibility: ch === view.chamber ? 'visible' : 'none' },
-        paint: { 'line-color': '#E87722', 'line-width': 3 }
+        layout: { visibility: ch === view.chamber ? 'visible' : 'none', 'line-join': 'round' },
+        paint: { 'line-color': cssVar('--ink'), 'line-width': 3 }
       });
       map.on('click', `${ch}-hit`, e => {
         if (e.features && e.features.length) selectDistrict(ch, e.features[0].properties.district, true);
@@ -231,7 +260,7 @@ function applyView(fly) {
   if (!layersReady) return;
   for (const ch of ['senate', 'house']) {
     const vis = ch === view.chamber ? 'visible' : 'none';
-    for (const suffix of ['hit', 'casing', 'line', 'selected', 'labels']) map.setLayoutProperty(`${ch}-${suffix}`, 'visibility', vis);
+    for (const suffix of ['hit', 'casing', 'line', 'selected-casing', 'selected', 'labels']) map.setLayoutProperty(`${ch}-${suffix}`, 'visibility', vis);
     /* The chosen district's number turns orange and always shows. */
     const sel = ch === view.chamber && view.district ? view.district : -1;
     map.setLayoutProperty(`${ch}-labels`, 'icon-image', ['case',
@@ -240,9 +269,15 @@ function applyView(fly) {
       ['concat', `lbl-${ch}-`, ['to-string', ['get', 'district']]]]);
     map.setLayoutProperty(`${ch}-labels`, 'symbol-sort-key', ['case',
       ['==', ['get', 'district'], sel], -1e15, ['-', 0, ['get', 'aland']]]);
-    map.setFilter(`${ch}-selected`, ['==', ['get', 'district'],
-      ch === view.chamber && view.district ? view.district : -1]);
+    for (const layer of [`${ch}-selected`, `${ch}-selected-casing`]) {
+      map.setFilter(layer, ['==', ['get', 'district'],
+        ch === view.chamber && view.district ? view.district : -1]);
+    }
   }
+  const sel = view.district
+    && OUTLINES[view.chamber].features.find(x => x.properties.district === view.district);
+  map.getSource('district-mask').setData(sel ? maskOutside(sel)
+    : { type: 'FeatureCollection', features: [] });
   map.setFilter('place-selected', ['==', ['get', 'geoid'], view.place || '']);
   if (fly && view.district) {
     const f = OUTLINES[view.chamber].features.find(x => x.properties.district === view.district);
@@ -300,7 +335,11 @@ function districtColumns() {
 function renderPanel() {
   const empty = document.getElementById('district-empty');
   const body = document.getElementById('district-body');
-  if (!view.district) { empty.hidden = false; body.hidden = true; return; }
+  if (!view.district) {
+    empty.hidden = false; body.hidden = true;
+    if (typeof prepareSheet === 'function') prepareSheet();
+    return;
+  }
   const ch = view.chamber, d = view.district;
   const row = districtRow(ch, d);
   const m = row.member || {};
@@ -378,6 +417,7 @@ function renderPanel() {
     </div>`;
   empty.hidden = true;
   body.hidden = false;
+  if (typeof prepareSheet === 'function') prepareSheet();
 }
 
 /* ---------------------------------------------------------------- state */
@@ -429,7 +469,7 @@ function placeTitle(geoid) {
 function writeHash() {
   const h = (view.district ? `#${view.chamber}-${view.district}` : `#${view.chamber}`)
     + (view.place ? `&place=${view.place}` : '');
-  if (location.hash !== h) history.replaceState(null, '', h);
+  setAddress(view.district ? `${view.chamber}/${view.district}/` : 'districts.html', h);
 }
 
 /* "#senate-28", "#house", "#senate-28&place=1751622", or nothing. Anything else
@@ -581,8 +621,11 @@ window.districtsApp = districtsApp;
       for (const ch of ['senate', 'house']) {
         map.setPaintProperty(`${ch}-casing`, 'line-color', cssVar('--surface'));
         map.setPaintProperty(`${ch}-line`, 'line-color', cssVar('--ink'));
+        map.setPaintProperty(`${ch}-selected-casing`, 'line-color', cssVar('--surface'));
+        map.setPaintProperty(`${ch}-selected`, 'line-color', cssVar('--ink'));
       }
       map.setPaintProperty('place-selected', 'line-color', placeOutlineColor());
+      map.setPaintProperty('district-mask', 'fill-color', cssVar('--surface'));
       if (map.hasImage('hatch')) map.updateImage('hatch', hatchImage());
       addLabelImages(true);
     });

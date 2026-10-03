@@ -750,11 +750,11 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                                  " && window.districtsApp.place().geoid === '1702154'",
                                  timeout=15_000)
             pl = p4.evaluate("window.districtsApp.place()")
-            url = p4.url.rsplit("/", 1)[-1]
+            url = p4.url
             R.out(f"    clicking Arlington Heights in the table: {url}, panel "
                   f"{pl['name']!r} {pl['percentText']!r}")
             checks["a table municipality opens beside the table, not on the main map"] = (
-                url.startswith("districts.html#house-54&place=1702154")
+                "/house/54/#house-54&place=1702154" in p4.url
                 and pl["open"] and "Arlington Heights" in pl["name"]
                 and any(ch.isdigit() for ch in pl["percentText"]))
             # A fresh page, so this is a load and not a same-document hash change.
@@ -968,8 +968,10 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                                  timeout=15_000)
             at = p6.evaluate("() => location.pathname + location.hash")
             R.out(f"    /town/{slug}/ lands on {at}")
-            checks["a town's page opens that town on the map"] = (
-                at.startswith("/index.html#place=1751622"))
+            # The address bar then shows the town's own page again, so a link
+            # copied from it previews as Naperville (CLAUDE.md deviation 41).
+            checks["a town's page opens that town, and the address bar keeps its page"] = (
+                at.startswith(f"/town/{slug}/#place=1751622"))
             p6.click("#detail .copy-link")
             p6.wait_for_timeout(300)
             url = p6.evaluate("() => document.querySelector('#detail .copy-link').dataset.url")
@@ -994,8 +996,43 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             at = p6.evaluate("() => location.pathname + location.hash")
             member = p6.evaluate("window.districtsApp.panel()")["member"]
             R.out(f"    /senate/28/ lands on {at}: {member!r}")
-            checks["a district's page opens that district"] = (
-                at.startswith("/districts.html#senate-28") and "Laura Murphy" in member)
+            checks["a district's page opens that district, and the address bar keeps its page"] = (
+                at.startswith("/senate/28/#senate-28") and "Laura Murphy" in member)
+            mask = p6.evaluate("() => window.map.getSource('district-mask')._data.type")
+            R.out(f"    outside-district fade drawn: {mask!r}")
+            checks["everything outside the selected district is faded"] = mask == "Feature"
+
+            # Old "#..." links keep working, and the address bar moves to the
+            # shareable form as soon as the view is restored.
+            p6.goto(f"{base}/index.html#place=1760352&metric=pct_growth", wait_until="load")
+            p6.wait_for_function("window.app && window.app.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            p6.wait_for_function("() => window.app.detail().geoid === '1760352'", timeout=15_000)
+            at = p6.evaluate("() => location.pathname + location.hash")
+            p6.evaluate("() => window.app.selectPlace('1751622')")
+            p6.wait_for_function("() => window.app.detail().geoid === '1751622'"
+                                 " && document.querySelector('#detail .pct')", timeout=15_000)
+            at2 = p6.evaluate("() => location.pathname + location.hash")
+            p6.evaluate("() => window.app.closeDetail()")
+            p6.wait_for_timeout(300)
+            at3 = p6.evaluate("() => location.pathname")
+            R.out(f"    index.html#place=1760352 -> {at}; then Naperville -> {at2}; closed -> {at3}")
+            checks["an old #place link opens and the address becomes the town's page"] = (
+                at.startswith("/town/plano/#place=1760352"))
+            checks["data still loads after the address moves (another town opens)"] = (
+                at2.startswith(f"/town/{slug}/#place=1751622"))
+            checks["closing the town puts the address back on the map page"] = at3 == "/index.html"
+            p6.goto(f"{base}/districts.html#house-54", wait_until="load")
+            p6.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            at = p6.evaluate("() => location.pathname + location.hash")
+            R.out(f"    districts.html#house-54 -> {at}")
+            checks["an old #house link opens and the address becomes the district's page"] = (
+                at.startswith("/house/54/#house-54"))
+            p6.goto(f"{base}/senate/28/", wait_until="load")
+            p6.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            p6.wait_for_timeout(400)
             p6.click("#district-body .copy-link")
             p6.wait_for_timeout(300)
             url = p6.evaluate("() => document.querySelector('#district-body .copy-link').dataset.url")
@@ -1066,6 +1103,32 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                          scale=1.2)
             pages_big = len(re.findall(rb"/Type\s*/Page[^s]", big))
             p7.emulate_media(media="screen")
+
+            # A print from the browser's menu or Ctrl+P, with no button pressed:
+            # Austin's Edge and Firefox prints were the whole page. The browser
+            # fires beforeprint; it must turn the open district into the sheet.
+            p7.goto(f"{base}/districts.html#senate-28", wait_until="load")
+            p7.wait_for_function("window.districtsApp && window.districtsApp.ready === true",
+                                 timeout=READY_TIMEOUT_MS)
+            p7.wait_for_function("() => [...document.querySelectorAll('#print-sheet img')]"
+                                 ".length === 2 && [...document.querySelectorAll('#print-sheet img')]"
+                                 ".every(i => i.complete && i.naturalWidth > 0)", timeout=15_000)
+            p7.evaluate("() => window.dispatchEvent(new Event('beforeprint'))")
+            p7.emulate_media(media="print")
+            menu = p7.evaluate("""() => {
+                const el = document.getElementById('print-sheet');
+                const shown = id => { const e = document.getElementById(id);
+                    return !!e && getComputedStyle(e).display !== 'none' && !!(e.offsetWidth || e.offsetHeight); };
+                return { sheet: shown('print-sheet'), panel: shown('district-panel'),
+                         member: el.innerText.includes('Laura Murphy'),
+                         towns: [...el.querySelectorAll('.sheet-town h2')].map(h => h.textContent),
+                         fade: !!el.querySelector('.sheet-map path[fill-opacity]') };
+            }""")
+            menu_pdf = p7.pdf(format="Letter", prefer_css_page_size=True, print_background=True)
+            menu_pages = len(re.findall(rb"/Type\s*/Page[^s]", menu_pdf))
+            p7.emulate_media(media="screen")
+            R.out(f"    menu print of Senate 28 (no button): sheet {menu['sheet']}, panel "
+                  f"{menu['panel']}, towns {menu['towns']}, fade {menu['fade']}, pages {menu_pages}")
             R.out(f"    House 69 sheet towns: {got['towns']}; images loaded {got['imgs']}; "
                   f"map markers {got['marks']}")
             R.out(f"    in print: sheet / panel / map visible = {vis};  PDF pages {pages} "
@@ -1079,6 +1142,10 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                 "only the sheet prints": vis == [True, False, False],
                 "the caveat and sources print with it": foot,
                 "it fits on one Letter page": pages == 1,
+                "a print from the browser menu is the sheet too": (
+                    menu["sheet"] and not menu["panel"] and menu["member"]
+                    and menu["towns"] == ["Des Plaines", "Schaumburg"] and menu_pages == 1),
+                "the sheet's map fades everything outside the district": menu["fade"],
                 "it still fits one page with a smaller printable area": pages_small == 1,
                 "it still fits one page printed 20% larger, as on an iPhone": pages_big == 1,
                 "no console errors": not errs,
