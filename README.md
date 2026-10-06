@@ -57,9 +57,10 @@ The site has three pages:
   too, `…/senate/28/#senate-28&place=1760352`). Printing an open district, from
   the **Print one-page sheet** button or the browser's own Print, gives one
   Letter page per district to leave behind in a meeting: the member,
-  the district's totals, a QR code, a map and two featured towns (the district
-  office town, then the best other town, by a fixed rule). How each district's
-  towns were chosen is in `docs/data/district_sheet_towns.csv`, with every
+  the district's totals, a QR code, a map and up to four featured
+  municipalities in a 2 x 2 grid (the district office municipality, then the
+  best of the rest, by a fixed rule). How each district's
+  municipalities were chosen is in `docs/data/district_sheet_towns.csv`, with every
   candidate ranked in `docs/data/district_town_ranking.csv`. Each detail panel on the main map
   links back to the place's districts.
 - **[Method and caveats](docs/about.html)** (`docs/about.html`), which explains
@@ -69,7 +70,7 @@ The site has three pages:
 
 ## Caveats that matter, especially in testimony
 
-**Permits show what a town approved, not every home added.** This caveat sits at the top of the
+**Permits show what a municipality approved, not every home added.** This caveat sits at the top of the
 map page itself. The survey counts permits for new buildings: conversions,
 additions and basement apartments never appear, and a building can be missing
 from a town's record entirely (Berwyn's 52-unit reVerb Century Station is one;
@@ -211,10 +212,10 @@ labelled as an addition:
   Census place of the same name, checks it reaches the map, the shards and the
   district file unchanged, and recomputes the under-25% set from IHDA's own
   population.
-- **I** re-implements the printable sheet's town rule independently and requires
-  every district's two towns to match it, no Census-designated place to be
-  featured, the named cases to hold (Sosnowski, Cochran and DeLaRosa get the two
-  best towns), both CSVs to agree with `districts.json`, and every QR code to
+- **I** re-implements the printable sheet's selection rule independently and
+  requires every district's (up to four) municipalities to match it, no
+  Census-designated place to be featured, the named cases to hold (Sosnowski,
+  Cochran and DeLaRosa get the four best), both CSVs to agree with `districts.json`, and every QR code to
   point at its district's page.
 - **H** requires a link-preview page and card for every municipality and
   district, with the right title, description, address, image and redirect, and
@@ -242,9 +243,9 @@ drives both AHPAA switches, the status tag and share column in both tables, the
 links to the explainer, and an unscored place; 14 drives the municipality search
 and the multifamily column; 15 opens a town's and a district's preview page and
 checks it lands on that view, carries the sender's filters, and that "Copy link"
-hands the page out; 16 prints a district sheet and checks its towns, its map
-markers, its logo and QR code, that only the sheet prints, and that it fits one
-Letter page; and B loads `about.html` and holds every figure on it
+hands the page out; 16 prints a district sheet and checks its four
+municipalities, their 2 x 2 grid and bare number labels, its map markers, its
+logo and QR code, that only the sheet prints, and that it fits one Letter page; and B loads `about.html` and holds every figure on it
 to `meta.json`.
 
 The page's one external dependency is the pinned MapLibre CDN build. `check_site.py`
