@@ -16,6 +16,12 @@ Item 3 is shelved.
 rate. Economic context (item 1) waits on outside advice. The three problems he
 hit with what was live were fixed the same day (CLAUDE.md deviation 41).
 
+**Austin's feedback, 2026-10-05.** The district view, previews and printing work
+for him, and the site stays AHIL-branded only (no YIMBY Illinois link). Built
+the next day (CLAUDE.md deviation 42): "municipality" for "town" in what a reader
+sees, up to four municipalities on the printed sheet in a 2 x 2 grid, and number
+labels only, without "District office" or "Top-ranked town".
+
 ---
 
 ## 1. Economic context for towns that permit little

@@ -871,8 +871,9 @@ ul.sources { font-size: 12.5px; color: var(--ink-secondary); }
 #print-sheet .sheet-qr img { width: 0.95in; height: 0.95in; display: block; }
 #print-sheet .sheet-qr figcaption { font-size: 6.5pt; color: #3C3C3C; word-break: break-all; }
 
-/* Map, then the two towns side by side: stacking the towns made the sheet tall
- * enough that an iPhone, which prints about 15% larger, ran off the page. */
+/* Map, then the municipalities in a two-column grid, reading 1 2 / 3 4 (Austin
+ * asked for up to four, 2026-10-05). Stacking them in one column made the sheet
+ * tall enough that an iPhone, which prints about 15% larger, ran off the page. */
 #print-sheet .sheet-body { display: grid; grid-template-columns: 2.55in 1fr; gap: 12pt; }
 #print-sheet .sheet-towns { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10pt; align-content: start; }
 #print-sheet .sheet-towns > .sheet-note { grid-column: 1 / -1; }
@@ -880,18 +881,23 @@ ul.sources { font-size: 12.5px; color: var(--ink-secondary); }
 #print-sheet .sheet-note { font-size: 7.5pt; color: #787878; margin: 4pt 0 0; }
 
 #print-sheet .sheet-town { border-left: 2pt solid #004B87; padding: 1pt 0 3pt 9pt; margin-bottom: 7pt; }
-#print-sheet .sheet-town-role { margin: 0; font-size: 8pt; font-weight: 600; color: #004B87;
-  text-transform: uppercase; letter-spacing: .04em; display: flex; align-items: center; gap: 5pt; }
-#print-sheet .sheet-num { display: inline-block; width: 13pt; height: 13pt; border-radius: 50%;
-  background: #004B87; color: #fff; text-align: center; line-height: 13pt; font-size: 8pt; }
-#print-sheet .sheet-town h2 { margin: 1pt 0 0; font-size: 14pt; }
+/* Only the number, matching the map's marker: Austin found "District office" and
+ * "Top-ranked town" labels unnecessary (2026-10-05). The note under the
+ * municipalities still says why number 1 was chosen. */
+#print-sheet .sheet-town-head { display: flex; align-items: center; gap: 5pt; }
+#print-sheet .sheet-num { flex: none; width: 15pt; height: 15pt; border-radius: 50%;
+  background: #004B87; color: #fff; text-align: center; line-height: 15pt; font-size: 9pt;
+  font-weight: 700; }
+#print-sheet .sheet-town h2 { margin: 0; font-size: 14pt; line-height: 1.15; }
 #print-sheet .sheet-where { margin: 0 0 3pt; font-size: 8pt; color: #3C3C3C; }
 #print-sheet .sheet-big { margin: 0; font-size: 19pt; font-weight: 700; line-height: 1.1;
   font-variant-numeric: tabular-nums; }
 #print-sheet .sheet-big-text { font-size: 15pt; }
 #print-sheet .sheet-cap { margin: 1pt 0 3pt; font-size: 8pt; color: #3C3C3C; }
 #print-sheet .sheet-types { border-collapse: collapse; font-size: 8pt; margin: 1pt 0 3pt; }
-#print-sheet .sheet-types td { padding: 0 10pt 0 0; }
+#print-sheet .sheet-types td { padding: 0 5pt 0 0; white-space: nowrap; }
+#print-sheet .sheet-types td.num { padding-right: 14pt; }
+#print-sheet .sheet-types td.num:last-child { padding-right: 0; }
 #print-sheet .sheet-types .num { text-align: right; font-variant-numeric: tabular-nums; }
 #print-sheet .sheet-flag { margin: 2pt 0; font-size: 8.5pt; font-weight: 600; color: #7E3505; }
 #print-sheet .sheet-ahpaa { margin: 2pt 0 0; font-size: 8.5pt; }

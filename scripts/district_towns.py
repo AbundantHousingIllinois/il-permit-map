@@ -1,27 +1,33 @@
 #!/usr/bin/env python3
-"""The two towns on each district's printable sheet (ROADMAP item 4).
+"""The municipalities on each district's printable sheet (ROADMAP item 4).
 
-Rules, as Austin Busch set them on 2026-10-02 and Steffany confirmed:
+Rules, as Austin Busch set them on 2026-10-02 and Steffany confirmed. The sheet
+showed two; on 2026-10-05 Austin asked for up to four, in a grid
+(``SHEET_N``), and the same ranking simply runs further down the list.
 
-1. **The district office town comes first**, when the member's district office
+1. **The district office municipality comes first**, when the member's district office
    is in a municipality inside the district. The office city is read from the
    Open States address ("..., Berwyn, IL 60609") and matched by exact name to a
    municipality in the district's list (``L.DISTRICT_SHARE_MIN`` of its land
    or more inside). No geocoding.
-2. **Otherwise the sheet shows the two best towns.** That covers a member with
+2. **Otherwise the sheet shows the best municipalities.** That covers a member with
    no address listed, an address in Springfield (a capitol office, not a
    district one), and Sosnowski (House 69), whose office in Machesney Park is
    outside his district.
-3. **"Best" is ranked in two tiers.** First, towns with more than half their land
-   in the district and more than 5,000 people; then every other town. Within a
-   tier, by land share x 2020 population: roughly, how many of the town's
+3. **"Best" is ranked in two tiers.** First, municipalities with more than half
+   their land in the district and more than 5,000 people; then every other one.
+   Within a tier, by land share x 2020 population: roughly, how many of its
    residents live in the district, the assumption the district estimate makes.
    Ties go to the larger land share, then to the name.
-4. **Chicago is one town**, never split. A Chicago district shows Chicago and its
-   best suburb if it has one, which the ranking gives without a special case.
+4. **Chicago is one municipality**, never split. A Chicago district shows Chicago
+   and its best suburbs if it has any, which the ranking gives without a special
+   case.
 
 Only municipalities are candidates. A Census-designated place (``... CDP``) is
-unincorporated land with no town government, so it is never featured.
+unincorporated land with no municipal government, so it is never featured.
+
+Reader-facing text says "municipality", not "town" (Austin, 2026-10-05): the
+``why`` strings here are printed in docs/data/district_sheet_towns.csv.
 
 ``choose()`` returns the picks with a plain-English reason for each, and the
 whole ranked candidate list, so the choice can be checked by hand. build.py
@@ -34,6 +40,8 @@ import re
 
 TIER1_SHARE = 0.5           # more than half the town's land inside the district
 TIER1_POP = 5000            # and more than 5,000 people (2020 Census)
+SHEET_N = 4                 # municipalities on a sheet, at most (a 2 x 2 grid)
+_ORDINAL = ["Best", "Second-best", "Third-best", "Fourth-best"]
 
 _OFFICE_CITY = re.compile(r",\s*([^,]+?),\s*IL\s+\d{5}")
 
@@ -73,10 +81,10 @@ def rank(places: list[dict]) -> list[dict]:
 def _why_ranked(p: dict, label: str) -> str:
     people = f"{_fmt_pct(p['share'])} of its land × {p['pop2020'] or 0:,} people = {p['score']:,}"
     if p["tier"] == 1:
-        return (f"{label} among towns with more than half their land in the district "
+        return (f"{label} among municipalities with more than half their land in the district "
                 f"and more than {TIER1_POP:,} people, by land share × population "
                 f"({people}).")
-    return (f"{label} by land share × population ({people}). No remaining town has "
+    return (f"{label} by land share × population ({people}). No remaining municipality has "
             f"more than half its land in the district and more than {TIER1_POP:,} people.")
 
 
@@ -89,12 +97,12 @@ def office_status(address: str | None, city: str | None, in_district: bool) -> s
 
 
 def choose(places: list[dict], member: dict | None) -> dict:
-    """The sheet's towns for one district.
+    """The sheet's municipalities for one district.
 
     ``places`` are the district's rows from districts.json, each with
     ``geoid, name, namelsad, share, pop2020``. Returns ``{"office": {...},
-    "towns": [pick, pick], "ranked": [...]}``; ``towns`` has fewer than two
-    entries only when the district has fewer than two municipalities.
+    "towns": [pick, ...], "ranked": [...]}``; ``towns`` has ``SHEET_N`` entries
+    unless the district has fewer municipalities than that.
     """
     member = member or {}
     address = member.get("office")
@@ -114,17 +122,18 @@ def choose(places: list[dict], member: dict | None) -> dict:
                   "outside district": f"The district office, in {city}, is outside "
                                       "the district"}[status]
     for p in ranked:
-        if len(picks) == 2:
+        if len(picks) == SHEET_N:
             break
         if any(q["geoid"] == p["geoid"] for q in picks):
             continue
         if office_town is not None:
-            why = _why_ranked(p, "Best town after the office town")
+            nth = _ORDINAL[len(picks) - 1]
+            why = _why_ranked(p, f"{nth} municipality after the office municipality")
         elif not picks:
-            why = (f"{why_no}, so the sheet shows the two best towns. "
-                   + _why_ranked(p, "Best town"))
+            why = (f"{why_no}, so the sheet shows the best municipalities. "
+                   + _why_ranked(p, "Best municipality"))
         else:
-            why = _why_ranked(p, "Second-best town")
+            why = _why_ranked(p, f"{_ORDINAL[len(picks)]} municipality")
         picks.append(dict(p, role="best", why=why))
     return {"office": {"address": address, "city": city, "status": status,
                        "geoid": office_town["geoid"] if office_town else None},

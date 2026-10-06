@@ -1,7 +1,7 @@
-chamber,district,rank,geoid,town,land_share,pop2020,tier,score,is_office_town,on_sheet
+chamber,district,rank,geoid,municipality,land_share,pop2020,tier,score,is_office_municipality,on_sheet
 senate,1,1,1714351,Cicero,0.7041,85268,1,60037,False,best
-senate,1,2,1708576,Brookfield,0.6676,19476,1,13002,False,
-senate,1,3,1745434,Lyons,1.0,10817,1,10817,False,
+senate,1,2,1708576,Brookfield,0.6676,19476,1,13002,False,best
+senate,1,3,1745434,Lyons,1.0,10817,1,10817,False,best
 senate,1,4,1772676,Stickney,1.0,7110,1,7110,False,
 senate,1,5,1714000,Chicago,0.0394,2746388,2,108208,False,
 senate,1,6,1705573,Berwyn,0.3998,57250,2,22889,True,office
@@ -11,8 +11,8 @@ senate,1,9,1745564,McCook,0.254,249,2,63,False,
 senate,2,1,1714000,Chicago,0.0482,2746388,2,132376,True,office
 senate,3,1,1714000,Chicago,0.0687,2746388,2,188677,True,office
 senate,4,1,1747774,Maywood,1.0,23512,1,23512,False,best
-senate,4,2,1704975,Bellwood,1.0,18789,1,18789,False,
-senate,4,3,1780047,Westchester,1.0,16892,1,16892,False,
+senate,4,2,1704975,Bellwood,1.0,18789,1,18789,False,best
+senate,4,3,1780047,Westchester,1.0,16892,1,16892,False,best
 senate,4,4,1726935,Forest Park,0.9439,14339,1,13535,False,
 senate,4,5,1740767,La Grange,0.7989,16321,1,13039,False,
 senate,4,6,1740793,La Grange Park,0.6675,13475,1,8995,False,
@@ -36,23 +36,23 @@ senate,5,1,1714000,Chicago,0.0772,2746388,2,212021,True,office
 senate,6,1,1714000,Chicago,0.0308,2746388,2,84589,True,office
 senate,7,1,1714000,Chicago,0.0351,2746388,2,96398,True,office
 senate,8,1,1770122,Skokie,0.5014,67824,1,34007,False,best
-senate,8,2,1753000,Niles,0.8325,30912,1,25734,False,
-senate,8,3,1750647,Morton Grove,0.8012,25297,1,20268,False,
+senate,8,2,1753000,Niles,0.8325,30912,1,25734,False,best
+senate,8,3,1750647,Morton Grove,0.8012,25297,1,20268,False,best
 senate,8,4,1743744,Lincolnwood,1.0,13463,1,13463,False,
 senate,8,5,1714000,Chicago,0.0473,2746388,2,129904,True,office
 senate,8,6,1757875,Park Ridge,0.023,39656,2,912,False,
 senate,9,1,1724582,Evanston,1.0,78110,1,78110,False,best
 senate,9,2,1729938,Glenview,0.8065,48705,1,39281,True,office
-senate,9,3,1782075,Wilmette,0.8899,28170,1,25068,False,
-senate,9,4,1782530,Winnetka,1.0,12744,1,12744,False,
+senate,9,3,1782075,Wilmette,0.8899,28170,1,25068,False,best
+senate,9,4,1782530,Winnetka,1.0,12744,1,12744,False,best
 senate,9,5,1770122,Skokie,0.4986,67824,2,33817,False,
 senate,9,6,1753481,Northbrook,0.164,35222,2,5776,False,
 senate,9,7,1750647,Morton Grove,0.1105,25297,2,2795,False,
 senate,9,8,1739519,Kenilworth,1.0,2514,2,2514,False,
 senate,9,9,1730328,Golf,1.0,514,2,514,False,
 senate,10,1,1753377,Norridge,1.0,15251,1,15251,False,best
-senate,10,2,1768081,Schiller Park,1.0,11709,1,11709,False,
-senate,10,3,1733435,Harwood Heights,1.0,9065,1,9065,False,
+senate,10,2,1768081,Schiller Park,1.0,11709,1,11709,False,best
+senate,10,3,1733435,Harwood Heights,1.0,9065,1,9065,False,best
 senate,10,4,1714000,Chicago,0.0753,2746388,2,206803,True,office
 senate,10,5,1723724,Elmwood Park,0.1559,24521,2,3823,False,
 senate,10,6,1765819,Rosemont,0.8208,3952,2,3244,False,
@@ -60,8 +60,8 @@ senate,10,7,1727702,Franklin Park,0.1611,18467,2,2975,False,
 senate,10,8,1764343,River Grove,0.2423,10612,2,2571,False,
 senate,11,1,1705573,Berwyn,0.5583,57250,1,31963,False,best
 senate,11,2,1709642,Burbank,0.5817,29439,1,17125,True,office
-senate,11,3,1773638,Summit,0.9958,11161,1,11114,False,
-senate,11,4,1708225,Bridgeview,0.5475,17027,1,9322,False,
+senate,11,3,1773638,Summit,0.9958,11161,1,11114,False,best
+senate,11,4,1708225,Bridgeview,0.5475,17027,1,9322,False,best
 senate,11,5,1764421,Riverside,0.6299,9298,1,5857,False,
 senate,11,6,1754144,North Riverside,0.6127,7426,1,4550,False,
 senate,11,7,1714000,Chicago,0.04,2746388,2,109856,False,
@@ -78,8 +78,8 @@ senate,12,1,1714000,Chicago,0.0604,2746388,2,165882,True,office
 senate,12,2,1714351,Cicero,0.1346,85268,2,11477,False,best
 senate,13,1,1714000,Chicago,0.0718,2746388,2,197191,True,office
 senate,14,1,1756640,Orland Park,0.5028,58703,1,29516,False,best
-senate,14,2,1706704,Blue Island,1.0,22558,1,22558,False,
-senate,14,3,1717497,Crestwood,0.9997,10826,1,10823,False,
+senate,14,2,1706704,Blue Island,1.0,22558,1,22558,False,best
+senate,14,3,1717497,Crestwood,0.9997,10826,1,10823,False,best
 senate,14,4,1764278,Riverdale,0.9882,10663,1,10537,False,
 senate,14,5,1710513,Calumet Park,1.0,7025,1,7025,False,
 senate,14,6,1761314,Posen,0.6376,5632,1,3591,False,
@@ -92,8 +92,8 @@ senate,14,12,1748892,Midlothian,0.2221,14325,2,3182,False,
 senate,14,13,1735835,Homer Glen,0.0455,24543,2,1117,False,
 senate,14,14,1756627,Orland Hills,0.0567,6893,2,391,False,
 senate,15,1,1720292,Dolton,1.0,21426,1,21426,False,best
-senate,15,2,1770850,South Holland,0.9719,21465,1,20862,False,
-senate,15,3,1733383,Harvey,1.0,20324,1,20324,False,
+senate,15,2,1770850,South Holland,0.9719,21465,1,20862,False,best
+senate,15,3,1733383,Harvey,1.0,20324,1,20324,False,best
 senate,15,4,1735879,Homewood,0.9824,19463,1,19120,True,office
 senate,15,5,1747007,Markham,0.9826,11661,1,11458,False,
 senate,15,6,1748892,Midlothian,0.7779,14325,1,11143,False,
@@ -126,17 +126,17 @@ senate,15,32,1770629,South Chicago Heights,0.064,4026,2,258,False,
 senate,15,33,1749893,Momence,0.0709,3117,2,221,False,
 senate,15,34,1764278,Riverdale,0.0118,10663,2,126,False,
 senate,16,1,1734514,Hickory Hills,0.7689,14505,1,11153,False,best
-senate,16,2,1738830,Justice,0.6853,12600,1,8635,False,
+senate,16,2,1738830,Justice,0.6853,12600,1,8635,False,best
 senate,16,3,1714000,Chicago,0.0625,2746388,2,171649,True,office
-senate,16,4,1754820,Oak Lawn,0.3023,58362,2,17643,False,
+senate,16,4,1754820,Oak Lawn,0.3023,58362,2,17643,False,best
 senate,16,5,1709642,Burbank,0.4183,29439,2,12314,False,
 senate,16,6,1708225,Bridgeview,0.4525,17027,2,7705,False,
 senate,16,7,1735866,Hometown,1.0,4343,2,4343,False,
 senate,16,8,1714065,Chicago Ridge,0.2998,14433,2,4327,False,
 senate,16,9,1757394,Palos Hills,0.2081,18530,2,3856,False,
 senate,17,1,1742028,Lansing,0.9992,29076,1,29053,False,best
-senate,17,2,1710487,Calumet City,0.6894,36033,1,24841,False,
-senate,17,3,1745421,Lynwood,0.9683,9116,1,8827,False,
+senate,17,2,1710487,Calumet City,0.6894,36033,1,24841,False,best
+senate,17,3,1745421,Lynwood,0.9683,9116,1,8827,False,best
 senate,17,4,1767769,Sauk Village,0.6843,9921,1,6789,False,
 senate,17,5,1714000,Chicago,0.1247,2746388,2,342475,True,office
 senate,17,6,1709798,Burnham,0.8747,4046,2,3539,False,
@@ -151,8 +151,8 @@ senate,17,14,1736190,Hopkins Park,1.0,597,2,597,False,
 senate,17,15,1773943,Sun River Terrace,1.0,455,2,455,False,
 senate,17,16,1717523,Crete,0.024,8465,2,203,False,
 senate,18,1,1754820,Oak Lawn,0.6977,58362,1,40719,False,best
-senate,18,2,1724634,Evergreen Park,1.0,19943,1,19943,False,
-senate,18,3,1757394,Palos Hills,0.7919,18530,1,14674,False,
+senate,18,2,1724634,Evergreen Park,1.0,19943,1,19943,False,best
+senate,18,3,1757394,Palos Hills,0.7919,18530,1,14674,False,best
 senate,18,4,1701010,Alsip,0.755,19063,1,14393,False,
 senate,18,5,1757381,Palos Heights,1.0,12068,1,12068,False,
 senate,18,6,1783518,Worth,1.0,10970,1,10970,False,
@@ -163,8 +163,8 @@ senate,18,10,1757407,Palos Park,0.5252,4899,2,2573,False,
 senate,18,11,1748554,Merrionette Park,1.0,1969,2,1969,False,
 senate,18,12,1782049,Willow Springs,0.1644,5857,2,963,False,
 senate,19,1,1775484,Tinley Park,0.6362,55971,1,35609,False,best
-senate,19,2,1735835,Homer Glen,0.8842,24543,1,21701,False,
-senate,19,3,1749854,Mokena,0.9557,19887,1,19006,False,
+senate,19,2,1735835,Homer Glen,0.8842,24543,1,21701,False,best
+senate,19,3,1749854,Mokena,0.9557,19887,1,19006,False,best
 senate,19,4,1747540,Matteson,0.9689,19073,1,18480,True,office
 senate,19,5,1716691,Country Club Hills,0.9998,16775,1,16772,False,
 senate,19,6,1727624,Frankfort,0.7696,20296,1,15620,False,
@@ -182,23 +182,23 @@ senate,19,17,1747007,Markham,0.0174,11661,2,203,False,
 senate,20,1,1714000,Chicago,0.0466,2746388,2,127982,True,office
 senate,21,1,1751622,Naperville,0.5683,149540,1,84984,True,office
 senate,21,2,1744407,Lombard,0.7974,44476,1,35465,False,best
-senate,21,3,1729756,Glen Ellyn,0.9281,28846,1,26772,False,
-senate,21,4,1743939,Lisle,0.5633,24223,1,13645,False,
+senate,21,3,1729756,Glen Ellyn,0.9281,28846,1,26772,False,best
+senate,21,4,1743939,Lisle,0.5633,24223,1,13645,False,best
 senate,21,5,1720591,Downers Grove,0.1901,50247,2,9552,False,
 senate,21,6,1781048,Wheaton,0.1571,53970,2,8479,False,
 senate,21,7,1707133,Bolingbrook,0.0584,73922,2,4317,False,
 senate,21,8,1778929,Warrenville,0.2707,13553,2,3669,False,
 senate,22,1,1773157,Streamwood,0.9221,39577,1,36494,False,best
-senate,22,2,1735411,Hoffman Estates,0.5961,52530,1,31313,False,
+senate,22,2,1735411,Hoffman Estates,0.5961,52530,1,31313,False,best
 senate,22,3,1723074,Elgin,0.326,114797,2,37424,True,office
-senate,22,4,1768003,Schaumburg,0.2226,78723,2,17524,False,
+senate,22,4,1768003,Schaumburg,0.2226,78723,2,17524,False,best
 senate,22,5,1732746,Hanover Park,0.396,37470,2,14838,False,
 senate,22,6,1711358,Carpentersville,0.3079,37983,2,11695,False,
 senate,22,7,1721696,East Dundee,0.5866,3152,2,1849,False,
 senate,22,8,1703883,Barrington Hills,0.0168,4114,2,69,False,
 senate,23,1,1723620,Elmhurst,0.8848,45786,1,40511,False,best
-senate,23,2,1729730,Glendale Heights,1.0,33176,1,33176,False,
-senate,23,3,1700243,Addison,0.6767,35702,1,24160,False,
+senate,23,2,1729730,Glendale Heights,1.0,33176,1,33176,False,best
+senate,23,3,1700243,Addison,0.6767,35702,1,24160,False,best
 senate,23,4,1777993,Villa Park,0.9981,22263,1,22221,False,
 senate,23,5,1780645,Westmont,0.8923,24429,1,21798,True,office
 senate,23,6,1735307,Hinsdale,0.5764,17395,1,10026,False,
@@ -214,8 +214,8 @@ senate,23,15,1780242,Western Springs,0.1308,13629,2,1783,False,
 senate,23,16,1718628,Darien,0.0173,22011,2,381,False,
 senate,24,1,1781048,Wheaton,0.8429,53970,1,45491,False,best
 senate,24,2,1711332,Carol Stream,0.7634,39854,1,30425,True,office
-senate,24,3,1765806,Roselle,0.9382,22897,1,21482,False,
-senate,24,4,1706587,Bloomingdale,0.7563,22382,1,16928,False,
+senate,24,3,1765806,Roselle,0.9382,22897,1,21482,False,best
+senate,24,4,1706587,Bloomingdale,0.7563,22382,1,16928,False,best
 senate,24,5,1782985,Wood Dale,0.9991,14012,1,13999,False,
 senate,24,6,1782400,Winfield,1.0,9835,1,9835,False,
 senate,24,7,1737907,Itasca,1.0,9543,1,9543,False,
@@ -232,8 +232,8 @@ senate,24,17,1768003,Schaumburg,0.0121,78723,2,953,False,
 senate,24,18,1704013,Bartlett,0.0228,41105,2,937,False,
 senate,25,1,1704013,Bartlett,0.9553,41105,1,39268,False,best
 senate,25,2,1780060,West Chicago,0.8373,25614,1,21447,True,office
-senate,25,3,1704078,Batavia,0.5951,26098,1,15531,False,
-senate,25,4,1753442,North Aurora,0.5909,18261,1,10790,False,
+senate,25,3,1704078,Batavia,0.5951,26098,1,15531,False,best
+senate,25,4,1753442,North Aurora,0.5909,18261,1,10790,False,best
 senate,25,5,1703012,Aurora,0.4669,180542,2,84295,False,
 senate,25,6,1723074,Elgin,0.1076,114797,2,12352,False,
 senate,25,7,1751622,Naperville,0.0419,149540,2,6266,False,
@@ -246,8 +246,8 @@ senate,25,13,1766703,St. Charles,0.0156,33081,2,516,False,
 senate,25,14,1779397,Wayne,0.2069,2286,2,473,False,
 senate,26,1,1757225,Palatine,0.6694,67908,1,45458,False,best
 senate,26,2,1741742,Lake Zurich,1.0,19759,1,19759,True,office
-senate,26,3,1751349,Mundelein,0.6256,31560,1,19744,False,
-senate,26,4,1779267,Wauconda,1.0,14084,1,14084,False,
+senate,26,3,1751349,Mundelein,0.6256,31560,1,19744,False,best
+senate,26,4,1779267,Wauconda,1.0,14084,1,14084,False,best
 senate,26,5,1703844,Barrington,1.0,10722,1,10722,False,
 senate,26,6,1733630,Hawthorn Woods,1.0,9062,1,9062,False,
 senate,26,7,1744524,Long Grove,1.0,8366,1,8366,False,
@@ -275,16 +275,16 @@ senate,26,28,1709447,Buffalo Grove,0.0139,43212,2,601,False,
 senate,26,29,1721696,East Dundee,0.0469,3152,2,148,False,
 senate,27,1,1702154,Arlington Heights,0.9993,77676,1,77622,True,office
 senate,27,2,1751089,Mount Prospect,0.7961,56852,1,45260,False,best
-senate,27,3,1765338,Rolling Meadows,0.7781,24200,1,18830,False,
-senate,27,4,1762016,Prospect Heights,0.5814,16058,1,9336,False,
+senate,27,3,1765338,Rolling Meadows,0.7781,24200,1,18830,False,best
+senate,27,4,1762016,Prospect Heights,0.5814,16058,1,9336,False,best
 senate,27,5,1757225,Palatine,0.3306,67908,2,22450,False,
 senate,27,6,1719642,Des Plaines,0.1264,60675,2,7669,False,
 senate,27,7,1709447,Buffalo Grove,0.1633,43212,2,7057,False,
 senate,27,8,1768003,Schaumburg,0.0529,78723,2,4164,False,
 senate,28,1,1768003,Schaumburg,0.6824,78723,1,53721,False,best
 senate,28,2,1719642,Des Plaines,0.8128,60675,1,49317,True,office
-senate,28,3,1757875,Park Ridge,0.9719,39656,1,38542,False,
-senate,28,4,1723256,Elk Grove Village,0.5251,32812,1,17230,False,
+senate,28,3,1757875,Park Ridge,0.9719,39656,1,38542,False,best
+senate,28,4,1723256,Elk Grove Village,0.5251,32812,1,17230,False,best
 senate,28,5,1732746,Hanover Park,0.3782,37470,2,14171,False,
 senate,28,6,1753000,Niles,0.1675,30912,2,5178,False,
 senate,28,7,1751089,Mount Prospect,0.0906,56852,2,5151,False,
@@ -295,8 +295,8 @@ senate,28,11,1765806,Roselle,0.0618,22897,2,1415,False,
 senate,28,12,1729938,Glenview,0.0185,48705,2,901,False,
 senate,28,13,1765819,Rosemont,0.0383,3952,2,151,False,
 senate,29,1,1781087,Wheeling,0.772,39137,1,30214,False,best
-senate,29,2,1734722,Highland Park,1.0,30176,1,30176,False,
-senate,29,3,1753481,Northbrook,0.836,35222,1,29446,False,
+senate,29,2,1734722,Highland Park,1.0,30176,1,30176,False,best
+senate,29,3,1753481,Northbrook,0.836,35222,1,29446,False,best
 senate,29,4,1741105,Lake Forest,1.0,19367,1,19367,False,
 senate,29,5,1718992,Deerfield,1.0,19196,1,19196,True,office
 senate,29,6,1729652,Glencoe,0.9998,8849,1,8847,False,
@@ -317,8 +317,8 @@ senate,29,20,1731446,Green Oaks,0.0909,4128,2,375,False,
 senate,29,21,1748671,Mettawa,0.5529,533,2,295,False,
 senate,30,1,1779293,Waukegan,0.6854,89321,1,61221,True,office
 senate,30,2,1709447,Buffalo Grove,0.7528,43212,1,32530,False,best
-senate,30,3,1777694,Vernon Hills,0.9684,26850,1,26002,False,
-senate,30,4,1753559,North Chicago,0.6118,30759,1,18818,False,
+senate,30,3,1777694,Vernon Hills,0.9684,26850,1,26002,False,best
+senate,30,4,1753559,North Chicago,0.6118,30759,1,18818,False,best
 senate,30,5,1757654,Park City,1.0,7885,1,7885,False,
 senate,30,6,1743666,Lincolnshire,0.5651,7940,1,4487,False,
 senate,30,7,1732018,Gurnee,0.4685,30706,2,14386,False,
@@ -330,9 +330,9 @@ senate,30,12,1778370,Wadsworth,0.2827,3517,2,994,False,
 senate,30,13,1737218,Indian Creek,1.0,536,2,536,False,
 senate,30,14,1748671,Mettawa,0.4471,533,2,238,False,
 senate,31,1,1766040,Round Lake Beach,0.9917,27252,1,27026,False,best
-senate,31,2,1784220,Zion,1.0,24655,1,24655,False,
+senate,31,2,1784220,Zion,1.0,24655,1,24655,False,best
 senate,31,3,1731121,Grayslake,1.0,21248,1,21248,True,office
-senate,31,4,1766027,Round Lake,0.9993,18721,1,18708,False,
+senate,31,4,1766027,Round Lake,0.9993,18721,1,18708,False,best
 senate,31,5,1732018,Gurnee,0.5315,30706,1,16320,False,
 senate,31,6,1704303,Beach Park,0.9987,14249,1,14230,False,
 senate,31,7,1743770,Lindenhurst,0.9374,14406,1,13504,False,
@@ -351,8 +351,8 @@ senate,31,19,1741586,Lake Villa,0.0314,8741,2,274,False,
 senate,31,20,1755639,Old Mill Creek,1.0,162,2,162,False,
 senate,32,1,1745694,McHenry,1.0,27135,1,27135,False,best
 senate,32,2,1783349,Woodstock,0.8484,25630,1,21744,True,office
-senate,32,3,1711592,Cary,1.0,17826,1,17826,False,
-senate,32,4,1701595,Antioch,0.9399,14622,1,13743,False,
+senate,32,3,1711592,Cary,1.0,17826,1,17826,False,best
+senate,32,4,1701595,Antioch,0.9399,14622,1,13743,False,best
 senate,32,5,1727442,Fox Lake,1.0,10978,1,10978,False,
 senate,32,6,1741586,Lake Villa,0.9686,8741,1,8467,False,
 senate,32,7,1738479,Johnsburg,1.0,6355,1,6355,False,
@@ -376,8 +376,8 @@ senate,32,24,1735515,Holiday Hills,1.0,618,2,618,False,
 senate,32,25,1700685,Algonquin,0.0205,29700,2,609,False,
 senate,32,26,1776160,Trout Valley,1.0,515,2,515,False,
 senate,33,1,1723074,Elgin,0.5147,114797,1,59086,False,best
-senate,33,2,1711358,Carpentersville,0.6841,37983,1,25984,False,
-senate,33,3,1766703,St. Charles,0.7768,33081,1,25697,False,
+senate,33,2,1711358,Carpentersville,0.6841,37983,1,25984,False,best
+senate,33,3,1766703,St. Charles,0.7768,33081,1,25697,False,best
 senate,33,4,1770720,South Elgin,0.8496,23865,1,20276,False,
 senate,33,5,1710906,Campton Hills,1.0,10885,1,10885,False,
 senate,33,6,1780125,West Dundee,1.0,7686,1,7686,True,office
@@ -397,13 +397,13 @@ senate,33,19,1729171,Gilberts,0.0511,8366,2,428,False,
 senate,33,20,1759988,Pingree Grove,0.0224,10365,2,232,False,
 senate,34,1,1765000,Rockford,0.8514,148655,1,126565,True,office
 senate,34,2,1705092,Belvidere,0.9658,25339,1,24472,False,best
-senate,34,3,1745031,Loves Park,0.4872,23397,2,11399,False,
-senate,34,4,1713074,Cherry Valley,0.9099,2905,2,2643,False,
+senate,34,3,1745031,Loves Park,0.4872,23397,2,11399,False,best
+senate,34,4,1713074,Cherry Valley,0.9099,2905,2,2643,False,best
 senate,34,5,1745726,Machesney Park,0.0429,22950,2,985,False,
 senate,34,6,1752701,New Milford,0.5702,794,2,453,False,
 senate,35,1,1736750,Huntley,1.0,27740,1,27740,False,best
-senate,35,2,1774223,Sycamore,0.9378,18577,1,17422,False,
-senate,35,3,1759988,Pingree Grove,0.9776,10365,1,10133,False,
+senate,35,2,1774223,Sycamore,0.9378,18577,1,17422,False,best
+senate,35,3,1759988,Pingree Grove,0.9776,10365,1,10133,False,best
 senate,35,4,1733331,Harvard,1.0,9469,1,9469,False,
 senate,35,5,1773391,Sugar Grove,0.8661,9278,1,8036,False,
 senate,35,6,1729171,Gilberts,0.9489,8366,1,7938,False,
@@ -442,8 +442,8 @@ senate,35,38,1710422,Caledonia,0.7773,183,2,142,False,
 senate,35,39,1709531,Bull Valley,0.0935,1128,2,105,False,
 senate,36,1,1749867,Moline,1.0,42985,1,42985,False,best
 senate,36,2,1765078,Rock Island,1.0,37108,1,37108,True,office
-senate,36,3,1728326,Galesburg,1.0,30052,1,30052,False,
-senate,36,4,1722073,East Moline,0.826,21374,1,17655,False,
+senate,36,3,1728326,Galesburg,1.0,30052,1,30052,False,best
+senate,36,4,1722073,East Moline,0.826,21374,1,17655,False,best
 senate,36,5,1745889,Macomb,0.8464,15051,1,12739,False,
 senate,36,6,1750010,Monmouth,1.0,8902,1,8902,False,
 senate,36,7,1769979,Silvis,1.0,8003,1,8003,False,
@@ -473,8 +473,8 @@ senate,36,30,1714923,Cleveland,0.2102,163,2,34,False,
 senate,36,31,1703207,Avon,0.0316,704,2,22,False,
 senate,37,1,1720162,Dixon,1.0,15274,1,15274,True,office
 senate,37,2,1772546,Sterling,1.0,14764,1,14764,False,best
-senate,37,3,1764746,Rochelle,1.0,9446,1,9446,False,
-senate,37,4,1764928,Rock Falls,1.0,8789,1,8789,False,
+senate,37,3,1764746,Rochelle,1.0,9446,1,9446,False,best
+senate,37,4,1764928,Rock Falls,1.0,8789,1,8789,False,best
 senate,37,5,1761899,Princeton,1.0,7832,1,7832,False,
 senate,37,6,1748333,Mendota,1.0,7061,1,7061,False,
 senate,37,7,1728846,Geneseo,1.0,6539,1,6539,False,
@@ -545,8 +545,8 @@ senate,37,71,1719499,De Pue,0.0479,1633,2,78,False,
 senate,37,72,1752155,New Bedford,1.0,76,2,76,False,
 senate,37,73,1719031,Deer Grove,1.0,38,2,38,False,
 senate,38,1,1719161,DeKalb,0.8582,40290,1,34577,False,best
-senate,38,2,1756926,Ottawa,0.9831,18840,1,18522,False,
-senate,38,3,1756887,Oswego,0.5297,34585,1,18320,False,
+senate,38,2,1756926,Ottawa,0.9831,18840,1,18522,False,best
+senate,38,3,1756887,Oswego,0.5297,34585,1,18320,False,best
 senate,38,4,1784038,Yorkville,0.8172,21533,1,17597,False,
 senate,38,5,1760352,Plano,1.0,11847,1,11847,False,
 senate,38,6,1749607,Minooka,0.8239,12758,1,10511,False,
@@ -581,8 +581,8 @@ senate,38,34,1760391,Plattville,1.0,220,2,220,False,
 senate,38,35,1735671,Hollowayville,1.0,36,2,36,False,
 senate,39,1,1754885,Oak Park,0.9162,54583,1,50009,True,office
 senate,39,2,1723724,Elmwood Park,0.8441,24521,1,20698,False,best
-senate,39,3,1748242,Melrose Park,0.7568,24796,1,18766,False,
-senate,39,4,1705248,Bensenville,0.9376,18813,1,17639,False,
+senate,39,3,1748242,Melrose Park,0.7568,24796,1,18766,False,best
+senate,39,4,1705248,Bensenville,0.9376,18813,1,17639,False,best
 senate,39,5,1727702,Franklin Park,0.8389,18467,1,15492,False,
 senate,39,6,1753871,Northlake,0.8794,12840,1,11291,False,
 senate,39,7,1764304,River Forest,0.9435,11717,1,11055,False,
@@ -595,9 +595,9 @@ senate,39,13,1723256,Elk Grove Village,0.0406,32812,2,1332,False,
 senate,39,14,1726935,Forest Park,0.0561,14339,2,804,False,
 senate,39,15,1765819,Rosemont,0.1408,3952,2,556,False,
 senate,40,1,1738934,Kankakee,0.9119,24052,1,21933,False,best
-senate,40,2,1757732,Park Forest,1.0,21687,1,21687,False,
+senate,40,2,1757732,Park Forest,1.0,21687,1,21687,False,best
 senate,40,3,1714026,Chicago Heights,0.7555,27480,1,20761,True,office
-senate,40,4,1707471,Bourbonnais,0.9741,18164,1,17694,False,
+senate,40,4,1707471,Bourbonnais,0.9741,18164,1,17694,False,best
 senate,40,5,1707744,Bradley,0.7117,15419,1,10974,False,
 senate,40,6,1746357,Manhattan,1.0,9385,1,9385,False,
 senate,40,7,1776935,University Park,0.99,7145,1,7074,False,
@@ -636,8 +636,8 @@ senate,40,39,1737803,Irwin,1.0,68,2,68,False,
 senate,40,40,1776771,Union Hill,1.0,55,2,55,False,
 senate,41,1,1720591,Downers Grove,0.688,50247,1,34570,True,office
 senate,41,2,1783245,Woodridge,0.7201,34158,1,24597,False,best
-senate,41,3,1718628,Darien,0.9827,22011,1,21630,False,
-senate,41,4,1742795,Lemont,0.9666,17629,1,17040,False,
+senate,41,3,1718628,Darien,0.9827,22011,1,21630,False,best
+senate,41,4,1742795,Lemont,0.9666,17629,1,17040,False,best
 senate,41,5,1709980,Burr Ridge,1.0,11192,1,11192,False,
 senate,41,6,1781919,Willowbrook,0.7674,9236,1,7088,False,
 senate,41,7,1782049,Willow Springs,0.8356,5857,1,4894,False,
@@ -656,8 +656,8 @@ senate,41,19,1756640,Orland Park,0.0169,58703,2,992,False,
 senate,41,20,1735385,Hodgkins,0.3804,1500,2,571,False,
 senate,42,1,1703012,Aurora,0.5128,180542,1,92582,True,office
 senate,42,2,1750218,Montgomery,1.0,20262,1,20262,False,best
-senate,42,3,1756887,Oswego,0.4272,34585,2,14775,False,
-senate,42,4,1751622,Naperville,0.0913,149540,2,13653,False,
+senate,42,3,1756887,Oswego,0.4272,34585,2,14775,False,best
+senate,42,4,1751622,Naperville,0.0913,149540,2,13653,False,best
 senate,42,5,1704078,Batavia,0.4049,26098,2,10567,False,
 senate,42,6,1728872,Geneva,0.4573,21393,2,9783,False,
 senate,42,7,1753442,North Aurora,0.409,18261,2,7469,False,
@@ -666,8 +666,8 @@ senate,42,9,1784038,Yorkville,0.1828,21533,2,3936,False,
 senate,42,10,1773391,Sugar Grove,0.1339,9278,2,1242,False,
 senate,43,1,1738570,Joliet,0.5856,150362,1,88052,True,office
 senate,43,2,1707133,Bolingbrook,0.5051,73922,1,37338,False,best
-senate,43,3,1765442,Romeoville,0.7826,39863,1,31197,False,
-senate,43,4,1744225,Lockport,0.5096,26094,1,13298,False,
+senate,43,3,1765442,Romeoville,0.7826,39863,1,31197,False,best
+senate,43,4,1744225,Lockport,0.5096,26094,1,13298,False,best
 senate,43,5,1769758,Shorewood,0.673,18186,1,12239,False,
 senate,43,6,1712476,Channahon,0.5029,13383,1,6730,False,
 senate,43,7,1783245,Woodridge,0.2799,34158,2,9561,False,
@@ -681,9 +681,9 @@ senate,43,14,1707770,Braidwood,0.212,6194,2,1313,False,
 senate,43,15,1719837,Diamond,0.3669,2640,2,969,False,
 senate,43,16,1742795,Lemont,0.0314,17629,2,554,False,
 senate,44,1,1706613,Bloomington,0.5093,78680,1,40072,False,best
-senate,44,2,1750621,Morton,0.9272,17117,1,15871,False,
+senate,44,2,1750621,Morton,0.9272,17117,1,15871,False,best
 senate,44,3,1743536,Lincoln,1.0,13288,1,13288,True,office
-senate,44,4,1715001,Clinton,1.0,7004,1,7004,False,
+senate,44,4,1715001,Clinton,1.0,7004,1,7004,False,best
 senate,44,5,1750244,Monticello,1.0,5941,1,5941,False,
 senate,44,6,1718823,Decatur,0.3367,70522,2,23745,False,
 senate,44,7,1758447,Pekin,0.2641,31731,2,8380,False,
@@ -750,8 +750,8 @@ senate,44,67,1708472,Broadwell,1.0,136,2,136,False,
 senate,44,68,1716119,Congerville,0.022,497,2,11,False,
 senate,45,1,1727884,Freeport,1.0,23973,1,23973,True,office
 senate,45,2,1745726,Machesney Park,0.9571,22950,1,21965,False,best
-senate,45,3,1765611,Roscoe,1.0,10983,1,10983,False,
-senate,45,4,1770590,South Beloit,1.0,7989,1,7989,False,
+senate,45,3,1765611,Roscoe,1.0,10983,1,10983,False,best
+senate,45,4,1770590,South Beloit,1.0,7989,1,7989,False,best
 senate,45,5,1765156,Rockton,1.0,7863,1,7863,False,
 senate,45,6,1728898,Genoa,1.0,5298,1,5298,False,
 senate,45,7,1765000,Rockford,0.0864,148655,2,12844,False,
@@ -804,8 +804,8 @@ senate,45,53,1753195,Nora,1.0,107,2,107,False,
 senate,45,54,1700295,Adeline,1.0,78,2,78,False,
 senate,45,55,1710422,Caledonia,0.2227,183,2,41,False,
 senate,46,1,1759000,Peoria,0.6779,113150,1,76704,False,best
-senate,46,2,1753234,Normal,0.6858,52736,1,36166,False,
-senate,46,3,1722164,East Peoria,0.6186,22484,1,13909,False,
+senate,46,2,1753234,Normal,0.6858,52736,1,36166,False,best
+senate,46,3,1722164,East Peoria,0.6186,22484,1,13909,False,best
 senate,46,4,1759026,Peoria Heights,0.9344,5908,1,5520,False,
 senate,46,5,1704039,Bartonville,0.8959,5945,1,5326,False,
 senate,46,6,1706613,Bloomington,0.4537,78680,2,35697,True,office
@@ -820,8 +820,8 @@ senate,46,14,1716119,Congerville,0.978,497,2,486,False,
 senate,46,15,1704871,Bellevue,0.0963,1878,2,181,False,
 senate,46,16,1723737,El Paso,0.0559,2756,2,154,False,
 senate,47,1,1758447,Pekin,0.7359,31731,1,23351,False,best
-senate,47,2,1711007,Canton,1.0,13242,1,13242,False,
-senate,47,3,1739727,Kewanee,1.0,12509,1,12509,False,
+senate,47,2,1711007,Canton,1.0,13242,1,13242,False,best
+senate,47,3,1739727,Kewanee,1.0,12509,1,12509,False,best
 senate,47,4,1759000,Peoria,0.0597,113150,2,6755,False,
 senate,47,5,1700646,Aledo,1.0,3633,2,3633,True,office
 senate,47,6,1733513,Havana,1.0,2963,2,2963,False,
@@ -935,8 +935,8 @@ senate,47,113,1705274,Bentley,1.0,30,2,30,False,
 senate,47,114,1731991,Gulfport,1.0,,2,0,False,
 senate,48,1,1772000,Springfield,0.9633,114394,1,110196,True,office
 senate,48,2,1718823,Decatur,0.6347,70522,1,44760,False,best
-senate,48,3,1712684,Chatham,0.7577,14377,1,10893,False,
-senate,48,4,1764759,Rochester,1.0,3863,2,3863,False,
+senate,48,3,1712684,Chatham,0.7577,14377,1,10893,False,best
+senate,48,4,1764759,Rochester,1.0,3863,2,3863,False,best
 senate,48,5,1738375,Jerome,1.0,1692,2,1692,False,
 senate,48,6,1770759,Southern View,1.0,1596,2,1596,False,
 senate,48,7,1742769,Leland Grove,1.0,1454,2,1454,False,
@@ -954,8 +954,8 @@ senate,48,18,1738349,Jeisyville,1.0,102,2,102,False,
 senate,48,19,1718147,Curran,0.3281,213,2,70,False,
 senate,49,1,1760287,Plainfield,0.8478,44762,1,37949,False,best
 senate,49,2,1717458,Crest Hill,0.5804,20459,1,11874,True,office
-senate,49,3,1738570,Joliet,0.3202,150362,2,48146,False,
-senate,49,4,1707133,Bolingbrook,0.4363,73922,2,32252,False,
+senate,49,3,1738570,Joliet,0.3202,150362,2,48146,False,best
+senate,49,4,1707133,Bolingbrook,0.4363,73922,2,32252,False,best
 senate,49,5,1765442,Romeoville,0.2174,39863,2,8666,False,
 senate,49,6,1751622,Naperville,0.0528,149540,2,7896,False,
 senate,49,7,1769758,Shorewood,0.327,18186,2,5947,False,
@@ -963,8 +963,8 @@ senate,49,8,1703012,Aurora,0.0201,180542,2,3629,False,
 senate,49,9,1756887,Oswego,0.0431,34585,2,1491,False,
 senate,50,1,1762367,Quincy,1.0,39463,1,39463,True,office
 senate,50,2,1738115,Jacksonville,1.0,17616,1,17616,False,best
-senate,50,3,1730094,Godfrey,0.8497,17825,1,15146,False,
-senate,50,4,1738414,Jerseyville,1.0,8337,1,8337,False,
+senate,50,3,1730094,Godfrey,0.8497,17825,1,15146,False,best
+senate,50,4,1738414,Jerseyville,1.0,8337,1,8337,False,best
 senate,50,5,1704351,Beardstown,1.0,5951,1,5951,False,
 senate,50,6,1760222,Pittsfield,1.0,4206,2,4206,False,
 senate,50,7,1770889,South Jacksonville,1.0,3302,2,3302,False,
@@ -1052,8 +1052,8 @@ senate,50,88,1726480,Florence,1.0,17,2,17,False,
 senate,50,89,1777187,Valley City,1.0,14,2,14,False,
 senate,51,1,1712567,Charleston,1.0,17286,1,17286,False,best
 senate,51,2,1747553,Mattoon,1.0,16870,1,16870,True,office
-senate,51,3,1746136,Mahomet,1.0,9434,1,9434,False,
-senate,51,4,1757628,Paris,1.0,8291,1,8291,False,
+senate,51,3,1746136,Mahomet,1.0,9434,1,9434,False,best
+senate,51,4,1757628,Paris,1.0,8291,1,8291,False,best
 senate,51,5,1764707,Robinson,1.0,7150,1,7150,False,
 senate,51,6,1736061,Hoopeston,1.0,4915,2,4915,False,
 senate,51,7,1776407,Tuscola,1.0,4636,2,4636,False,
@@ -1133,8 +1133,8 @@ senate,51,80,1726662,Foosland,1.0,75,2,75,False,
 senate,51,81,1783765,Yale,1.0,67,2,67,False,
 senate,52,1,1712385,Champaign,1.0,88302,1,88302,True,office
 senate,52,2,1777005,Urbana,1.0,38336,1,38336,False,best
-senate,52,3,1718563,Danville,1.0,29204,1,29204,False,
-senate,52,4,1762783,Rantoul,1.0,12371,1,12371,False,
+senate,52,3,1718563,Danville,1.0,29204,1,29204,False,best
+senate,52,4,1762783,Rantoul,1.0,12371,1,12371,False,best
 senate,52,5,1767860,Savoy,1.0,8857,1,8857,False,
 senate,52,6,1780931,Westville,1.0,3167,2,3167,False,
 senate,52,7,1775276,Tilton,0.9987,2660,2,2657,False,
@@ -1148,9 +1148,9 @@ senate,52,14,1751336,Muncie,1.0,157,2,157,False,
 senate,52,15,1766950,St. Joseph,0.0266,3810,2,101,False,
 senate,52,16,1755275,Ogden,0.0667,729,2,49,False,
 senate,53,1,1779033,Washington,0.8375,16071,1,13459,False,best
-senate,53,2,1773170,Streator,1.0,12500,1,12500,False,
+senate,53,2,1773170,Streator,1.0,12500,1,12500,False,best
 senate,53,3,1761015,Pontiac,1.0,11150,1,11150,True,office
-senate,53,4,1715170,Coal City,0.9919,5705,1,5659,False,
+senate,53,4,1715170,Coal City,0.9919,5705,1,5659,False,best
 senate,53,5,1724543,Eureka,1.0,5227,1,5227,False,
 senate,53,6,1753234,Normal,0.2819,52736,2,14866,False,
 senate,53,7,1712476,Channahon,0.4113,13383,2,5504,False,
@@ -1254,9 +1254,9 @@ senate,53,104,1757524,Panola,1.0,47,2,47,False,
 senate,53,105,1707640,Braceville,0.0478,724,2,35,False,
 senate,53,106,1763056,Reddick,0.1594,199,2,32,False,
 senate,54,1,1722736,Effingham,1.0,12252,1,12252,False,best
-senate,54,2,1774574,Taylorville,1.0,10506,1,10506,False,
+senate,54,2,1774574,Taylorville,1.0,10506,1,10506,False,best
 senate,54,3,1743965,Litchfield,1.0,6605,1,6605,True,office
-senate,54,4,1735047,Hillsboro,1.0,5902,1,5902,False,
+senate,54,4,1735047,Hillsboro,1.0,5902,1,5902,False,best
 senate,54,5,1711202,Carlinville,1.0,5710,1,5710,False,
 senate,54,6,1757472,Pana,1.0,5199,1,5199,False,
 senate,54,7,1751206,Mount Zion,0.8439,6019,1,5079,False,
@@ -1346,8 +1346,8 @@ senate,54,90,1755418,Ohlman,1.0,109,2,109,False,
 senate,54,91,1778656,Walshville,1.0,61,2,61,False,
 senate,54,92,1779826,Wenonah,1.0,32,2,32,False,
 senate,55,1,1712164,Centralia,0.9812,12182,1,11953,False,best
-senate,55,2,1776199,Troy,1.0,10960,1,10960,False,
-senate,55,3,1734670,Highland,1.0,9991,1,9991,False,
+senate,55,2,1776199,Troy,1.0,10960,1,10960,False,best
+senate,55,3,1734670,Highland,1.0,9991,1,9991,False,best
 senate,55,4,1755912,Olney,1.0,8701,1,8701,False,
 senate,55,5,1777317,Vandalia,1.0,7458,1,7458,True,office
 senate,55,6,1767236,Salem,1.0,7282,1,7282,False,
@@ -1431,8 +1431,8 @@ senate,55,83,1755717,Old Ripley,1.0,82,2,82,False,
 senate,55,84,1706028,Bingham,1.0,60,2,60,False,
 senate,55,85,1720318,Donnellson,0.0995,153,2,15,False,
 senate,56,1,1730926,Granite City,1.0,27549,1,27549,False,best
-senate,56,2,1701114,Alton,0.9841,25676,1,25268,False,
-senate,56,3,1715599,Collinsville,0.9912,24366,1,24152,False,
+senate,56,2,1701114,Alton,0.9841,25676,1,25268,False,best
+senate,56,3,1715599,Collinsville,0.9912,24366,1,24152,False,best
 senate,56,4,1722697,Edwardsville,0.8954,26808,1,24004,True,office
 senate,56,5,1729639,Glen Carbon,0.9772,13842,1,13526,False,
 senate,56,6,1725141,Fairview Heights,0.7081,16706,1,11830,False,
@@ -1452,9 +1452,9 @@ senate,56,19,1769524,Shiloh,0.066,14098,2,930,False,
 senate,56,20,1724933,Fairmont City,0.3336,2265,2,756,False,
 senate,56,21,1774119,Swansea,0.046,14386,2,662,False,
 senate,57,1,1704845,Belleville,1.0,42404,1,42404,False,best
-senate,57,2,1755249,O'Fallon,0.6183,32289,1,19964,False,
+senate,57,2,1755249,O'Fallon,0.6183,32289,1,19964,False,best
 senate,57,3,1722255,East St. Louis,1.0,18469,1,18469,True,office
-senate,57,4,1774119,Swansea,0.954,14386,1,13724,False,
+senate,57,4,1774119,Swansea,0.954,14386,1,13724,False,best
 senate,57,5,1769524,Shiloh,0.934,14098,1,13168,False,
 senate,57,6,1747423,Mascoutah,1.0,8754,1,8754,False,
 senate,57,7,1725141,Fairview Heights,0.2919,16706,2,4876,False,
@@ -1479,8 +1479,8 @@ senate,57,25,1766989,St. Libory,0.0717,628,2,45,False,
 senate,57,26,1710373,Cahokia Heights,1.0,,2,0,False,
 senate,58,1,1751180,Mount Vernon,1.0,14600,1,14600,True,office
 senate,58,2,1779150,Waterloo,1.0,11013,1,11013,False,best
-senate,58,3,1715833,Columbia,0.9137,10999,1,10050,False,
-senate,58,4,1750868,Mount Carmel,1.0,7015,1,7015,False,
+senate,58,3,1715833,Columbia,0.9137,10999,1,10050,False,best
+senate,58,4,1750868,Mount Carmel,1.0,7015,1,7015,False,best
 senate,58,5,1751453,Murphysboro,0.9647,7093,1,6843,False,
 senate,58,6,1713139,Chester,1.0,6814,1,6814,False,
 senate,58,7,1705300,Benton,1.0,6709,1,6709,False,
@@ -1564,8 +1564,8 @@ senate,58,84,1739129,Kaskaskia,1.0,21,2,21,False,
 senate,58,85,1752116,New Athens,0.01,1955,2,20,False,
 senate,59,1,1711163,Carbondale,1.0,21857,1,21857,False,best
 senate,59,2,1746916,Marion,1.0,16855,1,16855,True,office
-senate,59,3,1734358,Herrin,1.0,12352,1,12352,False,
-senate,59,4,1733136,Harrisburg,1.0,8219,1,8219,False,
+senate,59,3,1734358,Herrin,1.0,12352,1,12352,False,best
+senate,59,4,1733136,Harrisburg,1.0,8219,1,8219,False,best
 senate,59,5,1780333,West Frankfort,1.0,7275,1,7275,False,
 senate,59,6,1748645,Metropolis,1.0,5969,1,5969,False,
 senate,59,7,1711514,Carterville,1.0,5848,1,5848,False,
@@ -1643,8 +1643,8 @@ house,1,1,1714000,Chicago,0.0389,2746388,2,106834,True,office
 house,1,2,1726987,Forest View,1.0,792,2,792,False,best
 house,2,1,1714351,Cicero,0.7041,85268,1,60037,True,office
 house,2,2,1708576,Brookfield,0.6676,19476,1,13002,False,best
-house,2,3,1745434,Lyons,1.0,10817,1,10817,False,
-house,2,4,1772676,Stickney,0.9917,7110,1,7051,False,
+house,2,3,1745434,Lyons,1.0,10817,1,10817,False,best
+house,2,4,1772676,Stickney,0.9917,7110,1,7051,False,best
 house,2,5,1705573,Berwyn,0.3998,57250,2,22889,False,
 house,2,6,1764421,Riverside,0.3701,9298,2,3441,False,
 house,2,7,1745564,McCook,0.254,249,2,63,False,
@@ -1653,9 +1653,9 @@ house,4,1,1714000,Chicago,0.0245,2746388,2,67287,True,office
 house,5,1,1714000,Chicago,0.0295,2746388,2,81018,True,office
 house,6,1,1714000,Chicago,0.0392,2746388,2,107658,True,office
 house,7,1,1747774,Maywood,1.0,23512,1,23512,False,best
-house,7,2,1704975,Bellwood,1.0,18789,1,18789,False,
+house,7,2,1704975,Bellwood,1.0,18789,1,18789,False,best
 house,7,3,1780047,Westchester,0.9865,16892,1,16664,True,office
-house,7,4,1726935,Forest Park,0.6062,14339,1,8692,False,
+house,7,4,1726935,Forest Park,0.6062,14339,1,8692,False,best
 house,7,5,1735086,Hillside,1.0,8320,1,8320,False,
 house,7,6,1708446,Broadview,0.7028,7998,1,5621,False,
 house,7,7,1705404,Berkeley,1.0,5338,1,5338,False,
@@ -1668,9 +1668,9 @@ house,7,13,1764304,River Forest,0.0565,11717,2,662,False,
 house,7,14,1735307,Hinsdale,0.0349,17395,2,607,False,
 house,7,15,1780242,Western Springs,0.0306,13629,2,417,False,
 house,8,1,1740767,La Grange,0.7989,16321,1,13039,False,best
-house,8,2,1716873,Countryside,0.5535,6420,1,3553,False,
+house,8,2,1716873,Countryside,0.5535,6420,1,3553,False,best
 house,8,3,1714000,Chicago,0.018,2746388,2,49435,True,office
-house,8,4,1740793,La Grange Park,0.3953,13475,2,5327,False,
+house,8,4,1740793,La Grange Park,0.3953,13475,2,5327,False,best
 house,8,5,1726935,Forest Park,0.3377,14339,2,4842,False,
 house,8,6,1780242,Western Springs,0.3432,13629,2,4677,False,
 house,8,7,1754885,Oak Park,0.0838,54583,2,4574,False,
@@ -1686,37 +1686,37 @@ house,12,1,1714000,Chicago,0.0134,2746388,2,36802,True,office
 house,13,1,1714000,Chicago,0.0211,2746388,2,57949,True,office
 house,14,1,1714000,Chicago,0.014,2746388,2,38449,True,office
 house,15,1,1753000,Niles,0.8325,30912,1,25734,False,best
-house,15,2,1750647,Morton Grove,0.8012,25297,1,20268,False,
+house,15,2,1750647,Morton Grove,0.8012,25297,1,20268,False,best
 house,15,3,1714000,Chicago,0.0332,2746388,2,91180,True,office
-house,15,4,1757875,Park Ridge,0.023,39656,2,912,False,
+house,15,4,1757875,Park Ridge,0.023,39656,2,912,False,best
 house,16,1,1743744,Lincolnwood,1.0,13463,1,13463,False,best
 house,16,2,1714000,Chicago,0.0141,2746388,2,38724,True,office
-house,16,3,1770122,Skokie,0.4941,67824,2,33512,False,
+house,16,3,1770122,Skokie,0.4941,67824,2,33512,False,best
 house,17,1,1729938,Glenview,0.8065,48705,1,39281,True,office
 house,17,2,1770122,Skokie,0.4986,67824,2,33817,False,best
-house,17,3,1724582,Evanston,0.1409,78110,2,11006,False,
-house,17,4,1782075,Wilmette,0.3799,28170,2,10702,False,
+house,17,3,1724582,Evanston,0.1409,78110,2,11006,False,best
+house,17,4,1782075,Wilmette,0.3799,28170,2,10702,False,best
 house,17,5,1753481,Northbrook,0.164,35222,2,5776,False,
 house,17,6,1750647,Morton Grove,0.1105,25297,2,2795,False,
 house,17,7,1730328,Golf,1.0,514,2,514,False,
 house,18,1,1724582,Evanston,0.8591,78110,1,67104,True,office
 house,18,2,1782075,Wilmette,0.51,28170,1,14367,False,best
-house,18,3,1782530,Winnetka,1.0,12744,1,12744,False,
-house,18,4,1739519,Kenilworth,1.0,2514,2,2514,False,
+house,18,3,1782530,Winnetka,1.0,12744,1,12744,False,best
+house,18,4,1739519,Kenilworth,1.0,2514,2,2514,False,best
 house,19,1,1714000,Chicago,0.036,2746388,2,98870,True,office
 house,19,2,1733435,Harwood Heights,0.3912,9065,2,3546,False,best
 house,20,1,1753377,Norridge,1.0,15251,1,15251,True,office
 house,20,2,1768081,Schiller Park,1.0,11709,1,11709,False,best
-house,20,3,1733435,Harwood Heights,0.6088,9065,1,5519,False,
-house,20,4,1714000,Chicago,0.0393,2746388,2,107933,False,
+house,20,3,1733435,Harwood Heights,0.6088,9065,1,5519,False,best
+house,20,4,1714000,Chicago,0.0393,2746388,2,107933,False,best
 house,20,5,1723724,Elmwood Park,0.1559,24521,2,3823,False,
 house,20,6,1765819,Rosemont,0.8208,3952,2,3244,False,
 house,20,7,1727702,Franklin Park,0.1611,18467,2,2975,False,
 house,20,8,1764343,River Grove,0.2423,10612,2,2571,False,
 house,21,1,1705573,Berwyn,0.5583,57250,1,31963,True,office
 house,21,2,1773638,Summit,0.9958,11161,1,11114,False,best
-house,21,3,1764421,Riverside,0.6299,9298,1,5857,False,
-house,21,4,1754144,North Riverside,0.6127,7426,1,4550,False,
+house,21,3,1764421,Riverside,0.6299,9298,1,5857,False,best
+house,21,4,1754144,North Riverside,0.6127,7426,1,4550,False,best
 house,21,5,1714351,Cicero,0.1558,85268,2,13285,False,
 house,21,6,1708225,Bridgeview,0.4788,17027,2,8153,False,
 house,21,7,1708576,Brookfield,0.3324,19476,2,6474,False,
@@ -1729,8 +1729,8 @@ house,21,13,1704572,Bedford Park,0.3453,602,2,208,False,
 house,21,14,1745564,McCook,0.746,249,2,186,False,
 house,22,1,1709642,Burbank,0.5817,29439,1,17125,False,best
 house,22,2,1714000,Chicago,0.0376,2746388,2,103264,True,office
-house,22,3,1708225,Bridgeview,0.0688,17027,2,1171,False,
-house,22,4,1704572,Bedford Park,0.6461,602,2,389,False,
+house,22,3,1708225,Bridgeview,0.0688,17027,2,1171,False,best
+house,22,4,1704572,Bedford Park,0.6461,602,2,389,False,best
 house,23,1,1714000,Chicago,0.0258,2746388,2,70857,True,office
 house,23,2,1714351,Cicero,0.1346,85268,2,11477,False,best
 house,24,1,1714000,Chicago,0.0347,2746388,2,95300,True,office
@@ -1738,8 +1738,8 @@ house,25,1,1714000,Chicago,0.0406,2746388,2,111503,True,office
 house,26,1,1714000,Chicago,0.0312,2746388,2,85687,True,office
 house,27,1,1717497,Crestwood,0.5406,10826,1,5853,False,best
 house,27,2,1714000,Chicago,0.0323,2746388,2,88708,True,office
-house,27,3,1756640,Orland Park,0.4791,58703,2,28125,False,
-house,27,4,1706704,Blue Island,0.2094,22558,2,4724,False,
+house,27,3,1756640,Orland Park,0.4791,58703,2,28125,False,best
+house,27,4,1706704,Blue Island,0.2094,22558,2,4724,False,best
 house,27,5,1701010,Alsip,0.2449,19063,2,4669,False,
 house,27,6,1775484,Tinley Park,0.0659,55971,2,3688,False,
 house,27,7,1735835,Homer Glen,0.0455,24543,2,1117,False,
@@ -1747,8 +1747,8 @@ house,27,8,1756627,Orland Hills,0.0567,6893,2,391,False,
 house,27,9,1748892,Midlothian,0.0142,14325,2,203,False,
 house,28,1,1706704,Blue Island,0.7906,22558,1,17834,True,office
 house,28,2,1764278,Riverdale,0.9882,10663,1,10537,False,best
-house,28,3,1710513,Calumet Park,1.0,7025,1,7025,False,
-house,28,4,1761314,Posen,0.6376,5632,1,3591,False,
+house,28,3,1710513,Calumet Park,1.0,7025,1,7025,False,best
+house,28,4,1761314,Posen,0.6376,5632,1,3591,False,best
 house,28,5,1714000,Chicago,0.0135,2746388,2,37076,False,
 house,28,6,1775484,Tinley Park,0.2737,55971,2,15319,False,
 house,28,7,1754638,Oak Forest,0.4122,27478,2,11326,False,
@@ -1758,8 +1758,8 @@ house,28,10,1748892,Midlothian,0.2079,14325,2,2978,False,
 house,28,11,1756640,Orland Park,0.0237,58703,2,1391,False,
 house,29,1,1770850,South Holland,0.6072,21465,1,13034,True,office
 house,29,2,1720292,Dolton,0.5298,21426,1,11351,False,best
-house,29,3,1730029,Glenwood,0.9809,8662,1,8497,False,
-house,29,4,1746500,Manteno,0.7549,9210,1,6953,False,
+house,29,3,1730029,Glenwood,0.9809,8662,1,8497,False,best
+house,29,4,1746500,Manteno,0.7549,9210,1,6953,False,best
 house,29,5,1717523,Crete,0.6429,8465,1,5442,False,
 house,29,6,1714000,Chicago,0.0128,2746388,2,35154,False,
 house,29,7,1710487,Calumet City,0.3106,36033,2,11192,False,
@@ -1780,8 +1780,8 @@ house,29,21,1749893,Momence,0.0709,3117,2,221,False,
 house,29,22,1764278,Riverdale,0.0118,10663,2,126,False,
 house,29,23,1721904,East Hazel Crest,0.0238,1297,2,31,False,
 house,30,1,1733383,Harvey,1.0,20324,1,20324,False,best
-house,30,2,1735879,Homewood,0.8336,19463,1,16224,False,
-house,30,3,1747007,Markham,0.9826,11661,1,11458,False,
+house,30,2,1735879,Homewood,0.8336,19463,1,16224,False,best
+house,30,3,1747007,Markham,0.9826,11661,1,11458,False,best
 house,30,4,1748892,Midlothian,0.7779,14325,1,11143,False,
 house,30,5,1726571,Flossmoor,0.9516,9704,1,9234,False,
 house,30,6,1754638,Oak Forest,0.4175,27478,2,11472,False,
@@ -1796,26 +1796,26 @@ house,30,14,1775484,Tinley Park,0.0243,55971,2,1360,False,
 house,30,15,1721904,East Hazel Crest,0.9762,1297,2,1266,True,office
 house,30,16,1775185,Thornton,0.1331,2386,2,318,False,
 house,31,1,1734514,Hickory Hills,0.7044,14505,1,10217,False,best
-house,31,2,1738830,Justice,0.6853,12600,1,8635,False,
+house,31,2,1738830,Justice,0.6853,12600,1,8635,False,best
 house,31,3,1714000,Chicago,0.027,2746388,2,74152,True,office
-house,31,4,1754820,Oak Lawn,0.298,58362,2,17392,False,
+house,31,4,1754820,Oak Lawn,0.298,58362,2,17392,False,best
 house,31,5,1735866,Hometown,1.0,4343,2,4343,False,
 house,31,6,1714065,Chicago Ridge,0.2998,14433,2,4327,False,
 house,31,7,1757394,Palos Hills,0.2081,18530,2,3856,False,
 house,31,8,1708225,Bridgeview,0.1905,17027,2,3244,False,
 house,32,1,1714000,Chicago,0.0355,2746388,2,97497,True,office
 house,32,2,1709642,Burbank,0.4183,29439,2,12314,False,best
-house,32,3,1708225,Bridgeview,0.262,17027,2,4461,False,
-house,32,4,1734514,Hickory Hills,0.0645,14505,2,936,False,
+house,32,3,1708225,Bridgeview,0.262,17027,2,4461,False,best
+house,32,4,1734514,Hickory Hills,0.0645,14505,2,936,False,best
 house,33,1,1742028,Lansing,0.6313,29076,1,18356,False,best
 house,33,2,1714000,Chicago,0.0566,2746388,2,155446,True,office
-house,33,3,1710487,Calumet City,0.3095,36033,2,11152,False,
-house,33,4,1709798,Burnham,0.4683,4046,2,1895,False,
+house,33,3,1710487,Calumet City,0.3095,36033,2,11152,False,best
+house,33,4,1709798,Burnham,0.4683,4046,2,1895,False,best
 house,33,5,1745421,Lynwood,0.1872,9116,2,1707,False,
 house,34,1,1745421,Lynwood,0.781,9116,1,7120,False,best
-house,34,2,1767769,Sauk Village,0.6843,9921,1,6789,False,
+house,34,2,1767769,Sauk Village,0.6843,9921,1,6789,False,best
 house,34,3,1714000,Chicago,0.0681,2746388,2,187029,True,office
-house,34,4,1710487,Calumet City,0.3799,36033,2,13689,False,
+house,34,4,1710487,Calumet City,0.3799,36033,2,13689,False,best
 house,34,5,1742028,Lansing,0.368,29076,2,10700,False,
 house,34,6,1749893,Momence,0.9291,3117,2,2896,False,
 house,34,7,1738934,Kankakee,0.087,24052,2,2093,False,
@@ -1829,25 +1829,25 @@ house,34,14,1736190,Hopkins Park,1.0,597,2,597,False,
 house,34,15,1773943,Sun River Terrace,1.0,455,2,455,False,
 house,34,16,1717523,Crete,0.024,8465,2,203,False,
 house,35,1,1701010,Alsip,0.755,19063,1,14393,False,best
-house,35,2,1757381,Palos Heights,0.9663,12068,1,11661,False,
+house,35,2,1757381,Palos Heights,0.9663,12068,1,11661,False,best
 house,35,3,1714000,Chicago,0.0275,2746388,2,75526,True,office
-house,35,4,1756640,Orland Park,0.2392,58703,2,14042,False,
+house,35,4,1756640,Orland Park,0.2392,58703,2,14042,False,best
 house,35,5,1783518,Worth,0.4476,10970,2,4910,False,
 house,35,6,1748554,Merrionette Park,1.0,1969,2,1969,False,
 house,35,7,1757407,Palos Park,0.3175,4899,2,1555,False,
 house,35,8,1754820,Oak Lawn,0.0214,58362,2,1249,False,
 house,36,1,1754820,Oak Lawn,0.6762,58362,1,39464,False,best
 house,36,2,1724634,Evergreen Park,1.0,19943,1,19943,True,office
-house,36,3,1757394,Palos Hills,0.7919,18530,1,14674,False,
-house,36,4,1714065,Chicago Ridge,0.6975,14433,1,10067,False,
+house,36,3,1757394,Palos Hills,0.7919,18530,1,14674,False,best
+house,36,4,1714065,Chicago Ridge,0.6975,14433,1,10067,False,best
 house,36,5,1783518,Worth,0.5524,10970,1,6060,False,
 house,36,6,1757407,Palos Park,0.2077,4899,2,1018,False,
 house,36,7,1782049,Willow Springs,0.1644,5857,2,963,False,
 house,36,8,1757381,Palos Heights,0.0337,12068,2,407,False,
 house,37,1,1735835,Homer Glen,0.8842,24543,1,21701,True,office
 house,37,2,1749854,Mokena,0.9182,19887,1,18260,False,best
-house,37,3,1752584,New Lenox,0.5236,27214,1,14249,False,
-house,37,4,1756627,Orland Hills,0.9433,6893,1,6502,False,
+house,37,3,1752584,New Lenox,0.5236,27214,1,14249,False,best
+house,37,4,1756627,Orland Hills,0.9433,6893,1,6502,False,best
 house,37,5,1756640,Orland Park,0.2411,58703,2,14153,False,
 house,37,6,1744225,Lockport,0.4904,26094,2,12796,False,
 house,37,7,1775484,Tinley Park,0.1533,55971,2,8580,False,
@@ -1855,8 +1855,8 @@ house,37,8,1738570,Joliet,0.035,150362,2,5263,False,
 house,37,9,1727624,Frankfort,0.09,20296,2,1827,False,
 house,38,1,1747540,Matteson,0.9689,19073,1,18480,True,office
 house,38,2,1716691,Country Club Hills,0.9998,16775,1,16772,False,best
-house,38,3,1727624,Frankfort,0.6795,20296,1,13791,False,
-house,38,4,1733695,Hazel Crest,0.7574,13382,1,10136,False,
+house,38,3,1727624,Frankfort,0.6795,20296,1,13791,False,best
+house,38,4,1733695,Hazel Crest,0.7574,13382,1,10136,False,best
 house,38,5,1763706,Richton Park,0.7897,12775,1,10088,False,
 house,38,6,1775484,Tinley Park,0.4829,55971,2,27028,False,
 house,38,7,1754638,Oak Forest,0.1621,27478,2,4454,False,
@@ -1868,26 +1868,26 @@ house,39,1,1714000,Chicago,0.0219,2746388,2,60146,True,office
 house,40,1,1714000,Chicago,0.0247,2746388,2,67836,True,office
 house,41,1,1751622,Naperville,0.5683,149540,1,84984,True,office
 house,41,2,1707133,Bolingbrook,0.0584,73922,2,4317,False,best
-house,41,3,1778929,Warrenville,0.2707,13553,2,3669,False,
+house,41,3,1778929,Warrenville,0.2707,13553,2,3669,False,best
 house,42,1,1744407,Lombard,0.7974,44476,1,35465,False,best
 house,42,2,1729756,Glen Ellyn,0.9281,28846,1,26772,False,best
-house,42,3,1743939,Lisle,0.5633,24223,1,13645,False,
-house,42,4,1720591,Downers Grove,0.1901,50247,2,9552,False,
+house,42,3,1743939,Lisle,0.5633,24223,1,13645,False,best
+house,42,4,1720591,Downers Grove,0.1901,50247,2,9552,False,best
 house,42,5,1781048,Wheaton,0.1571,53970,2,8479,False,
 house,43,1,1723074,Elgin,0.326,114797,2,37424,True,office
 house,43,2,1711358,Carpentersville,0.3079,37983,2,11695,False,best
-house,43,3,1773157,Streamwood,0.1487,39577,2,5885,False,
-house,43,4,1735411,Hoffman Estates,0.1041,52530,2,5468,False,
+house,43,3,1773157,Streamwood,0.1487,39577,2,5885,False,best
+house,43,4,1735411,Hoffman Estates,0.1041,52530,2,5468,False,best
 house,43,5,1721696,East Dundee,0.5866,3152,2,1849,False,
 house,43,6,1703883,Barrington Hills,0.0168,4114,2,69,False,
 house,44,1,1773157,Streamwood,0.7735,39577,1,30613,True,office
 house,44,2,1735411,Hoffman Estates,0.492,52530,2,25845,False,best
-house,44,3,1768003,Schaumburg,0.2226,78723,2,17524,False,
-house,44,4,1732746,Hanover Park,0.396,37470,2,14838,False,
+house,44,3,1768003,Schaumburg,0.2226,78723,2,17524,False,best
+house,44,4,1732746,Hanover Park,0.396,37470,2,14838,False,best
 house,45,1,1723620,Elmhurst,0.8256,45786,1,37801,False,best
 house,45,2,1780645,Westmont,0.8923,24429,1,21798,True,office
-house,45,3,1735307,Hinsdale,0.5764,17395,1,10026,False,
-house,45,4,1714572,Clarendon Hills,1.0,8702,1,8702,False,
+house,45,3,1735307,Hinsdale,0.5764,17395,1,10026,False,best
+house,45,4,1714572,Clarendon Hills,1.0,8702,1,8702,False,best
 house,45,5,1720591,Downers Grove,0.1219,50247,2,6125,False,
 house,45,6,1754534,Oak Brook,0.4818,8163,2,3933,False,
 house,45,7,1700243,Addison,0.1084,35702,2,3870,False,
@@ -1897,25 +1897,25 @@ house,45,10,1754560,Oakbrook Terrace,0.685,2751,2,1884,False,
 house,45,11,1780242,Western Springs,0.1308,13629,2,1783,False,
 house,45,12,1718628,Darien,0.0173,22011,2,381,False,
 house,46,1,1729730,Glendale Heights,1.0,33176,1,33176,False,best
-house,46,2,1700243,Addison,0.5682,35702,1,20286,False,
+house,46,2,1700243,Addison,0.5682,35702,1,20286,False,best
 house,46,3,1777993,Villa Park,0.8875,22263,1,19758,True,office
-house,46,4,1711332,Carol Stream,0.2366,39854,2,9429,False,
+house,46,4,1711332,Carol Stream,0.2366,39854,2,9429,False,best
 house,46,5,1744407,Lombard,0.1927,44476,2,8571,False,
 house,46,6,1706587,Bloomingdale,0.2437,22382,2,5454,False,
 house,46,7,1723620,Elmhurst,0.0593,45786,2,2715,False,
 house,46,8,1754560,Oakbrook Terrace,0.3143,2751,2,865,False,
 house,47,1,1781048,Wheaton,0.8429,53970,1,45491,True,office
 house,47,2,1711332,Carol Stream,0.6006,39854,1,23936,False,best
-house,47,3,1782400,Winfield,1.0,9835,1,9835,False,
-house,47,4,1751622,Naperville,0.1087,149540,2,16255,False,
+house,47,3,1782400,Winfield,1.0,9835,1,9835,False,best
+house,47,4,1751622,Naperville,0.1087,149540,2,16255,False,best
 house,47,5,1778929,Warrenville,0.4631,13553,2,6276,False,
 house,47,6,1743939,Lisle,0.1485,24223,2,3597,False,
 house,47,7,1780060,West Chicago,0.0929,25614,2,2380,False,
 house,47,8,1729756,Glen Ellyn,0.0656,28846,2,1892,False,
 house,47,9,1704013,Bartlett,0.0228,41105,2,937,False,
 house,48,1,1765806,Roselle,0.9382,22897,1,21482,False,best
-house,48,2,1706587,Bloomingdale,0.7563,22382,1,16928,False,
-house,48,3,1782985,Wood Dale,0.9991,14012,1,13999,False,
+house,48,2,1706587,Bloomingdale,0.7563,22382,1,16928,False,best
+house,48,3,1782985,Wood Dale,0.9991,14012,1,13999,False,best
 house,48,4,1737907,Itasca,1.0,9543,1,9543,False,
 house,48,5,1723256,Elk Grove Village,0.4344,32812,2,14254,False,
 house,48,6,1711332,Carol Stream,0.1629,39854,2,6492,True,office
@@ -1925,8 +1925,8 @@ house,48,9,1705248,Bensenville,0.0624,18813,2,1174,False,
 house,48,10,1768003,Schaumburg,0.0121,78723,2,953,False,
 house,49,1,1704013,Bartlett,0.9553,41105,1,39268,False,best
 house,49,2,1780060,West Chicago,0.8373,25614,1,21447,True,office
-house,49,3,1723074,Elgin,0.1076,114797,2,12352,False,
-house,49,4,1703012,Aurora,0.0483,180542,2,8720,False,
+house,49,3,1723074,Elgin,0.1076,114797,2,12352,False,best
+house,49,4,1703012,Aurora,0.0483,180542,2,8720,False,best
 house,49,5,1704078,Batavia,0.3162,26098,2,8252,False,
 house,49,6,1751622,Naperville,0.0419,149540,2,6266,False,
 house,49,7,1732746,Hanover Park,0.1316,37470,2,4931,False,
@@ -1938,11 +1938,11 @@ house,49,12,1766703,St. Charles,0.0156,33081,2,516,False,
 house,49,13,1779397,Wayne,0.2069,2286,2,473,False,
 house,50,1,1753442,North Aurora,0.5909,18261,1,10790,False,best
 house,50,2,1703012,Aurora,0.4186,180542,2,75575,True,office
-house,50,3,1704078,Batavia,0.2789,26098,2,7279,False,
+house,50,3,1704078,Batavia,0.2789,26098,2,7279,False,best
 house,51,1,1757225,Palatine,0.6694,67908,1,45458,True,office
 house,51,2,1741742,Lake Zurich,1.0,19759,1,19759,False,best
-house,51,3,1744524,Long Grove,0.8942,8366,1,7481,False,
-house,51,4,1733630,Hawthorn Woods,0.7458,9062,1,6758,False,
+house,51,3,1744524,Long Grove,0.8942,8366,1,7481,False,best
+house,51,4,1733630,Hawthorn Woods,0.7458,9062,1,6758,False,best
 house,51,5,1737608,Inverness,0.7958,7616,1,6061,False,
 house,51,6,1735411,Hoffman Estates,0.196,52530,2,10296,False,
 house,51,7,1739883,Kildeer,1.0,4091,2,4091,False,
@@ -1955,8 +1955,8 @@ house,51,13,1753455,North Barrington,0.2102,3171,2,667,False,
 house,51,14,1709447,Buffalo Grove,0.0139,43212,2,601,False,
 house,51,15,1770564,South Barrington,0.0396,5077,2,201,False,
 house,52,1,1751349,Mundelein,0.6256,31560,1,19744,False,best
-house,52,2,1779267,Wauconda,1.0,14084,1,14084,False,
-house,52,3,1703844,Barrington,0.6902,10722,1,7400,False,
+house,52,2,1779267,Wauconda,1.0,14084,1,14084,False,best
+house,52,3,1703844,Barrington,0.6902,10722,1,7400,False,best
 house,52,4,1740884,Lake Barrington,1.0,5100,1,5100,True,office
 house,52,5,1770564,South Barrington,0.9565,5077,1,4856,False,
 house,52,6,1778227,Volo,0.5283,6122,1,3234,False,
@@ -1977,27 +1977,27 @@ house,52,20,1741326,Lakemoor,0.1395,6182,2,862,False,
 house,52,21,1721696,East Dundee,0.0469,3152,2,148,False,
 house,52,22,1719083,Deer Park,0.0298,3681,2,110,False,
 house,53,1,1751089,Mount Prospect,0.6887,56852,1,39154,False,best
-house,53,2,1765338,Rolling Meadows,0.7577,24200,1,18336,False,
+house,53,2,1765338,Rolling Meadows,0.7577,24200,1,18336,False,best
 house,53,3,1702154,Arlington Heights,0.3,77676,2,23303,True,office
-house,53,4,1719642,Des Plaines,0.1264,60675,2,7669,False,
+house,53,4,1719642,Des Plaines,0.1264,60675,2,7669,False,best
 house,53,5,1768003,Schaumburg,0.0529,78723,2,4164,False,
 house,53,6,1757225,Palatine,0.0362,67908,2,2458,False,
 house,54,1,1702154,Arlington Heights,0.6993,77676,1,54319,True,office
 house,54,2,1762016,Prospect Heights,0.5814,16058,1,9336,False,best
-house,54,3,1757225,Palatine,0.2944,67908,2,19992,False,
-house,54,4,1709447,Buffalo Grove,0.1633,43212,2,7057,False,
+house,54,3,1757225,Palatine,0.2944,67908,2,19992,False,best
+house,54,4,1709447,Buffalo Grove,0.1633,43212,2,7057,False,best
 house,54,5,1751089,Mount Prospect,0.1074,56852,2,6106,False,
 house,54,6,1765338,Rolling Meadows,0.0204,24200,2,494,False,
 house,55,1,1757875,Park Ridge,0.9284,39656,1,36817,False,best
 house,55,2,1719642,Des Plaines,0.2847,60675,2,17274,False,best
-house,55,3,1753000,Niles,0.1675,30912,2,5178,False,
-house,55,4,1750647,Morton Grove,0.0882,25297,2,2231,False,
+house,55,3,1753000,Niles,0.1675,30912,2,5178,False,best
+house,55,4,1750647,Morton Grove,0.0882,25297,2,2231,False,best
 house,55,5,1729938,Glenview,0.0185,48705,2,901,False,
 house,55,6,1765819,Rosemont,0.0383,3952,2,151,False,
 house,56,1,1768003,Schaumburg,0.6824,78723,1,53721,True,office
 house,56,2,1719642,Des Plaines,0.5281,60675,1,32042,False,best
-house,56,3,1723256,Elk Grove Village,0.5251,32812,1,17230,False,
-house,56,4,1732746,Hanover Park,0.3782,37470,2,14171,False,
+house,56,3,1723256,Elk Grove Village,0.5251,32812,1,17230,False,best
+house,56,4,1732746,Hanover Park,0.3782,37470,2,14171,False,best
 house,56,5,1751089,Mount Prospect,0.0906,56852,2,5151,False,
 house,56,6,1735411,Hoffman Estates,0.0358,52530,2,1881,False,
 house,56,7,1757875,Park Ridge,0.0435,39656,2,1725,False,
@@ -2005,8 +2005,8 @@ house,56,8,1765338,Rolling Meadows,0.0693,24200,2,1677,False,
 house,56,9,1765806,Roselle,0.0618,22897,2,1415,False,
 house,57,1,1781087,Wheeling,0.772,39137,1,30214,False,best
 house,57,2,1753481,Northbrook,0.7229,35222,1,25462,True,office
-house,57,3,1753663,Northfield,0.9984,5751,1,5742,False,
-house,57,4,1729652,Glencoe,0.54,8849,1,4778,False,
+house,57,3,1753663,Northfield,0.9984,5751,1,5742,False,best
+house,57,4,1729652,Glencoe,0.54,8849,1,4778,False,best
 house,57,5,1729938,Glenview,0.175,48705,2,8523,False,
 house,57,6,1762016,Prospect Heights,0.4186,16058,2,6722,False,
 house,57,7,1751089,Mount Prospect,0.1132,56852,2,6436,False,
@@ -2017,8 +2017,8 @@ house,57,11,1719642,Des Plaines,0.0375,60675,2,2275,False,
 house,57,12,1718992,Deerfield,0.0389,19196,2,747,False,
 house,57,13,1743666,Lincolnshire,0.0819,7940,2,650,False,
 house,58,1,1734722,Highland Park,1.0,30176,1,30176,False,best
-house,58,2,1741105,Lake Forest,1.0,19367,1,19367,False,
-house,58,3,1718992,Deerfield,0.9611,19196,1,18449,False,
+house,58,2,1741105,Lake Forest,1.0,19367,1,19367,False,best
+house,58,3,1718992,Deerfield,0.9611,19196,1,18449,False,best
 house,58,4,1740910,Lake Bluff,0.9999,5616,1,5615,False,
 house,58,5,1734865,Highwood,1.0,5074,1,5074,True,office
 house,58,6,1753559,North Chicago,0.3882,30759,2,11941,False,
@@ -2031,8 +2031,8 @@ house,58,12,1731446,Green Oaks,0.0909,4128,2,375,False,
 house,58,13,1748671,Mettawa,0.5529,533,2,295,False,
 house,59,1,1709447,Buffalo Grove,0.7528,43212,1,32530,True,office
 house,59,2,1777694,Vernon Hills,0.9684,26850,1,26002,False,best
-house,59,3,1757654,Park City,0.8695,7885,1,6856,False,
-house,59,4,1743666,Lincolnshire,0.5651,7940,1,4487,False,
+house,59,3,1757654,Park City,0.8695,7885,1,6856,False,best
+house,59,4,1743666,Lincolnshire,0.5651,7940,1,4487,False,best
 house,59,5,1751349,Mundelein,0.3669,31560,2,11579,False,
 house,59,6,1781087,Wheeling,0.2191,39137,2,8575,False,
 house,59,7,1779293,Waukegan,0.0778,89321,2,6949,False,
@@ -2042,13 +2042,13 @@ house,59,10,1737218,Indian Creek,1.0,536,2,536,False,
 house,59,11,1748671,Mettawa,0.4471,533,2,238,False,
 house,60,1,1779293,Waukegan,0.6076,89321,1,54271,True,office
 house,60,2,1753559,North Chicago,0.6113,30759,1,18803,False,best
-house,60,3,1732018,Gurnee,0.4614,30706,2,14168,False,
-house,60,4,1757654,Park City,0.1305,7885,2,1029,False,
+house,60,3,1732018,Gurnee,0.4614,30706,2,14168,False,best
+house,60,4,1757654,Park City,0.1305,7885,2,1029,False,best
 house,60,5,1778370,Wadsworth,0.2827,3517,2,994,False,
 house,60,6,1731446,Green Oaks,0.0582,4128,2,240,False,
 house,61,1,1784220,Zion,1.0,24655,1,24655,False,best
-house,61,2,1704303,Beach Park,0.9987,14249,1,14230,False,
-house,61,3,1743770,Lindenhurst,0.9374,14406,1,13504,False,
+house,61,2,1704303,Beach Park,0.9987,14249,1,14230,False,best
+house,61,3,1743770,Lindenhurst,0.9374,14406,1,13504,False,best
 house,61,4,1782686,Winthrop Harbor,1.0,6705,1,6705,False,
 house,61,5,1779293,Waukegan,0.1696,89321,2,15149,False,
 house,61,6,1732018,Gurnee,0.4217,30706,2,12949,False,
@@ -2060,8 +2060,8 @@ house,61,11,1741586,Lake Villa,0.0275,8741,2,240,False,
 house,61,12,1755639,Old Mill Creek,1.0,162,2,162,False,
 house,62,1,1766040,Round Lake Beach,0.9917,27252,1,27026,False,best
 house,62,2,1731121,Grayslake,0.9872,21248,1,20976,True,office
-house,62,3,1766027,Round Lake,0.9993,18721,1,18708,False,
-house,62,4,1743250,Libertyville,0.5252,20579,1,10808,False,
+house,62,3,1766027,Round Lake,0.9993,18721,1,18708,False,best
+house,62,4,1743250,Libertyville,0.5252,20579,1,10808,False,best
 house,62,5,1766066,Round Lake Park,1.0,7680,1,7680,False,
 house,62,6,1779293,Waukegan,0.145,89321,2,12952,False,
 house,62,7,1732200,Hainesville,1.0,3546,2,3546,False,
@@ -2071,8 +2071,8 @@ house,62,10,1731446,Green Oaks,0.2395,4128,2,989,False,
 house,62,11,1778227,Volo,0.045,6122,2,275,False,
 house,63,1,1783349,Woodstock,0.8484,25630,1,21744,True,office
 house,63,2,1711592,Cary,1.0,17826,1,17826,False,best
-house,63,3,1745694,McHenry,0.5068,27135,1,13752,False,
-house,63,4,1737894,Island Lake,0.5517,8051,1,4442,False,
+house,63,3,1745694,McHenry,0.5068,27135,1,13752,False,best
+house,63,4,1737894,Island Lake,0.5517,8051,1,4442,False,best
 house,63,5,1717887,Crystal Lake,0.4831,40269,2,19454,False,
 house,63,6,1741183,Lake in the Hills,0.1712,28982,2,4962,False,
 house,63,7,1755041,Oakwood Hills,1.0,2076,2,2076,False,
@@ -2087,8 +2087,8 @@ house,63,15,1782855,Wonder Lake,0.1263,3973,2,502,False,
 house,63,16,1741326,Lakemoor,0.0678,6182,2,419,False,
 house,64,1,1701595,Antioch,0.9399,14622,1,13743,False,best
 house,64,2,1727442,Fox Lake,1.0,10978,1,10978,True,office
-house,64,3,1741586,Lake Villa,0.9686,8741,1,8467,False,
-house,64,4,1738479,Johnsburg,1.0,6355,1,6355,False,
+house,64,3,1741586,Lake Villa,0.9686,8741,1,8467,False,best
+house,64,4,1738479,Johnsburg,1.0,6355,1,6355,False,best
 house,64,5,1772052,Spring Grove,1.0,5487,1,5487,False,
 house,64,6,1741326,Lakemoor,0.7927,6182,1,4900,False,
 house,64,7,1745694,McHenry,0.4932,27135,2,13383,False,
@@ -2100,8 +2100,8 @@ house,64,12,1764135,Ringwood,1.0,844,2,844,False,
 house,64,13,1763641,Richmond,0.3354,2089,2,701,False,
 house,65,1,1766703,St. Charles,0.7768,33081,1,25697,True,office
 house,65,2,1770720,South Elgin,0.8496,23865,1,20276,False,best
-house,65,3,1710906,Campton Hills,1.0,10885,1,10885,False,
-house,65,4,1722931,Elburn,0.6411,6175,1,3959,False,
+house,65,3,1710906,Campton Hills,1.0,10885,1,10885,False,best
+house,65,4,1722931,Elburn,0.6411,6175,1,3959,False,best
 house,65,5,1723074,Elgin,0.2156,114797,2,24750,False,
 house,65,6,1728872,Geneva,0.4625,21393,2,9894,False,
 house,65,7,1779397,Wayne,0.7874,2286,2,1800,False,
@@ -2110,8 +2110,8 @@ house,65,9,1743406,Lily Lake,1.0,1032,2,1032,False,
 house,65,10,1704013,Bartlett,0.0192,41105,2,789,False,
 house,65,11,1759988,Pingree Grove,0.0224,10365,2,232,False,
 house,66,1,1711358,Carpentersville,0.6841,37983,1,25984,False,best
-house,66,2,1780125,West Dundee,1.0,7686,1,7686,False,
-house,66,3,1723074,Elgin,0.2991,114797,2,34336,False,
+house,66,2,1780125,West Dundee,1.0,7686,1,7686,False,best
+house,66,3,1723074,Elgin,0.2991,114797,2,34336,False,best
 house,66,4,1717887,Crystal Lake,0.4666,40269,2,18790,False,
 house,66,5,1700685,Algonquin,0.4214,29700,2,12516,False,
 house,66,6,1741183,Lake in the Hills,0.3632,28982,2,10526,False,
@@ -2121,17 +2121,17 @@ house,66,9,1741651,Lakewood,0.1125,4283,2,482,False,
 house,66,10,1729171,Gilberts,0.0511,8366,2,428,False,
 house,67,1,1765000,Rockford,0.5138,148655,1,76379,True,office
 house,67,2,1745031,Loves Park,0.3333,23397,2,7798,False,best
-house,67,3,1713074,Cherry Valley,0.6842,2905,2,1988,False,
-house,67,4,1745726,Machesney Park,0.0429,22950,2,985,False,
+house,67,3,1713074,Cherry Valley,0.6842,2905,2,1988,False,best
+house,67,4,1745726,Machesney Park,0.0429,22950,2,985,False,best
 house,67,5,1752701,New Milford,0.5702,794,2,453,False,
 house,68,1,1705092,Belvidere,0.9658,25339,1,24472,False,best
-house,68,2,1765000,Rockford,0.3376,148655,2,50186,False,
+house,68,2,1765000,Rockford,0.3376,148655,2,50186,False,best
 house,68,3,1745031,Loves Park,0.1539,23397,2,3601,True,office
-house,68,4,1713074,Cherry Valley,0.2258,2905,2,656,False,
+house,68,4,1713074,Cherry Valley,0.2258,2905,2,656,False,best
 house,69,1,1736750,Huntley,0.5562,27740,1,15429,False,best
 house,69,2,1733331,Harvard,1.0,9469,1,9469,False,best
-house,69,3,1746786,Marengo,1.0,7568,1,7568,False,
-house,69,4,1761145,Poplar Grove,0.8979,5049,1,4533,False,
+house,69,3,1746786,Marengo,1.0,7568,1,7568,False,best
+house,69,4,1761145,Poplar Grove,0.8979,5049,1,4533,False,best
 house,69,5,1765000,Rockford,0.0622,148655,2,9246,False,
 house,69,6,1741183,Lake in the Hills,0.2492,28982,2,7222,False,
 house,69,7,1783349,Woodstock,0.1516,25630,2,3886,False,
@@ -2151,8 +2151,8 @@ house,69,20,1710422,Caledonia,0.7773,183,2,142,False,
 house,69,21,1709531,Bull Valley,0.0935,1128,2,105,False,
 house,70,1,1774223,Sycamore,0.9378,18577,1,17422,True,office
 house,70,2,1759988,Pingree Grove,0.9776,10365,1,10133,False,best
-house,70,3,1773391,Sugar Grove,0.8661,9278,1,8036,False,
-house,70,4,1729171,Gilberts,0.9489,8366,1,7938,False,
+house,70,3,1773391,Sugar Grove,0.8661,9278,1,8036,False,best
+house,70,4,1729171,Gilberts,0.9489,8366,1,7938,False,best
 house,70,5,1732525,Hampshire,0.9947,7667,1,7626,False,
 house,70,6,1736750,Huntley,0.4438,27740,2,12311,False,
 house,70,7,1723074,Elgin,0.0516,114797,2,5924,False,
@@ -2172,8 +2172,8 @@ house,70,20,1778175,Virgil,1.0,289,2,289,False,
 house,70,21,1767548,Sandwich,0.03,7221,2,217,False,
 house,71,1,1728326,Galesburg,1.0,30052,1,30052,False,best
 house,71,2,1745889,Macomb,0.8464,15051,1,12739,False,best
-house,71,3,1750010,Monmouth,1.0,8902,1,8902,False,
-house,71,4,1715664,Colona,1.0,5045,1,5045,False,
+house,71,3,1750010,Monmouth,1.0,8902,1,8902,False,best
+house,71,4,1715664,Colona,1.0,5045,1,5045,False,best
 house,71,5,1749867,Moline,0.2618,42985,2,11253,False,
 house,71,6,1715235,Coal Valley,1.0,3873,2,3873,False,
 house,71,7,1740416,Knoxville,1.0,2901,2,2901,False,
@@ -2200,16 +2200,16 @@ house,71,27,1730458,Good Hope,0.4428,363,2,161,False,
 house,71,28,1714923,Cleveland,0.2102,163,2,34,False,
 house,71,29,1703207,Avon,0.0316,704,2,22,False,
 house,72,1,1765078,Rock Island,1.0,37108,1,37108,False,best
-house,72,2,1749867,Moline,0.7382,42985,1,31732,False,
+house,72,2,1749867,Moline,0.7382,42985,1,31732,False,best
 house,72,3,1722073,East Moline,0.708,21374,1,15133,True,office
-house,72,4,1769979,Silvis,0.6497,8003,1,5200,False,
+house,72,4,1769979,Silvis,0.6497,8003,1,5200,False,best
 house,72,5,1749009,Milan,0.7671,5097,1,3910,False,
 house,72,6,1732564,Hampton,1.0,1779,2,1779,False,
 house,72,7,1711150,Carbon Cliff,0.0296,1846,2,55,False,
 house,72,8,1754703,Oak Grove,0.0879,476,2,42,False,
 house,73,1,1761899,Princeton,1.0,7832,1,7832,False,best
-house,73,2,1728846,Geneseo,1.0,6539,1,6539,False,
-house,73,3,1714117,Chillicothe,0.6425,6128,1,3937,False,
+house,73,2,1728846,Geneseo,1.0,6539,1,6539,False,best
+house,73,3,1714117,Chillicothe,0.6425,6128,1,3937,False,best
 house,73,4,1759000,Peoria,0.2624,113150,2,29691,True,office
 house,73,5,1722073,East Moline,0.174,21374,2,3719,False,
 house,73,6,1728144,Fulton,1.0,3647,2,3647,False,
@@ -2252,8 +2252,8 @@ house,73,42,1752155,New Bedford,1.0,76,2,76,False,
 house,73,43,1719031,Deer Grove,1.0,38,2,38,False,
 house,74,1,1720162,Dixon,1.0,15274,1,15274,True,office
 house,74,2,1772546,Sterling,1.0,14764,1,14764,False,best
-house,74,3,1764746,Rochelle,1.0,9446,1,9446,False,
-house,74,4,1764928,Rock Falls,1.0,8789,1,8789,False,
+house,74,3,1764746,Rochelle,1.0,9446,1,9446,False,best
+house,74,4,1764928,Rock Falls,1.0,8789,1,8789,False,best
 house,74,5,1748333,Mendota,1.0,7061,1,7061,False,
 house,74,6,1742184,LaSalle,0.3437,9582,2,3293,False,
 house,74,7,1719161,DeKalb,0.0615,40290,2,2478,False,
@@ -2283,8 +2283,8 @@ house,74,30,1751947,Nelson,1.0,127,2,127,False,
 house,74,31,1732967,Harmon,1.0,111,2,111,False,
 house,75,1,1756887,Oswego,0.5297,34585,1,18320,False,best
 house,75,2,1784038,Yorkville,0.8172,21533,1,17597,True,office
-house,75,3,1760352,Plano,1.0,11847,1,11847,False,
-house,75,4,1749607,Minooka,0.8239,12758,1,10511,False,
+house,75,3,1760352,Plano,1.0,11847,1,11847,False,best
+house,75,4,1749607,Minooka,0.8239,12758,1,10511,False,best
 house,75,5,1750491,Morris,0.7249,14163,1,10267,False,
 house,75,6,1767548,Sandwich,0.97,7221,1,7004,False,
 house,75,7,1738570,Joliet,0.0476,150362,2,7157,False,
@@ -2301,8 +2301,8 @@ house,75,17,1743900,Lisbon,1.0,271,2,271,False,
 house,75,18,1760391,Plattville,1.0,220,2,220,False,
 house,76,1,1719161,DeKalb,0.8582,40290,1,34577,False,best
 house,76,2,1756926,Ottawa,0.9831,18840,1,18522,True,office
-house,76,3,1759234,Peru,0.8352,9896,1,8265,False,
-house,76,4,1742184,LaSalle,0.6563,9582,1,6289,False,
+house,76,3,1759234,Peru,0.8352,9896,1,8265,False,best
+house,76,4,1742184,LaSalle,0.6563,9582,1,6289,False,best
 house,76,5,1772156,Spring Valley,1.0,5582,1,5582,False,
 house,76,6,1755353,Oglesby,1.0,3712,2,3712,False,
 house,76,7,1740598,Ladd,1.0,1263,2,1263,False,
@@ -2318,9 +2318,9 @@ house,76,16,1768471,Seatonville,1.0,321,2,321,False,
 house,76,17,1711982,Cedar Point,1.0,266,2,266,False,
 house,76,18,1735671,Hollowayville,1.0,36,2,36,False,
 house,77,1,1705248,Bensenville,0.9376,18813,1,17639,False,best
-house,77,2,1727702,Franklin Park,0.8389,18467,1,15492,False,
+house,77,2,1727702,Franklin Park,0.8389,18467,1,15492,False,best
 house,77,3,1748242,Melrose Park,0.5897,24796,1,14622,True,office
-house,77,4,1753871,Northlake,0.8794,12840,1,11291,False,
+house,77,4,1753871,Northlake,0.8794,12840,1,11291,False,best
 house,77,5,1764343,River Grove,0.7577,10612,1,8041,False,
 house,77,6,1714000,Chicago,0.0449,2746388,2,123313,False,
 house,77,7,1700243,Addison,0.2038,35702,2,7276,False,
@@ -2331,14 +2331,14 @@ house,77,11,1723256,Elk Grove Village,0.0406,32812,2,1332,False,
 house,77,12,1765819,Rosemont,0.1408,3952,2,556,False,
 house,78,1,1754885,Oak Park,0.9162,54583,1,50009,True,office
 house,78,2,1723724,Elmwood Park,0.5495,24521,1,13474,False,best
-house,78,3,1764304,River Forest,0.9435,11717,1,11055,False,
-house,78,4,1714000,Chicago,0.0108,2746388,2,29661,False,
+house,78,3,1764304,River Forest,0.9435,11717,1,11055,False,best
+house,78,4,1714000,Chicago,0.0108,2746388,2,29661,False,best
 house,78,5,1748242,Melrose Park,0.167,24796,2,4141,False,
 house,78,6,1726935,Forest Park,0.0561,14339,2,804,False,
 house,79,1,1738934,Kankakee,0.9119,24052,1,21933,True,office
 house,79,2,1707471,Bourbonnais,0.9741,18164,1,17694,False,best
-house,79,3,1707744,Bradley,0.7117,15419,1,10974,False,
-house,79,4,1749945,Monee,0.917,5128,1,4702,False,
+house,79,3,1707744,Bradley,0.7117,15419,1,10974,False,best
+house,79,4,1749945,Monee,0.917,5128,1,4702,False,best
 house,79,5,1776935,University Park,0.5231,7145,1,3738,False,
 house,79,6,1757732,Park Forest,0.4627,21687,2,10035,False,
 house,79,7,1746500,Manteno,0.2451,9210,2,2257,False,
@@ -2363,8 +2363,8 @@ house,79,25,1737803,Irwin,1.0,68,2,68,False,
 house,79,26,1776771,Union Hill,1.0,55,2,55,False,
 house,80,1,1714026,Chicago Heights,0.7555,27480,1,20761,True,office
 house,80,2,1757732,Park Forest,0.5373,21687,1,11652,False,best
-house,80,3,1746357,Manhattan,1.0,9385,1,9385,False,
-house,80,4,1772520,Steger,0.5035,9584,1,4826,False,
+house,80,3,1746357,Manhattan,1.0,9385,1,9385,False,best
+house,80,4,1772520,Steger,0.5035,9584,1,4826,False,best
 house,80,5,1782101,Wilmington,0.6748,5664,1,3822,False,
 house,80,6,1752584,New Lenox,0.4758,27214,2,12948,False,
 house,80,7,1727624,Frankfort,0.2304,20296,2,4676,False,
@@ -2383,14 +2383,14 @@ house,80,19,1774275,Symerton,1.0,128,2,128,False,
 house,80,20,1755938,Olympia Fields,0.0148,4718,2,70,False,
 house,81,1,1720591,Downers Grove,0.6766,50247,1,33997,True,office
 house,81,2,1783245,Woodridge,0.6083,34158,1,20778,False,best
-house,81,3,1751622,Naperville,0.0865,149540,2,12935,False,
-house,81,4,1743939,Lisle,0.2882,24223,2,6981,False,
+house,81,3,1751622,Naperville,0.0865,149540,2,12935,False,best
+house,81,4,1743939,Lisle,0.2882,24223,2,6981,False,best
 house,81,5,1718628,Darien,0.1923,22011,2,4233,False,
 house,81,6,1780645,Westmont,0.107,24429,2,2614,False,
 house,82,1,1718628,Darien,0.7904,22011,1,17397,False,best
 house,82,2,1742795,Lemont,0.9666,17629,1,17040,True,office
-house,82,3,1709980,Burr Ridge,1.0,11192,1,11192,False,
-house,82,4,1781919,Willowbrook,0.7674,9236,1,7088,False,
+house,82,3,1709980,Burr Ridge,1.0,11192,1,11192,False,best
+house,82,4,1781919,Willowbrook,0.7674,9236,1,7088,False,best
 house,82,5,1782049,Willow Springs,0.8356,5857,1,4894,False,
 house,82,6,1735307,Hinsdale,0.3887,17395,2,6761,False,
 house,82,7,1780242,Western Springs,0.4953,13629,2,6750,False,
@@ -2405,9 +2405,9 @@ house,82,15,1756640,Orland Park,0.0169,58703,2,992,False,
 house,82,16,1720591,Downers Grove,0.0114,50247,2,573,False,
 house,82,17,1735385,Hodgkins,0.3804,1500,2,571,False,
 house,83,1,1750218,Montgomery,0.8585,20262,1,17395,False,best
-house,83,2,1703012,Aurora,0.1744,180542,2,31487,False,
+house,83,2,1703012,Aurora,0.1744,180542,2,31487,False,best
 house,83,3,1704078,Batavia,0.4049,26098,2,10567,True,office
-house,83,4,1728872,Geneva,0.4573,21393,2,9783,False,
+house,83,4,1728872,Geneva,0.4573,21393,2,9783,False,best
 house,83,5,1753442,North Aurora,0.409,18261,2,7469,False,
 house,83,6,1766703,St. Charles,0.2076,33081,2,6868,False,
 house,83,7,1756887,Oswego,0.1551,34585,2,5364,False,
@@ -2415,19 +2415,19 @@ house,83,8,1784038,Yorkville,0.1828,21533,2,3936,False,
 house,83,9,1773391,Sugar Grove,0.1339,9278,2,1242,False,
 house,84,1,1703012,Aurora,0.3384,180542,2,61095,True,office
 house,84,2,1751622,Naperville,0.0913,149540,2,13653,False,best
-house,84,3,1756887,Oswego,0.2721,34585,2,9411,False,
-house,84,4,1750218,Montgomery,0.1415,20262,2,2867,False,
+house,84,3,1756887,Oswego,0.2721,34585,2,9411,False,best
+house,84,4,1750218,Montgomery,0.1415,20262,2,2867,False,best
 house,85,1,1707133,Bolingbrook,0.5051,73922,1,37338,False,best
 house,85,2,1765442,Romeoville,0.7826,39863,1,31197,True,office
-house,85,3,1744225,Lockport,0.5096,26094,1,13298,False,
-house,85,4,1783245,Woodridge,0.2799,34158,2,9561,False,
+house,85,3,1744225,Lockport,0.5096,26094,1,13298,False,best
+house,85,4,1783245,Woodridge,0.2799,34158,2,9561,False,best
 house,85,5,1717458,Crest Hill,0.4196,20459,2,8585,False,
 house,85,6,1751622,Naperville,0.0505,149540,2,7552,False,
 house,85,7,1742795,Lemont,0.0314,17629,2,554,False,
 house,86,1,1738570,Joliet,0.5846,150362,1,87902,True,office
 house,86,2,1769758,Shorewood,0.673,18186,1,12239,False,best
-house,86,3,1712476,Channahon,0.5029,13383,1,6730,False,
-house,86,4,1723945,Elwood,0.995,2229,2,2218,False,
+house,86,3,1712476,Channahon,0.5029,13383,1,6730,False,best
+house,86,4,1723945,Elwood,0.995,2229,2,2218,False,best
 house,86,5,1764902,Rockdale,1.0,2012,2,2012,False,
 house,86,6,1782101,Wilmington,0.3212,5664,2,1819,False,
 house,86,7,1749607,Minooka,0.1094,12758,2,1396,False,
@@ -2435,8 +2435,8 @@ house,86,8,1707770,Braidwood,0.212,6194,2,1313,False,
 house,86,9,1719837,Diamond,0.3669,2640,2,969,False,
 house,87,1,1750621,Morton,0.9272,17117,1,15871,True,office
 house,87,2,1743536,Lincoln,1.0,13288,1,13288,False,best
-house,87,3,1715001,Clinton,1.0,7004,1,7004,False,
-house,87,4,1758447,Pekin,0.2641,31731,2,8380,False,
+house,87,3,1715001,Clinton,1.0,7004,1,7004,False,best
+house,87,4,1758447,Pekin,0.2641,31731,2,8380,False,best
 house,87,5,1722164,East Peoria,0.2758,22484,2,6201,False,
 house,87,6,1717549,Creve Coeur,0.8047,4934,2,3970,False,
 house,87,7,1775965,Tremont,1.0,2277,2,2277,False,
@@ -2474,9 +2474,9 @@ house,87,38,1730445,Goodfield,0.2407,936,2,225,False,
 house,87,39,1708472,Broadwell,1.0,136,2,136,False,
 house,87,40,1716119,Congerville,0.022,497,2,11,False,
 house,88,1,1706613,Bloomington,0.5092,78680,1,40064,False,best
-house,88,2,1750244,Monticello,1.0,5941,1,5941,False,
+house,88,2,1750244,Monticello,1.0,5941,1,5941,False,best
 house,88,3,1718823,Decatur,0.3367,70522,2,23745,True,office
-house,88,4,1727091,Forsyth,0.9998,3734,2,3733,False,
+house,88,4,1727091,Forsyth,0.9998,3734,2,3733,False,best
 house,88,5,1742971,Le Roy,1.0,3512,2,3512,False,
 house,88,6,1725414,Farmer City,1.0,1828,2,1828,False,
 house,88,7,1705144,Bement,1.0,1484,2,1484,False,
@@ -2503,8 +2503,8 @@ house,88,27,1701361,Anchor,1.0,163,2,163,False,
 house,88,28,1719798,De Witt,1.0,160,2,160,False,
 house,88,29,1716210,Cooksville,1.0,157,2,157,False,
 house,89,1,1728898,Genoa,1.0,5298,1,5298,False,best
-house,89,2,1765000,Rockford,0.0462,148655,2,6868,False,
-house,89,3,1710240,Byron,1.0,3784,2,3784,False,
+house,89,2,1765000,Rockford,0.0462,148655,2,6868,False,best
+house,89,3,1710240,Byron,1.0,3784,2,3784,False,best
 house,89,4,1756484,Oregon,1.0,3604,2,3604,False,
 house,89,5,1728300,Galena,1.0,3308,2,3308,False,
 house,89,6,1782491,Winnebago,1.0,2940,2,2940,False,
@@ -2545,8 +2545,8 @@ house,89,40,1753195,Nora,1.0,107,2,107,False,
 house,89,41,1700295,Adeline,1.0,78,2,78,False,
 house,90,1,1727884,Freeport,1.0,23973,1,23973,False,best
 house,90,2,1745726,Machesney Park,0.9571,22950,1,21965,True,office
-house,90,3,1765611,Roscoe,1.0,10983,1,10983,False,
-house,90,4,1770590,South Beloit,1.0,7989,1,7989,False,
+house,90,3,1765611,Roscoe,1.0,10983,1,10983,False,best
+house,90,4,1770590,South Beloit,1.0,7989,1,7989,False,best
 house,90,5,1765156,Rockton,1.0,7863,1,7863,False,
 house,90,6,1745031,Loves Park,0.4769,23397,2,11158,False,
 house,90,7,1765000,Rockford,0.0402,148655,2,5976,False,
@@ -2560,8 +2560,8 @@ house,90,14,1756341,Orangeville,0.2278,766,2,174,False,
 house,90,15,1764044,Ridott,1.0,124,2,124,False,
 house,90,16,1710422,Caledonia,0.2227,183,2,41,False,
 house,91,1,1753234,Normal,0.6858,52736,1,36166,False,best
-house,91,2,1722164,East Peoria,0.6186,22484,1,13909,False,
-house,91,3,1704039,Bartonville,0.7994,5945,1,4752,False,
+house,91,2,1722164,East Peoria,0.6186,22484,1,13909,False,best
+house,91,3,1704039,Bartonville,0.7994,5945,1,4752,False,best
 house,91,4,1706613,Bloomington,0.4537,78680,2,35697,True,office
 house,91,5,1779033,Washington,0.1625,16071,2,2612,False,
 house,91,6,1750621,Morton,0.0728,17117,2,1246,False,
@@ -2573,13 +2573,13 @@ house,91,11,1716119,Congerville,0.978,497,2,486,False,
 house,91,12,1723737,El Paso,0.0559,2756,2,154,False,
 house,92,1,1759000,Peoria,0.6775,113150,1,76659,True,office
 house,92,2,1759026,Peoria Heights,0.9344,5908,1,5520,False,best
-house,92,3,1780736,West Peoria,0.8316,4263,2,3545,False,
-house,92,4,1704039,Bartonville,0.0964,5945,2,573,False,
+house,92,3,1780736,West Peoria,0.8316,4263,2,3545,False,best
+house,92,4,1704039,Bartonville,0.0964,5945,2,573,False,best
 house,92,5,1704871,Bellevue,0.0963,1878,2,181,False,
 house,93,1,1758447,Pekin,0.7359,31731,1,23351,True,office
 house,93,2,1739727,Kewanee,1.0,12509,1,12509,False,best
-house,93,3,1759000,Peoria,0.0597,113150,2,6755,False,
-house,93,4,1728430,Galva,1.0,2470,2,2470,False,
+house,93,3,1759000,Peoria,0.0597,113150,2,6755,False,best
+house,93,4,1728430,Galva,1.0,2470,2,2470,False,best
 house,93,5,1710643,Cambridge,1.0,2086,2,2086,False,
 house,93,6,1723698,Elmwood,1.0,2058,2,2058,False,
 house,93,7,1704871,Bellevue,0.9037,1878,2,1697,False,
@@ -2614,8 +2614,8 @@ house,93,35,1740676,La Fayette,1.0,160,2,160,False,
 house,93,36,1714923,Cleveland,0.7898,163,2,129,False,
 house,93,37,1706171,Bishop Hill,1.0,113,2,113,False,
 house,94,1,1711007,Canton,0.9189,13242,1,12168,False,best
-house,94,2,1700646,Aledo,1.0,3633,2,3633,False,
-house,94,3,1733513,Havana,1.0,2963,2,2963,False,
+house,94,2,1700646,Aledo,1.0,3633,2,3633,False,best
+house,94,3,1733513,Havana,1.0,2963,2,2963,False,best
 house,94,4,1700113,Abingdon,1.0,2951,2,2951,False,
 house,94,5,1732434,Hamilton,1.0,2753,2,2753,False,
 house,94,6,1711527,Carthage,1.0,2490,2,2490,False,
@@ -2693,8 +2693,8 @@ house,94,77,1705274,Bentley,1.0,30,2,30,False,
 house,94,78,1731991,Gulfport,1.0,,2,0,False,
 house,95,1,1772000,Springfield,0.7734,114394,1,88472,False,best
 house,95,2,1712684,Chatham,0.7577,14377,1,10893,False,best
-house,95,3,1764759,Rochester,1.0,3863,2,3863,False,
-house,95,4,1770759,Southern View,1.0,1596,2,1596,False,
+house,95,3,1764759,Rochester,1.0,3863,2,3863,False,best
+house,95,4,1770759,Southern View,1.0,1596,2,1596,False,best
 house,95,5,1730835,Grandview,1.0,1405,2,1405,False,
 house,95,6,1739909,Kincaid,1.0,1349,2,1349,False,
 house,95,7,1722645,Edinburg,1.0,1085,2,1085,False,
@@ -2708,27 +2708,27 @@ house,95,14,1738349,Jeisyville,1.0,102,2,102,False,
 house,95,15,1718147,Curran,0.3281,213,2,70,False,
 house,96,1,1718823,Decatur,0.6347,70522,1,44760,True,office
 house,96,2,1772000,Springfield,0.1899,114394,2,21723,False,best
-house,96,3,1738375,Jerome,1.0,1692,2,1692,False,
-house,96,4,1742769,Leland Grove,0.4756,1454,2,692,False,
+house,96,3,1738375,Jerome,1.0,1692,2,1692,False,best
+house,96,4,1742769,Leland Grove,0.4756,1454,2,692,False,best
 house,96,5,1733227,Harristown,0.3624,1310,2,475,False,
 house,96,6,1764486,Riverton,0.1309,3532,2,462,False,
 house,96,7,1750829,Mount Auburn,1.0,452,2,452,False,
 house,97,1,1760287,Plainfield,0.754,44762,1,33751,True,office
 house,97,2,1738570,Joliet,0.1982,150362,2,29802,False,best
-house,97,3,1751622,Naperville,0.0528,149540,2,7896,False,
-house,97,4,1769758,Shorewood,0.327,18186,2,5947,False,
+house,97,3,1751622,Naperville,0.0528,149540,2,7896,False,best
+house,97,4,1769758,Shorewood,0.327,18186,2,5947,False,best
 house,97,5,1703012,Aurora,0.0201,180542,2,3629,False,
 house,97,6,1707133,Bolingbrook,0.0227,73922,2,1678,False,
 house,97,7,1756887,Oswego,0.0431,34585,2,1491,False,
 house,98,1,1717458,Crest Hill,0.5804,20459,1,11874,False,best
-house,98,2,1707133,Bolingbrook,0.4136,73922,2,30574,False,
-house,98,3,1738570,Joliet,0.122,150362,2,18344,False,
+house,98,2,1707133,Bolingbrook,0.4136,73922,2,30574,False,best
+house,98,3,1738570,Joliet,0.122,150362,2,18344,False,best
 house,98,4,1765442,Romeoville,0.2174,39863,2,8666,True,office
 house,98,5,1760287,Plainfield,0.0938,44762,2,4199,False,
 house,99,1,1762367,Quincy,1.0,39463,1,39463,True,office
 house,99,2,1738115,Jacksonville,1.0,17616,1,17616,False,best
-house,99,3,1704351,Beardstown,1.0,5951,1,5951,False,
-house,99,4,1770889,South Jacksonville,1.0,3302,2,3302,False,
+house,99,3,1704351,Beardstown,1.0,5951,1,5951,False,best
+house,99,4,1770889,South Jacksonville,1.0,3302,2,3302,False,best
 house,99,5,1766339,Rushville,1.0,3005,2,3005,False,
 house,99,6,1751154,Mount Sterling,1.0,2006,2,2006,False,
 house,99,7,1778201,Virginia,1.0,1514,2,1514,False,
@@ -2751,8 +2751,8 @@ house,99,23,1764174,Ripley,1.0,53,2,53,False,
 house,99,24,1730159,Golden,0.0297,648,2,19,False,
 house,100,1,1730094,Godfrey,0.8497,17825,1,15146,False,best
 house,100,2,1738414,Jerseyville,1.0,8337,1,8337,True,office
-house,100,3,1760222,Pittsfield,1.0,4206,2,4206,False,
-house,100,4,1711462,Carrollton,1.0,2485,2,2485,False,
+house,100,3,1760222,Pittsfield,1.0,4206,2,4206,False,best
+house,100,4,1711462,Carrollton,1.0,2485,2,2485,False,best
 house,100,5,1781256,White Hall,1.0,2295,2,2295,False,
 house,100,6,1708264,Brighton,1.0,2221,2,2221,False,
 house,100,7,1709577,Bunker Hill,1.0,1630,2,1630,False,
@@ -2817,8 +2817,8 @@ house,100,65,1726480,Florence,1.0,17,2,17,False,
 house,100,66,1777187,Valley City,1.0,14,2,14,False,
 house,101,1,1747553,Mattoon,1.0,16870,1,16870,False,best
 house,101,2,1712567,Charleston,0.9652,17286,1,16684,True,office
-house,101,3,1746136,Mahomet,1.0,9434,1,9434,False,
-house,101,4,1736061,Hoopeston,1.0,4915,2,4915,False,
+house,101,3,1746136,Mahomet,1.0,9434,1,9434,False,best
+house,101,4,1736061,Hoopeston,1.0,4915,2,4915,False,best
 house,101,5,1776407,Tuscola,1.0,4636,2,4636,False,
 house,101,6,1775614,Tolono,0.9246,3604,2,3332,False,
 house,101,7,1701881,Arcola,1.0,2927,2,2927,False,
@@ -2850,8 +2850,8 @@ house,101,32,1744602,Longview,1.0,112,2,112,False,
 house,101,33,1726662,Foosland,1.0,75,2,75,False,
 house,102,1,1757628,Paris,1.0,8291,1,8291,True,office
 house,102,2,1764707,Robinson,1.0,7150,1,7150,False,best
-house,102,3,1742405,Lawrenceville,1.0,4164,2,4164,False,
-house,102,4,1747163,Marshall,1.0,3947,2,3947,False,
+house,102,3,1742405,Lawrenceville,1.0,4164,2,4164,False,best
+house,102,4,1747163,Marshall,1.0,3947,2,3947,False,best
 house,102,5,1766950,St. Joseph,0.9734,3810,2,3709,False,
 house,102,6,1728963,Georgetown,1.0,3143,2,3143,False,
 house,102,7,1752844,Newton,1.0,2777,2,2777,False,
@@ -2901,8 +2901,8 @@ house,103,1,1712385,Champaign,0.6424,88302,1,56725,False,best
 house,103,2,1777005,Urbana,0.6733,38336,1,25812,True,office
 house,104,1,1718563,Danville,1.0,29204,1,29204,True,office
 house,104,2,1762783,Rantoul,1.0,12371,1,12371,False,best
-house,104,3,1767860,Savoy,1.0,8857,1,8857,False,
-house,104,4,1712385,Champaign,0.3576,88302,2,31577,False,
+house,104,3,1767860,Savoy,1.0,8857,1,8857,False,best
+house,104,4,1712385,Champaign,0.3576,88302,2,31577,False,best
 house,104,5,1777005,Urbana,0.3267,38336,2,12524,False,
 house,104,6,1780931,Westville,1.0,3167,2,3167,False,
 house,104,7,1775276,Tilton,0.9987,2660,2,2657,False,
@@ -2917,8 +2917,8 @@ house,104,15,1766950,St. Joseph,0.0266,3810,2,101,False,
 house,104,16,1755275,Ogden,0.0667,729,2,49,False,
 house,105,1,1779033,Washington,0.8375,16071,1,13459,False,best
 house,105,2,1761015,Pontiac,0.9839,11150,1,10970,True,office
-house,105,3,1724543,Eureka,1.0,5227,1,5227,False,
-house,105,4,1753234,Normal,0.2819,52736,2,14866,False,
+house,105,3,1724543,Eureka,1.0,5227,1,5227,False,best
+house,105,4,1753234,Normal,0.2819,52736,2,14866,False,best
 house,105,5,1748606,Metamora,1.0,3904,2,3904,False,
 house,105,6,1706613,Bloomington,0.037,78680,2,2911,False,
 house,105,7,1723737,El Paso,0.9441,2756,2,2602,False,
@@ -2962,8 +2962,8 @@ house,105,44,1742171,La Rose,1.0,98,2,98,False,
 house,105,45,1729080,Germantown Hills,0.021,3412,2,72,False,
 house,105,46,1757524,Panola,1.0,47,2,47,False,
 house,106,1,1773170,Streator,0.879,12500,1,10988,False,best
-house,106,2,1715170,Coal City,0.9919,5705,1,5659,False,
-house,106,3,1712476,Channahon,0.4113,13383,2,5504,False,
+house,106,2,1715170,Coal City,0.9919,5705,1,5659,False,best
+house,106,3,1712476,Channahon,0.4113,13383,2,5504,False,best
 house,106,4,1779228,Watseka,1.0,4679,2,4679,True,office
 house,106,5,1758239,Paxton,1.0,4450,2,4450,False,
 house,106,6,1721358,Dwight,1.0,4032,2,4032,False,
@@ -3025,8 +3025,8 @@ house,106,61,1707640,Braceville,0.0478,724,2,35,False,
 house,106,62,1763056,Reddick,0.1594,199,2,32,False,
 house,107,1,1722736,Effingham,1.0,12252,1,12252,True,office
 house,107,2,1774574,Taylorville,1.0,10506,1,10506,False,best
-house,107,3,1757472,Pana,1.0,5199,1,5199,False,
-house,107,4,1751206,Mount Zion,0.8439,6019,1,5079,False,
+house,107,3,1757472,Pana,1.0,5199,1,5199,False,best
+house,107,4,1751206,Mount Zion,0.8439,6019,1,5079,False,best
 house,107,5,1769186,Shelbyville,1.0,4674,2,4674,False,
 house,107,6,1773495,Sullivan,1.0,4413,2,4413,False,
 house,107,7,1701049,Altamont,1.0,2216,2,2216,False,
@@ -3062,8 +3062,8 @@ house,107,36,1755418,Ohlman,1.0,109,2,109,False,
 house,107,37,1779826,Wenonah,1.0,32,2,32,False,
 house,108,1,1743965,Litchfield,1.0,6605,1,6605,False,best
 house,108,2,1735047,Hillsboro,1.0,5902,1,5902,False,best
-house,108,3,1711202,Carlinville,1.0,5710,1,5710,False,
-house,108,4,1772403,Staunton,1.0,5054,1,5054,False,
+house,108,3,1711202,Carlinville,1.0,5710,1,5710,False,best
+house,108,4,1772403,Staunton,1.0,5054,1,5054,False,best
 house,108,5,1702921,Auburn,1.0,4574,2,4574,False,
 house,108,6,1769342,Sherman,0.9393,4673,2,4389,False,
 house,108,7,1772000,Springfield,0.0367,114394,2,4198,False,
@@ -3117,8 +3117,8 @@ house,108,54,1721410,Eagarville,1.0,114,2,114,False,
 house,108,55,1778656,Walshville,1.0,61,2,61,False,
 house,109,1,1776199,Troy,1.0,10960,1,10960,False,best
 house,109,2,1734670,Highland,1.0,9991,1,9991,True,office
-house,109,3,1731589,Greenville,0.7637,7083,1,5409,False,
-house,109,4,1707913,Breese,1.0,4641,2,4641,False,
+house,109,3,1731589,Greenville,0.7637,7083,1,5409,False,best
+house,109,4,1707913,Breese,1.0,4641,2,4641,False,best
 house,109,5,1755249,O'Fallon,0.1228,32289,2,3965,False,
 house,109,6,1751700,Nashville,1.0,3105,2,3105,False,
 house,109,7,1722697,Edwardsville,0.1046,26808,2,2804,False,
@@ -3161,8 +3161,8 @@ house,109,43,1755717,Old Ripley,1.0,82,2,82,False,
 house,109,44,1720318,Donnellson,0.0995,153,2,15,False,
 house,110,1,1712164,Centralia,0.9635,12182,1,11737,False,best
 house,110,2,1755912,Olney,1.0,8701,1,8701,False,best
-house,110,3,1777317,Vandalia,1.0,7458,1,7458,False,
-house,110,4,1767236,Salem,1.0,7282,1,7282,False,
+house,110,3,1777317,Vandalia,1.0,7458,1,7458,False,best
+house,110,4,1767236,Salem,1.0,7282,1,7282,False,best
 house,110,5,1726454,Flora,1.0,4803,2,4803,False,
 house,110,6,1711228,Carlyle,0.9906,3253,2,3222,False,
 house,110,7,1731589,Greenville,0.2363,7083,2,1674,False,
@@ -3205,8 +3205,8 @@ house,110,43,1766599,Sailor Springs,1.0,89,2,89,False,
 house,110,44,1706028,Bingham,1.0,60,2,60,False,
 house,111,1,1701114,Alton,0.9841,25676,1,25268,True,office
 house,111,2,1730926,Granite City,0.7593,27549,1,20918,False,best
-house,111,3,1783271,Wood River,1.0,10464,1,10464,False,
-house,111,4,1729639,Glen Carbon,0.6635,13842,1,9184,False,
+house,111,3,1783271,Wood River,1.0,10464,1,10464,False,best
+house,111,4,1729639,Glen Carbon,0.6635,13842,1,9184,False,best
 house,111,5,1705599,Bethalto,0.8699,9310,1,8099,False,
 house,111,6,1721553,East Alton,1.0,5786,1,5786,False,
 house,111,7,1722697,Edwardsville,0.2736,26808,2,7335,False,
@@ -3220,8 +3220,8 @@ house,111,14,1766131,Roxana,0.7018,1454,2,1020,False,
 house,111,15,1715599,Collinsville,0.0228,24366,2,556,False,
 house,112,1,1715599,Collinsville,0.9684,24366,1,23596,True,office
 house,112,2,1722697,Edwardsville,0.6218,26808,1,16669,False,best
-house,112,3,1725141,Fairview Heights,0.7081,16706,1,11830,False,
-house,112,4,1747397,Maryville,0.6742,8221,1,5543,False,
+house,112,3,1725141,Fairview Heights,0.7081,16706,1,11830,False,best
+house,112,4,1747397,Maryville,0.6742,8221,1,5543,False,best
 house,112,5,1761067,Pontoon Beach,0.5079,5876,1,2984,False,
 house,112,6,1755249,O'Fallon,0.2589,32289,2,8360,False,
 house,112,7,1730926,Granite City,0.2407,27549,2,6631,False,
@@ -3234,8 +3234,8 @@ house,112,13,1774119,Swansea,0.046,14386,2,662,False,
 house,112,14,1766131,Roxana,0.2982,1454,2,434,False,
 house,113,1,1704845,Belleville,0.8611,42404,1,36514,True,office
 house,113,2,1774119,Swansea,0.954,14386,1,13724,False,best
-house,113,3,1769524,Shiloh,0.8788,14098,1,12389,False,
-house,113,4,1755249,O'Fallon,0.156,32289,2,5037,False,
+house,113,3,1769524,Shiloh,0.8788,14098,1,12389,False,best
+house,113,4,1755249,O'Fallon,0.156,32289,2,5037,False,best
 house,113,5,1725141,Fairview Heights,0.2912,16706,2,4865,False,
 house,113,6,1779085,Washington Park,0.7636,2592,2,1979,False,
 house,113,7,1724933,Fairmont City,0.6664,2265,2,1509,False,
@@ -3246,8 +3246,8 @@ house,113,11,1745993,Madison,0.1852,3171,2,587,False,
 house,113,12,1770252,Smithton,0.1002,4006,2,401,False,
 house,113,13,1722255,East St. Louis,0.0205,18469,2,379,False,
 house,114,1,1722255,East St. Louis,0.9795,18469,1,18090,False,best
-house,114,2,1747423,Mascoutah,1.0,8754,1,8754,False,
-house,114,3,1755249,O'Fallon,0.4623,32289,2,14927,False,
+house,114,2,1747423,Mascoutah,1.0,8754,1,8754,False,best
+house,114,3,1755249,O'Fallon,0.4623,32289,2,14927,False,best
 house,114,4,1704845,Belleville,0.1389,42404,2,5890,False,
 house,114,5,1727806,Freeburg,1.0,4582,2,4582,False,
 house,114,6,1742496,Lebanon,0.9251,4691,2,4340,False,
@@ -3265,8 +3265,8 @@ house,114,17,1767756,Sauget,1.0,141,2,141,False,
 house,114,18,1766989,St. Libory,0.0717,628,2,45,False,
 house,114,19,1710373,Cahokia Heights,0.9976,,2,0,True,office
 house,115,1,1779150,Waterloo,1.0,11013,1,11013,False,best
-house,115,2,1715833,Columbia,0.9137,10999,1,10050,False,
-house,115,3,1751453,Murphysboro,0.9647,7093,1,6843,False,
+house,115,2,1715833,Columbia,0.9137,10999,1,10050,False,best
+house,115,3,1751453,Murphysboro,0.9647,7093,1,6843,False,best
 house,115,4,1713139,Chester,1.0,6814,1,6814,False,
 house,115,5,1721267,Du Quoin,1.0,5827,1,5827,False,
 house,115,6,1759884,Pinckneyville,1.0,5066,1,5066,False,
@@ -3303,9 +3303,9 @@ house,115,36,1728170,Fults,1.0,28,2,28,False,
 house,115,37,1739129,Kaskaskia,1.0,21,2,21,False,
 house,115,38,1752116,New Athens,0.01,1955,2,20,False,
 house,116,1,1751180,Mount Vernon,1.0,14600,1,14600,False,best
-house,116,2,1750868,Mount Carmel,1.0,7015,1,7015,False,
+house,116,2,1750868,Mount Carmel,1.0,7015,1,7015,False,best
 house,116,3,1705300,Benton,1.0,6709,1,6709,True,office
-house,116,4,1724816,Fairfield,1.0,4883,2,4883,False,
+house,116,4,1724816,Fairfield,1.0,4883,2,4883,False,best
 house,116,5,1711293,Carmi,1.0,4865,2,4865,False,
 house,116,6,1714286,Christopher,1.0,2697,2,2697,False,
 house,116,7,1745824,McLeansboro,1.0,2675,2,2675,False,
@@ -3351,8 +3351,8 @@ house,116,46,1759520,Phillipstown,1.0,34,2,34,False,
 house,116,47,1745642,Macedonia,1.0,30,2,30,False,
 house,117,1,1733136,Harrisburg,1.0,8219,1,8219,True,office
 house,117,2,1780333,West Frankfort,1.0,7275,1,7275,False,best
-house,117,3,1748645,Metropolis,1.0,5969,1,5969,False,
-house,117,4,1723009,Eldorado,1.0,3743,2,3743,False,
+house,117,3,1748645,Metropolis,1.0,5969,1,5969,False,best
+house,117,4,1723009,Eldorado,1.0,3743,2,3743,False,best
 house,117,5,1738544,Johnston City,1.0,3384,2,3384,False,
 house,117,6,1746916,Marion,0.1699,16855,2,2864,False,
 house,117,7,1711397,Carrier Mills,1.0,1672,2,1672,False,
@@ -3395,8 +3395,8 @@ house,117,43,1738778,Junction,1.0,56,2,56,False,
 house,117,44,1770005,Simpson,1.0,44,2,44,False,
 house,118,1,1711163,Carbondale,1.0,21857,1,21857,False,best
 house,118,2,1746916,Marion,0.8301,16855,1,13991,True,office
-house,118,3,1734358,Herrin,1.0,12352,1,12352,False,
-house,118,4,1711514,Carterville,1.0,5848,1,5848,False,
+house,118,3,1734358,Herrin,1.0,12352,1,12352,False,best
+house,118,4,1711514,Carterville,1.0,5848,1,5848,False,best
 house,118,5,1701543,Anna,1.0,4303,2,4303,False,
 house,118,6,1710383,Cairo,1.0,1733,2,1733,False,
 house,118,7,1738635,Jonesboro,1.0,1711,2,1711,False,

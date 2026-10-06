@@ -400,7 +400,7 @@ function renderPanel() {
         <b id="district-net">${row.est_net_change < 0 ? '\u2212' : '+'}${roughly(Math.abs(row.est_net_change))}</b>
         units from 2010 to 2020 <span class="est-tag">estimate</span></p>
       <p class="fineprint">Each municipality's permits are counted in proportion to the share of its land inside
-        the district, which assumes they are spread evenly across the town. Permits filed by the county for
+        the district, which assumes they are spread evenly across the municipality. Permits filed by the county for
         unincorporated land are not included. The census change is weighted the same way, covers 2010–2020
         only, and counts every home that appeared or disappeared, so it is not a count of homes built.
         Illinois as a whole permitted ${fmtPct(META.il_pct_growth)} of its 2010 housing stock over
@@ -572,7 +572,7 @@ function renderLegend() {
     `U.S. Census Building Permits Survey; 2010 Decennial Census; Open States · built ${META.build_date}`;
   document.getElementById('footer-districts').textContent =
     `A municipality is listed under a district when at least ${Math.round(DIST.share_min * 100)}% of its land `
-    + `falls inside it, so a town split between districts appears under each. District boundaries are the `
+    + `falls inside it, so a municipality split between districts appears under each. District boundaries are the `
     + `Census ${DIST.boundary_vintage} files; members are the current Open States list, retrieved `
     + `${DIST.legislators_as_of || 'on an unknown date'}.`;
 }

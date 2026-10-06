@@ -1054,7 +1054,8 @@ def run_checks(sync_playwright, base, built, target, console_errors):
         def s16():
             R.out("  Not in SPEC.md §7. Added with the printable district sheet (CLAUDE.md")
             R.out("  deviation 40): the button fills one Letter page with the member, the")
-            R.out("  two towns the build chose, a map and a QR code, and only that prints.")
+            R.out("  municipalities the build chose (up to four, in a 2 x 2 grid since")
+            R.out("  deviation 42), a map and a QR code, and only that prints.")
             errs: list[str] = []
             p7 = context.new_page()
             p7.on("console", lambda m: errs.append(f"console.{m.type}: {m.text}")
@@ -1075,6 +1076,9 @@ def run_checks(sync_playwright, base, built, target, console_errors):
                     towns: [...el.querySelectorAll('.sheet-town h2')].map(h => h.textContent),
                     imgs: [...el.querySelectorAll('img')].map(i => i.naturalWidth > 0),
                     marks: el.querySelectorAll('.sheet-map circle').length,
+                    nums: [...el.querySelectorAll('.sheet-town .sheet-num')].map(n => n.textContent),
+                    labels: [...el.querySelectorAll('.sheet-town')].some(e =>
+                        /top-ranked|district office/i.test(e.innerText)),
                     on: document.body.classList.contains('print-sheet-on')
                 };
             }""")
@@ -1086,6 +1090,17 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             })""")
             foot = p7.evaluate("""() => { const f = document.querySelector('#print-sheet .sheet-foot');
                 return !!f && getComputedStyle(f).display !== 'none' && f.innerText.includes('Sources:'); }""")
+            # Austin asked for a grid reading 1 2 / 3 4: 1 and 3 share a column,
+            # 1 and 2 a row, and 3 sits below 1.
+            grid = p7.evaluate("""() => {
+                const b = [...document.querySelectorAll('#print-sheet .sheet-town')]
+                    .map(e => e.getBoundingClientRect());
+                if (b.length !== 4) return false;
+                const near = (a, c) => Math.abs(a - c) < 2;
+                return near(b[0].left, b[2].left) && near(b[1].left, b[3].left)
+                    && near(b[0].top, b[1].top) && near(b[2].top, b[3].top)
+                    && b[1].left > b[0].right - 2 && b[2].top >= b[0].bottom - 2;
+            }""")
             pdf = p7.pdf(format="Letter", prefer_css_page_size=True, print_background=True)
             pages = len(re.findall(rb"/Type\s*/Page[^s]", pdf))
             # A smaller printable area than Letter at the sheet's own margins: A4
@@ -1129,22 +1144,27 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             p7.emulate_media(media="screen")
             R.out(f"    menu print of Senate 28 (no button): sheet {menu['sheet']}, panel "
                   f"{menu['panel']}, towns {menu['towns']}, fade {menu['fade']}, pages {menu_pages}")
-            R.out(f"    House 69 sheet towns: {got['towns']}; images loaded {got['imgs']}; "
-                  f"map markers {got['marks']}")
+            R.out(f"    House 69 sheet municipalities: {got['towns']}; numbered {got['nums']}; "
+                  f"images loaded {got['imgs']}; map markers {got['marks']}; 2 x 2 grid {grid}")
             R.out(f"    in print: sheet / panel / map visible = {vis};  PDF pages {pages} "
                   f"(Letter), {pages_small} (A4, 3/4-inch margins), {pages_big} (Letter at 1.2x)")
             checks = {
                 "the button opens the print dialog once": True,
                 "the member is on the sheet": "Joe Sosnowski" in got["text"],
-                "Sosnowski's sheet shows the two best towns": got["towns"] == ["Huntley", "Harvard"],
+                "Sosnowski's sheet shows the four best municipalities": got["towns"] == [
+                    "Huntley", "Harvard", "Marengo", "Poplar Grove"],
+                "they are laid out 1 2 / 3 4": grid,
+                "each is numbered, with no role label": (
+                    got["nums"] == ["1", "2", "3", "4"] and not got["labels"]),
                 "the logo and QR code load": len(got["imgs"]) == 2 and all(got["imgs"]),
-                "both towns are marked on the map": got["marks"] == 2,
+                "all four are marked on the map": got["marks"] == 4,
                 "only the sheet prints": vis == [True, False, False],
                 "the caveat and sources print with it": foot,
                 "it fits on one Letter page": pages == 1,
                 "a print from the browser menu is the sheet too": (
                     menu["sheet"] and not menu["panel"] and menu["member"]
-                    and menu["towns"] == ["Des Plaines", "Schaumburg"] and menu_pages == 1),
+                    and menu["towns"] == ["Des Plaines", "Schaumburg", "Park Ridge",
+                                          "Elk Grove Village"] and menu_pages == 1),
                 "the sheet's map fades everything outside the district": menu["fade"],
                 "it still fits one page with a smaller printable area": pages_small == 1,
                 "it still fits one page printed 20% larger, as on an iPhone": pages_big == 1,
@@ -1154,7 +1174,7 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             for k, val in checks.items():
                 R.out(f"    {'ok  ' if val else 'FAIL'} {k}")
             return all(checks.values())
-        R.run(16, "The printable district sheet: the chosen towns, a map and a QR code, "
+        R.run(16, "The printable district sheet: the chosen municipalities, a map and a QR code, "
                   "and only the sheet prints, on one page", s16)
 
         # ---------------- B ----------------

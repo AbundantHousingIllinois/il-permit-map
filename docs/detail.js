@@ -302,7 +302,7 @@ async function renderPlaceDetail(geoid, title) {
     ${shard.zero_mf ? `<div class="flag"><strong>No 5+ unit buildings.</strong> No units in
       buildings of five or more have been permitted here since ${shard.first_metric_year || META.metric_start}.${
         shard.mf34_total
-          ? ` ${fmtInt(shard.mf34_total)} unit${shard.mf34_total === 1 ? '' : 's'} in 3- and 4-flats ${shard.mf34_total === 1 ? 'was' : 'were'} permitted over the same period — this measure counts those separately, so a town can appear here and still have permitted a small apartment building.`
+          ? ` ${fmtInt(shard.mf34_total)} unit${shard.mf34_total === 1 ? '' : 's'} in 3- and 4-flats ${shard.mf34_total === 1 ? 'was' : 'were'} permitted over the same period — this measure counts those separately, so a municipality can appear here and still have permitted a small apartment building.`
           : ' No 3- or 4-flats either.'}${
         shard.first_metric_year && shard.first_metric_year > META.metric_start
           ? ` This place's permit office first reported to the Census in ${shard.first_metric_year}, so there is no record for ${META.metric_start}–${shard.first_metric_year - 1}.`
@@ -403,7 +403,7 @@ function builtSection(shard) {
   const caveat = `These do not have to match. Demolitions and conversions lower the count but `
     + `not the permit total; not every permitted unit gets built, and one permitted late in `
     + `${y1} may not be standing on April 1, ${y1 + 1}; annexation moves boundaries between `
-    + `the two counts; and each count has its own error. A large gap is worth asking a town about, `
+    + `the two counts; and each count has its own error. A large gap is worth asking a municipality about, `
     + `but on its own it proves nothing.`;
   /* The change in the count is a fact whenever both counts exist, whatever the
    * permit office filed, so it is shown even when the comparison is withheld.

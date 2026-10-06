@@ -1270,14 +1270,16 @@ def cH():
     return ok
 
 
-@check("I", "Every district's printable sheet features the towns Austin's rule picks, "
+@check("I", "Every district's printable sheet features the municipalities Austin's rule picks, "
             "and the reference CSVs say why", gating=True)
 def cI():
     R.out("  Not in SPEC.md §7. Added with the printable district sheet (CLAUDE.md")
-    R.out("  deviation 40). The rule is re-implemented here from its description,")
+    R.out("  deviation 40; up to four since deviation 42). The rule is re-implemented")
+    R.out("  here from its description,")
     R.out("  not imported from district_towns.py, so a bug there cannot pass itself.")
     R.out("")
     import html as H
+    SHEET_N = 4   # Austin, 2026-10-05: up to four. Restated, not imported.
     D = json.loads((L.DOCS_DATA / "districts.json").read_text(encoding="utf-8"))
     ok = True
     want_sheet, want_rank = [], 0
@@ -1297,7 +1299,7 @@ def cI():
                 -round(p["share"] * (p["pop2020"] or 0)), -p["share"], p["name"]))
             office = next((p for p in muni if city and p["name"].lower() == city), None)
             picks = ([office] if office else []) + [p for p in ranked if p is not office]
-            want = [p["geoid"] for p in picks[:2]]
+            want = [p["geoid"] for p in picks[:SHEET_N]]
             got = [t["geoid"] for t in r["sheet"]["towns"]]
             if got != want:
                 bad.append((ch, d, got, want))
@@ -1307,12 +1309,16 @@ def cI():
                     if t["geoid"] in ids and next(p for p in r["places"]
                                                   if p["geoid"] == t["geoid"])["namelsad"].endswith(" CDP")]
             outside += [(ch, d, t["name"]) for t in r["sheet"]["towns"] if t["geoid"] not in ids]
-            want_sheet.append((ch, str(d), *(got + ["", ""])[:2]))
+            want_sheet.append((ch, str(d), *(got + [""] * SHEET_N)[:SHEET_N]))
             qr = L.DOCS / ch / str(d) / "qr.svg"
             title = re.search(r"<title>([^<]*)</title>", qr.read_text(encoding="utf-8")) if qr.exists() else None
             if not title or H.unescape(title[1]) != f"{L.SITE_URL}{ch}/{d}/":
                 qr_bad.append((ch, d))
-    R.out(f"  I.1  districts whose two towns differ from the rule recomputed here: {len(bad)}")
+    R.out(f"  I.1  districts whose municipalities differ from the rule recomputed here: {len(bad)}")
+    sizes = collections.Counter(len(r["sheet"]["towns"]) for ch in L.CHAMBERS
+                    for r in D["chambers"][ch]["districts"])
+    R.out(f"       municipalities per sheet: "
+          + ", ".join(f"{k}: {v} districts" for k, v in sorted(sizes.items())))
     for b in bad[:5]:
         R.out(f"         {b}")
     R.out(f"  I.2  featured towns that are CDPs: {len(cdp)};  not in the district: {len(outside)}")
@@ -1321,12 +1327,14 @@ def cI():
     named_ok = all(status_of.get(k) == v for k, v in named.items())
     roles = {k: [t["role"] for t in D["chambers"][k[0]]["districts"][k[1] - 1]["sheet"]["towns"]]
              for k in named}
-    named_ok &= all(roles[k] == ["best", "best"] for k in named if named[k] != "in district")
-    named_ok &= roles[("senate", 28)][0] == "office"
+    named_ok &= all(roles[k] == ["best"] * SHEET_N for k in named if named[k] != "in district")
+    named_ok &= roles[("senate", 28)] == ["office"] + ["best"] * (SHEET_N - 1)
     R.out(f"  I.3  named cases (Sosnowski House 69 outside, Cochran 55 and DeLaRosa 42 "
-          f"capitol office, each with two best towns; Senate 28 office first): {named_ok}")
+          f"capitol office, each with {SHEET_N} best municipalities; Senate 28 office "
+          f"first): {named_ok}")
     with (L.DOCS_DATA / "district_sheet_towns.csv").open(encoding="utf-8") as fh:
-        sheet_csv = [(r["chamber"], r["district"], r["town_1_geoid"], r["town_2_geoid"])
+        sheet_csv = [(r["chamber"], r["district"],
+                      *(r[f"municipality_{i}_geoid"] for i in range(1, SHEET_N + 1)))
                      for r in csv.DictReader(fh)]
     with (L.DOCS_DATA / "district_town_ranking.csv").open(encoding="utf-8") as fh:
         n_rank = sum(1 for _ in csv.DictReader(fh))

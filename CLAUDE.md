@@ -323,6 +323,18 @@ spelling. `aria-labelledby` is an HTML attribute and stays. Site check 11 reads
 the new wording. Geometry-derived county labels lacked " County" ("Greene"); they
 now take the same 2010 SF1 names as BPS-derived ones.
 
+**"Municipality", not "town", wherever a reader sees it.** Austin asked for it on
+2026-10-05, knowing it is the more formal word, so it is a deliberate exception to
+the plain-language pass above: the pages, panels, sheet, caveat ("Permits show
+what a municipality approved, not every home added") and the reasons written
+into the sheet CSVs. Three things keep "town" on purpose. The headline "How much
+housing has your town permitted?" is Austin's own preview title
+(`L.PREVIEW_TITLE`) and stays, with the matching `<h1>`; changing it would also
+redraw all 3,281 cards. URL paths (`town/<slug>/`) and the two CSV file names stay
+so that links already shared keep working; the CSV *columns* say
+`municipality_1` …. And code names (`towns`, `sheet-town`, `district_towns.py`)
+are not reader-facing.
+
 **The printable sheet's towns are chosen in the build, by Austin's rule.**
 `scripts/district_towns.py` picks them and `build.py` carries them in
 `districts.json`; the page only lays them out (`docs/sheet.js`). Office town
@@ -354,6 +366,23 @@ about 15% larger than desktop Chrome, which the A4 test did not model. The two
 towns now sit side by side beside the map instead of stacked, which leaves every
 one of the 177 sheets on one page at 1.2x scale (and 175 at 1.3x). Site check 16
 holds House 69 to Letter, A4 with 3/4-inch margins, and Letter at 1.2x.
+
+**Up to four municipalities, in a 2 x 2 grid, numbered only.** Austin asked for
+four on 2026-10-05; `district_towns.SHEET_N` is 4 and the same rule simply runs
+further down the ranking (office municipality, then the best of the rest; with
+no office in the district, the four best). 147 sheets now show four, 3 show
+three, 5 show two, and the 22 all-Chicago districts one. The blocks read 1 2 /
+3 4 beside the map. At the same time he asked to drop the role labels
+("District office", "Top-ranked town"): each block now carries only the numbered
+badge that matches its map marker, and the note under the grid still says why
+number 1 was chosen. Four blocks at the old size fitted Letter at 1x but not at
+1.2x, so each block was made shorter rather than the type smaller: the four
+structure types sit two to a row with their short labels, the land/population
+line and the AHPAA line were cut to one line each, and the AHPAA line dropped
+"(IHDA 2023)", which the sources line already gives. Every one of the 177 sheets
+now prints on one page at Letter 1.2x, Letter 1.3x and A4 with 3/4-inch margins,
+measured by printing each one. Austin also confirmed the sheet and site stay
+AHIL-branded only: a YIMBY Illinois link "doesn't do much for us".
 
 **The address bar is always a shareable link.** Steffany shared a
 `districts.html#…` link, which previews as the whole state: a preview service
@@ -563,3 +592,9 @@ beside the AHPAA gap overstated what is outstanding. `BLOCKERS.md` is unchanged.
     open district is the sheet*. Site checks 12, 15 and 16 follow: 15 proves old
     `#…` links still open and the address moves to the shareable form, and 16
     prints from the menu without the button.
+42. **Four municipalities per sheet, number labels only, and "municipality" for
+    "town"** (Austin's 2026-10-05 feedback). See *Up to four municipalities* and
+    *"Municipality", not "town"*. Data check **I** recomputes four picks and
+    reads four CSV columns; site check **16** asserts the four for House 69 and
+    Senate 28, the 1 2 / 3 4 grid, the bare numbers, four map markers and the
+    same three page sizes.

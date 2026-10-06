@@ -734,8 +734,9 @@ def main() -> int:
     props_by_geoid = {ft["properties"]["geoid"]: ft["properties"] for ft in features}
     leg_as_of = (L.LEGISLATORS_RETRIEVED.read_text(encoding="utf-8").strip()
                  if L.LEGISLATORS_RETRIEVED.exists() else None)
-    # The printable sheet's two towns per district (district_towns.py), with the
-    # figures each town block prints, and the reasoning kept for the CSVs.
+    # The printable sheet's municipalities per district, up to DT.SHEET_N
+    # (district_towns.py), with the figures each block prints, and the reasoning
+    # kept for the CSVs. CSV columns say "municipality": readers open them.
     sheet_rows: list[dict] = []
     rank_rows: list[dict] = []
 
@@ -763,16 +764,17 @@ def main() -> int:
             "office_address": pick["office"]["address"] or "",
             "office_city": pick["office"]["city"] or "",
             "office_status": pick["office"]["status"],
-            **{f"town_{i}{k}": (towns[i - 1][v] if len(towns) >= i else "")
-               for i in (1, 2) for k, v in (("", "name"), ("_geoid", "geoid"),
-                                            ("_role", "role"), ("_why", "why"))},
+            **{f"municipality_{i}{k}": (towns[i - 1][v] if len(towns) >= i else "")
+               for i in range(1, DT.SHEET_N + 1)
+               for k, v in (("", "name"), ("_geoid", "geoid"),
+                            ("_role", "role"), ("_why", "why"))},
         })
         for r in pick["ranked"]:
             rank_rows.append({
                 "chamber": ch, "district": d, "rank": r["rank"], "geoid": r["geoid"],
-                "town": r["name"], "land_share": r["share"], "pop2020": r["pop2020"],
+                "municipality": r["name"], "land_share": r["share"], "pop2020": r["pop2020"],
                 "tier": r["tier"], "score": r["score"],
-                "is_office_town": r["geoid"] == pick["office"]["geoid"],
+                "is_office_municipality": r["geoid"] == pick["office"]["geoid"],
                 "on_sheet": role.get(r["geoid"], ""),
             })
         return {"office": pick["office"], "towns": towns}
@@ -780,7 +782,7 @@ def main() -> int:
     def write_sheet_csvs():
         for path, rows_, note in (
                 (L.DOCS_DATA / "district_sheet_towns.csv", sheet_rows,
-                 "one row per district: the two towns on its sheet and why"),
+                 f"one row per district: the (up to {DT.SHEET_N}) municipalities on its sheet and why"),
                 (L.DOCS_DATA / "district_town_ranking.csv", rank_rows,
                  "every municipality in every district, ranked")):
             with path.open("w", newline="", encoding="utf-8") as fh:
