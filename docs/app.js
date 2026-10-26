@@ -184,6 +184,7 @@ function buildMap(placesGeojson, countiesGeojson, stateGeojson) {
 
     layersReady = true;
     applyStyle();
+    enablePlaceDetail(map, placesGeojson);
   });
 }
 

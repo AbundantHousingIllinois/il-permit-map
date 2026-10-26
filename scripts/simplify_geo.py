@@ -69,7 +69,7 @@ def read_shapefile_zip(zip_path: Path, state_fips: str | None = None) -> dict:
 def _round_coords(obj, nd: int):
     if isinstance(obj, (int, float)):
         return round(obj, nd)
-    if isinstance(obj, list):
+    if isinstance(obj, (list, tuple)):
         return [_round_coords(o, nd) for o in obj]
     return obj
 

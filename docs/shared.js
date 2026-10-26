@@ -156,6 +156,71 @@ function hatchImage() {
   return g.getImageData(0, 0, s, s);
 }
 
+/* ---------------------------------------------------- municipality detail */
+
+/* One lazy upgrade for this small statewide layer. MapLibre handles rendering
+ * detail per zoom in its worker; it cannot recover vertices removed offline.
+ * Swap EVERY geometry together, retaining the same source, IDs and properties,
+ * so neighbours never mix overview/detail edges and styling stays in sync.
+ * For substantially larger sources, use viewport/zoom vector tiles instead.
+ */
+function enablePlaceDetail(map, overview) {
+  const status = document.getElementById('boundary-status');
+  const controller = new AbortController();
+  let pending = false, attempted = false, removed = false;
+  const showStatus = text => {
+    status.textContent = text;
+    status.hidden = !text;
+  };
+  const upgrade = async () => {
+    if (map.getZoom() < 9) {
+      attempted = false;
+      return;
+    }
+    if (pending || attempted) return;
+    attempted = true;
+    pending = true;
+    showStatus('Loading detailed municipality boundaries…');
+    try {
+      const response = await fetch('data/places-detail.geojson', { signal: controller.signal });
+      if (!response.ok) throw new Error(`Boundary detail: HTTP ${response.status}`);
+      const detail = await response.json();
+      if (detail.type !== 'FeatureCollection' || !Array.isArray(detail.features)) {
+        throw new Error('Invalid boundary detail');
+      }
+      const geometries = new Map(detail.features.map(f => [f.properties?.geoid, f.geometry]));
+      if (geometries.size !== overview.features.length || geometries.size !== detail.features.length) {
+        throw new Error('Boundary detail IDs differ from overview');
+      }
+      const features = overview.features.map(f => {
+        const geometry = geometries.get(f.properties.geoid);
+        if (!geometry || !['Polygon', 'MultiPolygon'].includes(geometry.type)) {
+          throw new Error('Missing municipality boundary detail');
+        }
+        return { ...f, geometry };
+      });
+      if (removed) return;
+      map.getSource('places').setData({ ...overview, features });
+      map.off('zoomend', upgrade);
+      showStatus('');
+    } catch (err) {
+      if (!removed) {
+        showStatus('Detailed boundaries unavailable. Showing overview boundaries; zoom out to the statewide view and back in to retry.');
+      }
+    } finally {
+      pending = false;
+    }
+  };
+  map.on('zoomend', upgrade);
+  map.once('remove', () => {
+    removed = true;
+    map.off('zoomend', upgrade);
+    controller.abort();
+  });
+  // Also handle a camera already zoomed in when this is attached.
+  upgrade();
+}
+
 /* ---------------------------------------------------------------- share */
 
 /* Put the view in the address bar. ``path`` is relative to the site root (the

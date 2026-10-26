@@ -68,6 +68,15 @@ from the spec's suggested 5% to 12% because 5% produced only 0.51 MB against a
 3 MB budget; at that retention `places.geojson` was 1.09 MB (1.32 MB now, with the
 properties added since).
 
+**Municipalities upgrade on zoom.** `build.py` also reads the raw place archive
+into `docs/data/places-detail.geojson`, keeping every vertex and rounding to five
+decimals. `enablePlaceDetail` in `shared.js` loads it once at zoom 9 in both
+maps and replaces all geometries together by GEOID without changing properties,
+layers, filters or selection. It keeps the overview on failure and retries only
+after a zoom below 9 and back in. This restores the detail of the 1:500k source,
+not full TIGER/Line accuracy. Data check J compares every geometry to the raw
+archive; site check 17 covers lazy loading, state preservation and failures.
+
 **`scripts/simplify_geo.py` is the offline fallback.** SPEC.md §8 requires
 `build.py` to run with no network, and a checkout that has `data/raw/` but not
 `data/processed/` has no simplified geometry. In that case `build.py` rebuilds it

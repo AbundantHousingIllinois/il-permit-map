@@ -266,6 +266,56 @@ can be shown to be sufficient rather than merely permissive.
 
 ---
 
+## Municipality boundary detail and zoom
+
+The municipality layer is deliberately simplified for the opening statewide
+view. Its source, `cb_2025_17_place_500k.zip`, is already Census's generalized
+1:500,000 cartographic product; `fetch_geo.py` then keeps 12% of mapshaper's
+simplifiable vertices, preserving shared borders and small places. That produces
+18,739 coordinates in the shipped overview versus 99,126 in the source. For
+example, Naperville goes from 739 coordinates to 89 and Wilmette from 83 to 17.
+Increasing the coordinate precision or changing MapLibre's rendering tolerance
+cannot bring those discarded vertices back.
+
+Both maps now fetch `data/places-detail.geojson` once at zoom 9 (regional view),
+including searches and district links that zoom past this threshold. The build
+creates this geometry-only file directly from the committed source archive,
+without vertex simplification, rounding coordinates to five decimal places.
+The 1.44 MB opening file stays unchanged; the optional detail file is 2.21 MB
+(about 586 KB with gzip; actual compression depends on the host). Loading detail
+adds no third-party request or browser dependency.
+
+The upgrade replaces every geometry together in the existing `places` source,
+joining by GEOID and keeping the exact same permit properties, filters, coverage
+hatches and selection. It does not mix coarse and detailed neighbours, which
+could create seams. Once loaded, detail remains available while panning and
+zooming; MapLibre's worker handles zoom-dependent rendering simplification.
+An unsuccessful or mismatched response leaves the overview usable and shows a
+retry message. Zoom below 9 and back in to retry; ordinary zooming within the
+detail range cannot start a request storm.
+
+For a much larger dataset, especially full TIGER/Line boundaries or additional
+states, prefer pre-generated **vector tiles with detail per zoom**, requested
+only for the visible area. Keep stable GEOIDs in the tiles, preserve shared
+boundaries during generalization, and keep the metrics/table index separate
+from tiled geometry. That avoids repeatedly downloading entire higher-detail
+statewide files. PMTiles is a possible static delivery format if the host
+supports HTTP range requests and CORS; it remains outside this version's scope.
+See [MapLibre's large-data guidance](https://maplibre.org/maplibre-gl-js/docs/guides/large-data/).
+The current two-level approach is bounded and sufficient for these 1,461 places;
+it is not viewport-based tile streaming.
+
+Even this detailed view retains the source's cartographic generalization.
+[Census describes these files as intended for small-scale thematic mapping](https://www.census.gov/programs-surveys/acs/geography-acs/geography-tools.html),
+not address-level jurisdiction decisions. Use an appropriate detailed source
+for that task. District overlays already preserve all vertices of their own
+cartographic source files and are unchanged by this upgrade.
+
+Data check J compares every detailed geometry with the raw shapefile after
+rounding and enforces a separate 3 MB budget. Site check 17 covers both maps,
+the zoom threshold, a slow response, unchanged properties/filter/selection,
+single-request reuse, failed/invalid responses and zoom-triggered recovery.
+
 ## Publishing to GitHub Pages
 
 The site is the `docs/` directory on `main`. To turn it on:

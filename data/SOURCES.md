@@ -119,3 +119,4 @@ it produced (SPEC.md §1.7). Appended automatically by the fetch scripts.
 | https://www2.census.gov/econ/bps/County/co2023a.txt | 2026-10-03 | data/raw/bps/county/co2023a.txt | BPS county-level annual (all U.S. counties; Metros view), 2023 |
 | https://www2.census.gov/econ/bps/County/co2024a.txt | 2026-10-03 | data/raw/bps/county/co2024a.txt | BPS county-level annual (all U.S. counties; Metros view), 2024 |
 | https://www2.census.gov/econ/bps/County/co2025a.txt | 2026-10-03 | data/raw/bps/county/co2025a.txt | BPS county-level annual (all U.S. counties; Metros view), 2025 |
+| uv run scripts/build.py (from data/raw/geo/cb_2025_17_place_500k.zip) | 2026-10-26 | docs/data/places-detail.geojson | Geometry conversion, not a download. All 99,126 source coordinates retained, rounded to five decimal places; GEOID only, metrics joined in the browser. |

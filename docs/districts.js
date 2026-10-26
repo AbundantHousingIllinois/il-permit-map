@@ -149,6 +149,7 @@ function buildMap(places, stateOutline) {
   }), 'bottom-right');
 
   map.on('load', () => {
+    enablePlaceDetail(map, places);
     if (!map.hasImage('hatch')) map.addImage('hatch', hatchImage());
     map.addLayer({
       id: 'places-gap', type: 'fill', source: 'places',

@@ -8,6 +8,8 @@ produces it and stops.
 Outputs
   docs/data/places.geojson      one feature per TIGER Illinois place, carrying the
                                 properties the choropleth and the table need
+  docs/data/places-detail.geojson unsimplified cartographic geometry only, loaded
+                                once on zoom and joined to those properties
   docs/data/places/<geoid>.json one shard per place, carrying the per-year series
   docs/data/meta.json           il_pct_growth, us_pct_growth, ymax, build_date,
                                 sources, and the coverage/join counts the page
@@ -725,6 +727,18 @@ def main() -> int:
     L.DOCS_DATA.mkdir(parents=True, exist_ok=True)
     (L.DOCS_DATA / "places.geojson").write_text(
         json.dumps(out, separators=(",", ":")), encoding="utf-8")
+    # Keep the opening payload small; zoomed maps fetch geometry only, joining
+    # unchanged metrics by GEOID. Always read raw geometry, never the overview.
+    detail = SG.read_shapefile_zip(L.TIGER_ZIP)
+    for f in detail["features"]:
+        f["properties"] = {"geoid": f["properties"]["GEOID"]}
+        f["geometry"]["coordinates"] = SG._round_coords(
+            f["geometry"]["coordinates"], SG.COORD_DECIMALS)
+    (L.DOCS_DATA / "places-detail.geojson").write_text(
+        json.dumps(detail, separators=(",", ":")), encoding="utf-8")
+    print(f"  places-detail.geojson: {len(detail['features']):,} places, "
+          f"{(L.DOCS_DATA / 'places-detail.geojson').stat().st_size:,} bytes "
+          "(no vertex simplification; loaded on zoom)")
     # ---------------- legislative districts ----------------
     # districts.json is the reverse index: every district, its member, and the
     # places overlapping it with their share and their figures. The estimated

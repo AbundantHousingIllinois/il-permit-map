@@ -108,6 +108,13 @@ to silently go wrong. Requirements:
 - Simplify aggressively. Target: the full statewide `places.geojson` under 3 MB.
   Start around 5% retention and adjust. Quantize coordinates to ~5 decimal
   places.
+- Keep that simplified file for the opening view. At zoom 9, fetch a separate
+  geometry-only `places-detail.geojson` from the same raw archive, retaining all
+  vertices with the same coordinate rounding. Keep this optional detail payload
+  under 3 MB too. Upgrade both maps' place source atomically by GEOID, preserving
+  metrics, filters and selection; retain the overview on failure and allow a
+  retry after zooming out and back in. This is still a generalized 1:500k source,
+  not street-level jurisdiction data.
 
 ### 3.5 AHPAA status — hand-maintained, NOT automated
 

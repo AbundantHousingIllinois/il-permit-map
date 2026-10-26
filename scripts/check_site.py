@@ -113,6 +113,7 @@ def preflight() -> tuple[bool, dict]:
         L.DOCS / "app.js",
         L.DOCS / "style.css",
         L.DOCS_DATA / "places.geojson",
+        L.DOCS_DATA / "places-detail.geojson",
         L.DOCS_DATA / "state.geojson",
         L.DOCS / "districts.html",
         L.DOCS / "districts.js",
@@ -288,6 +289,102 @@ def mirror_cdn(urls: list[str]) -> tuple[dict[str, bytes], list[str]]:
             else:
                 notes.append(f"  {url}\n    FAILED and no cached copy: {exc}")
     return got, notes
+
+
+def check_boundary_detail(context, base: str, target: dict) -> bool:
+    """Exercise real source replacement, deferred delivery, errors and retries."""
+    body = (L.DOCS_DATA / "places-detail.geojson").read_text(encoding="utf-8")
+    expected = {f["properties"]["geoid"]: f["geometry"]
+                for f in json.loads(body)["features"]}
+    ok = True
+    for path, app_name in (("index.html", "app"), ("districts.html", "districtsApp")):
+        pg = context.new_page()
+        held = []
+        errors = []
+        pg.on("pageerror", lambda error: errors.append(str(error)))
+        pg.route("**/places-detail.geojson", lambda route: held.append(route))
+        pg.goto(f"{base}/{path}")
+        pg.wait_for_function(f"window.{app_name} && window.{app_name}.ready")
+        pg.wait_for_function("window.map.loaded()")
+        original = pg.evaluate("window.map.getSource('places').serialize().data")
+        pg.evaluate("window.map.jumpTo({zoom: 8.99})")
+        pg.wait_for_function("window.map.loaded()")
+        lazy = len(held) == 0
+        pg.evaluate("window.map.jumpTo({zoom: 9})")
+        pg.wait_for_function("!document.getElementById('boundary-status').hidden")
+        pg.wait_for_timeout(150)
+        pg.evaluate("window.map.jumpTo({zoom: 10})")
+        pg.wait_for_timeout(150)
+        single_pending = len(held) == 1
+        if not single_pending:
+            pg.close()
+            return False
+        # Filters/selection can change while the request is in flight.
+        if app_name == "app":
+            pg.click('[data-type="mf5p"]')
+            pg.evaluate("geoid => window.app.selectPlace(geoid)", target["geoid"])
+        else:
+            pg.evaluate("window.districtsApp.selectDistrict('senate', '28', false)")
+        pg.wait_for_timeout(800)
+        selected_before = pg.evaluate(f"window.{app_name}.{'state' if app_name == 'app' else 'view'}()")
+        style_before = pg.evaluate("window.map.getPaintProperty('places-fill', 'fill-color')")
+        held[0].fulfill(status=200, content_type="application/json", body=body)
+        pg.wait_for_function("document.getElementById('boundary-status').hidden")
+        pg.wait_for_function("window.map.loaded()")
+        updated = pg.evaluate("window.map.getSource('places').serialize().data")
+        actual = {f["properties"]["geoid"]: f["geometry"] for f in updated["features"]}
+        same_props = ([f["properties"] for f in original["features"]]
+                      == [f["properties"] for f in updated["features"]])
+        same_selection = selected_before == pg.evaluate(
+            f"window.{app_name}.{'state' if app_name == 'app' else 'view'}()")
+        same_style = style_before == pg.evaluate("window.map.getPaintProperty('places-fill', 'fill-color')")
+        pg.evaluate("window.map.jumpTo({zoom: 7}); window.map.jumpTo({zoom: 11})")
+        pg.wait_for_function("window.map.loaded()")
+        once = len(held) == 1
+        rendered = pg.evaluate("window.map.queryRenderedFeatures({layers: ['places-fill']}).length > 0")
+        passed = all((lazy, single_pending, actual == expected, same_props,
+                      same_selection, same_style, once, rendered, not errors))
+        R.out(f"  {path}: lazy={lazy}, one pending={single_pending}, exact detail={actual == expected}, "
+              f"properties/selection/style preserved={same_props and same_selection and same_style}, "
+              f"no refetch={once}, rendered={rendered}, errors={errors}")
+        ok = ok and passed
+        pg.close()
+
+    pg = context.new_page()
+    attempts = []
+
+    def respond(route):
+        attempts.append(route)
+        if len(attempts) == 1:
+            route.fulfill(status=503, body="Temporary failure")
+        elif len(attempts) == 2:
+            route.fulfill(status=200, content_type="application/json",
+                          body='{"type":"FeatureCollection","features":[]}')
+        else:
+            route.fulfill(status=200, content_type="application/json", body=body)
+
+    pg.route("**/places-detail.geojson", respond)
+    pg.goto(f"{base}/index.html")
+    pg.wait_for_function("window.app && window.app.ready && window.map.loaded()")
+    original = pg.evaluate("window.map.getSource('places').serialize().data")
+    for attempt in (1, 2):
+        pg.evaluate("window.map.jumpTo({zoom: 8}); window.map.jumpTo({zoom: 9})")
+        pg.wait_for_function("document.getElementById('boundary-status').textContent.includes('unavailable')")
+        unchanged = original == pg.evaluate("window.map.getSource('places').serialize().data")
+        pg.evaluate("window.map.jumpTo({zoom: 10})")
+        pg.wait_for_timeout(150)
+        R.out(f"  Failure {attempt}: overview preserved={unchanged}, no retry storm={len(attempts) == attempt}")
+        ok = ok and unchanged and len(attempts) == attempt
+    pg.evaluate("window.map.jumpTo({zoom: 8}); window.map.jumpTo({zoom: 9})")
+    pg.wait_for_function("document.getElementById('boundary-status').hidden")
+    pg.wait_for_function("window.map.loaded()")
+    recovered = pg.evaluate("window.map.getSource('places').serialize().data")
+    ok = ok and len(attempts) == 3 and {
+        f["properties"]["geoid"]: f["geometry"] for f in recovered["features"]
+    } == expected
+    R.out(f"  Recovered on zoom retry: {len(attempts) == 3}")
+    pg.close()
+    return ok
 
 
 def run_checks(sync_playwright, base, built, target, console_errors):
@@ -1176,6 +1273,9 @@ def run_checks(sync_playwright, base, built, target, console_errors):
             return all(checks.values())
         R.run(16, "The printable district sheet: the chosen municipalities, a map and a QR code, "
                   "and only the sheet prints, on one page", s16)
+
+        R.run(17, "Municipality detail loads once on zoom, preserves state, and recovers from failures",
+              lambda: check_boundary_detail(context, base, target))
 
         # ---------------- B ----------------
         def sB():

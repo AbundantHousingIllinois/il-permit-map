@@ -179,6 +179,12 @@
   <p class="lede">Settled choices, not waiting on anyone. Each is a place where the sources left a gap and the build had to pick a rule; they are recorded here so a reader can see what was picked and why.</p>
 
   <article class="item">
+    <h3>Municipality boundaries get more detail as you zoom in</h3>
+    <p>The opening map uses simplified boundaries to load quickly. Zooming in restores all the detail in the Census's 2025 cartographic boundary file. These 1:500,000-scale boundaries are intended for thematic maps; even the detailed view is generalized and cannot identify an exact property line or determine which jurisdiction an address belongs to.</p>
+    <p>If detailed boundaries cannot load, the overview stays available and the map explains how to retry. Permit figures and coverage classifications stay the same at every zoom.</p>
+  </article>
+
+  <article class="item">
     <h3>County-filed permits are not on the map</h3>
     <p>About <b id="s-uninc">8%</b> of Illinois permits since 2010 are filed by county permit offices for <b>unincorporated</b> territory, plus a few whole-county and township offices. That territory is not a municipality and has no place boundary to draw, and a county-balance layer was out of scope for this version. On the map it is the flat, unpatterned land between the municipalities.</p>
     <p>Those units are excluded from every municipal figure and are itemised line by line in <code>data/processed/unmatched.csv</code>. The consequence for testimony: <b>statewide totals on this map are municipal totals.</b> They are smaller than Illinois' true permit count, by that 8%.</p>

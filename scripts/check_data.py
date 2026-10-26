@@ -14,13 +14,17 @@ from __future__ import annotations
 
 import collections
 import csv
+import io
 import json
 import math
 import re
 import sys
 import traceback
+import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+
+import shapefile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -522,6 +526,42 @@ def c8():
     R.out(f"  {L.rel(path)}")
     R.out(f"  {size:,} bytes  =  {size / 1024 / 1024:.2f} MB   (budget 3.00 MB)")
     return size < GEOJSON_MAX_BYTES
+
+
+# --------------------------------------------------------------------------
+# Municipality detail (additional check, not in SPEC.md)
+# --------------------------------------------------------------------------
+
+@check("J", "Zoomed boundaries preserve every source coordinate and fit a 3 MB detail budget")
+def cJ():
+    path = L.DOCS_DATA / "places-detail.geojson"
+    detail = json.loads(path.read_text(encoding="utf-8"))
+    features = detail["features"]
+    by_id = {f["properties"]["geoid"]: f for f in features}
+    expected_ids = {p["geoid"] for p in props()}
+    # Independent of the build's reader/rounding helper: compare the complete
+    # geometry structure directly with pyshp, rounding only JSON floats.
+    with zipfile.ZipFile(L.TIGER_ZIP) as archive:
+        parts = {Path(n).suffix: n for n in archive.namelist()}
+        with shapefile.Reader(**{
+            ext[1:]: io.BytesIO(archive.read(parts[ext]))
+            for ext in (".shp", ".shx", ".dbf")
+        }) as reader:
+            expected = {
+                record.record.as_dict()["GEOID"]: json.loads(
+                    json.dumps(record.shape.__geo_interface__),
+                    parse_float=lambda value: round(float(value), 5))
+                for record in reader.iterShapeRecords()
+            }
+    mismatches = [geoid for geoid, geometry in expected.items()
+                  if by_id.get(geoid, {}).get("geometry") != geometry]
+    R.out(f"  Detail: {len(features):,} places, {path.stat().st_size:,} bytes")
+    R.out(f"  Geometries differing from rounded raw source: {len(mismatches)}")
+    return (detail["type"] == "FeatureCollection"
+            and len(by_id) == len(features)
+            and set(by_id) == expected_ids == set(expected)
+            and not mismatches
+            and path.stat().st_size < GEOJSON_MAX_BYTES)
 
 
 # --------------------------------------------------------------------------
@@ -1426,7 +1466,7 @@ def cA():
 
 def main() -> int:
     for name in ("c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10",
-                 "cB", "cC", "cH", "cI", "cA"):
+                 "cB", "cC", "cH", "cI", "cJ", "cA"):
         globals()[name]  # checks run at decoration time; this keeps ordering explicit
 
     R.out("")
